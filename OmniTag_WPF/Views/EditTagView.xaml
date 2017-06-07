@@ -1,0 +1,240 @@
+﻿<ncgv:NCGLibView x:Class="OmniTagWPF.Views.EditTagView"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ncgv="clr-namespace:NCGLib.WPF.Templates;assembly=NCGLib.WPF"
+                 xmlns:v="clr-namespace:OmniTagWPF.Views"
+                 xmlns:vm="clr-namespace:OmniTagWPF.ViewModels"
+                 xmlns:u="clr-namespace:OmniTagWPF.Utility"
+                 xmlns:cnvrt="clr-namespace:NCGLib.WPF.Converters;assembly=NCGLib.WPF"
+                 xmlns:cntrl="clr-namespace:OmniTagWPF.Views.Controls"
+                 xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                 Title="Tag Manager" Height="400" Width="600">
+    <ncgv:NCGLibView.Resources>
+        <cnvrt:EnumToBooleanConverter x:Key="enumBoolConverter" />
+        <cnvrt:BoolToVisibilityConverter x:Key="LabelVisibilityConverter"
+                                         TrueValue="Visible" FalseValue="Hidden" NullValue="Hidden" />
+        <cnvrt:BoolToVisibilityConverter x:Key="ButtonVisibilityConverter"
+                                         TrueValue="Visible" FalseValue="Visible" NullValue="Hidden" />
+        <v:VerifiedLabelTextConverter x:Key="VerifiedLabelTextConverter" />
+        <v:TagConverter x:Key="TagConverter" />
+    </ncgv:NCGLibView.Resources>
+    <ncgv:NCGLibView.DataContext>
+        <vm:EditTagViewModel />
+    </ncgv:NCGLibView.DataContext>
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MaxWidth="200" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+
+        <!-- Dynamic List View -->
+        <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+              Margin="0,0,5,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" MaxHeight="35" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" MaxHeight="35" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!--<TextBox Grid.Column="0" Grid.Row="0"
+                     Margin="0,0,5,2"
+                     Text="{Binding FullSearchText}"
+                     TextChanged="OnSearchTextChanged"
+                     bhvr:AutoCompleteBehavior.AutoCompleteItemsSource="{Binding SearchedFilteredTags, Converter={StaticResource TagConverter}}"
+                     bhvr:AutoCompleteBehavior.AutoCompleteStringComparison="CurrentCultureIgnoreCase" />-->
+            <cntrl:AutoCompleteBox Grid.Column="0" Grid.Row="0"
+                      Margin="0,0,5,2"
+                      IsEditable="True"
+                      IsTextSearchEnabled="True"
+                      IsTextSearchCaseSensitive="False"
+                      IsSynchronizedWithCurrentItem="False" 
+                      ItemsSource="{Binding AllFilteredTags}"
+                      DisplayMemberPath="Name"
+                      Text="{Binding FullSearchText, UpdateSourceTrigger=PropertyChanged}"
+                      cntrl:SearchTextAttachedProperty.SearchText="{Binding SearchText, Mode=TwoWay}"
+                      TextBoxBase.TextChanged="OnSearchTextChanged"
+                      PreviewKeyDown="OnSearchTextKeyPressed">
+                <cntrl:AutoCompleteBox.InputBindings>
+                    <KeyBinding Key="Enter" Command="{Binding SearchTagCommand}" />
+                </cntrl:AutoCompleteBox.InputBindings>
+                <cntrl:AutoCompleteBox.Resources>
+                    <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">0</sys:Double>
+                </cntrl:AutoCompleteBox.Resources>
+            </cntrl:AutoCompleteBox>
+
+            <!--TextBox Grid.Column="0" Grid.Row="0"
+                 Margin="0,0,5,2"
+                 HorizontalAlignment="Stretch"
+                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/-->
+
+            <Button Grid.Column="1" Grid.Row="0"
+                    Margin="0,0,0,2"  Padding="5,2,5,2"
+                    Content="Add"
+                    IsEnabled="{Binding CanNewTagBeAdded}"
+                    Command="{Binding AddNewTagCommand}"
+                    Click="AddTagButton_OnClick"/>
+
+            <ListView Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
+                      Name="TagListView" Margin="0,2,0,2"
+                      VerticalAlignment="Stretch"
+                      ItemsSource="{Binding SearchedFilteredTags}"
+                      SelectedItem="{Binding SelectedTag}"
+                      DisplayMemberPath="Name"
+                      SelectionMode="Single"
+                      SelectionChanged="TagListView_OnSelectionChanged"/>
+
+            <Grid Grid.Column="0" Row="3" Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock Grid.Column="0"
+                           Text="Filter by status:" />
+                <StackPanel Grid.Column="1">
+                    <RadioButton GroupName="FilterGroup" 
+                                 Margin="5,2,5,1"
+                                 VerticalAlignment="Center"
+                                 IsChecked="{Binding Path=TagFilterMode, Converter={StaticResource enumBoolConverter}, ConverterParameter={x:Static u:TagFilterMode.All}}"
+                                 Content="All" />
+                    <RadioButton GroupName="FilterGroup"
+                                 Margin="5,1,5,1"
+                                 VerticalAlignment="Center"
+                                 IsChecked="{Binding Path=TagFilterMode, Converter={StaticResource enumBoolConverter}, ConverterParameter={x:Static u:TagFilterMode.Verified}}"
+                                 Content="Verified" />
+                    <RadioButton GroupName="FilterGroup"
+                                 Margin="5,1,5,1"
+                                 VerticalAlignment="Center"
+                                 IsChecked="{Binding Path=TagFilterMode, Converter={StaticResource enumBoolConverter}, ConverterParameter={x:Static u:TagFilterMode.AutoVerified}}"
+                                 Content="Auto-Verified" />
+                    <RadioButton GroupName="FilterGroup"
+                                 Margin="5,1,5,1"
+                                 VerticalAlignment="Center"
+                                 IsChecked="{Binding Path=TagFilterMode, Converter={StaticResource enumBoolConverter}, ConverterParameter={x:Static u:TagFilterMode.Unverified}}"
+                                 Content="Unverified" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+        <Rectangle Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
+                   VerticalAlignment="Stretch" Width="1" Stroke="Black"/>
+
+        <!-- Detail Grid -->
+        <Grid Grid.Column="2" Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MaxWidth="150" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Column="0" Grid.Row="0"
+                       Margin="5,2,5,2"
+                       VerticalAlignment="Center"
+                       Text="Tag Name:" />
+            <TextBox Grid.Column="1" Grid.Row="0"
+                     Text="{Binding SelectedTagName, UpdateSourceTrigger=PropertyChanged}" />
+
+            <TextBlock Grid.Column="0" Grid.Row="1"
+                       Margin="5"
+                       Text="Description:" />
+            <TextBox Grid.Column="1" Grid.Row="1"
+                     Margin="0,5,0,0"
+                     AcceptsReturn="True"
+                     Text="{Binding SelectedTagDescription, UpdateSourceTrigger=PropertyChanged}"
+                     TextWrapping="Wrap" />
+
+            <TextBlock Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"
+                       VerticalAlignment="Center"
+                       Visibility="{Binding IsVerifiedLabelVisible, Converter={StaticResource LabelVisibilityConverter}}">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Text" Value="This tag has not been verified!"/>
+                        <Setter Property="Foreground" Value="Red" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsSelectedTagVerified, Converter={StaticResource VerifiedLabelTextConverter}}" Value="{x:Static sys:Boolean.TrueString}">
+                                <Setter Property="Text" Value="This tag has been automatically verified." />
+                                <Setter Property="Foreground" Value="{x:Static SystemColors.ControlTextBrush}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <!--<Label Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"
+                   Visibility="{Binding IsVerifiedButtonEnabled, Converter={StaticResource LabelVisibilityConverter}}"
+                   Content="This tag has not been verified!"
+                   Foreground="Red"/>-->
+            <Button Grid.Column="1" Grid.Row="2"
+                    Margin="0,5,0,5"
+                    Padding="5,0,5,0"
+                    MinWidth="75"
+                    HorizontalAlignment="Right"
+                    Command="{Binding VerifyTagCommand}"
+                    IsEnabled="{Binding IsVerifiedButtonEnabled}"
+                    Visibility="{Binding IsSelectedTagVerified, Converter={StaticResource ButtonVisibilityConverter}}">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="{Binding VerifiedImage, TargetNullValue={x:Null}}" />
+                    <TextBlock Margin="5"
+                               VerticalAlignment="Center">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="Verify" />
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding IsSelectedTagVerified}" Value="True" />
+                                            <Condition Binding="{Binding IsSelectedTagManuallyVerified}" Value="True" />
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Text" Value="Verified" />
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
+            </Button>
+
+            <TextBlock Grid.Column="0" Grid.Row="3"
+                       Margin="5"
+                       Text="Last Updated:" />
+            <TextBlock Grid.Column="1" Grid.Row="3"
+                       Margin="5"
+                       HorizontalAlignment="Right"
+                       Text="{Binding SelectedTagLastUpdated}" />
+        </Grid>
+
+        <DockPanel Grid.Column="2" Grid.Row="1"
+                   LastChildFill="False">
+            <Button DockPanel.Dock="Right"
+                    Margin="2,5,5,5" Padding="10,4,10,4" MaxHeight="30"
+                    Content="Save Changes"
+                    IsEnabled="{Binding ChangesMade}"
+                    Command="{Binding SaveTagsCommand}"/>
+            <Button DockPanel.Dock="Right"
+                    Margin="5,5,2,5" Padding="20,4,20,4" MaxHeight="30"
+                    Content="Close"
+                    Command="{Binding Path=CloseViewCommand}" 
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+
+            <Button DockPanel.Dock="Left"
+                    Margin="5,5,2,5" Padding="20,4,20,4" MaxHeight="30"
+                    Content="Delete"
+                    IsEnabled="{Binding CanSelectedTagBeDeleted}"
+                    Command="{Binding DeleteSelectedTagCommand}"/>
+        </DockPanel>
+    </Grid>
+</ncgv:NCGLibView>

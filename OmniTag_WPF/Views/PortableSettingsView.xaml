@@ -1,0 +1,66 @@
+﻿<v:NCGLibView x:Class="OmniTagWPF.Views.PortableSettingsView"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:v="clr-namespace:NCGLib.WPF.Templates;assembly=NCGLib.WPF"
+              xmlns:vm="clr-namespace:OmniTagWPF.ViewModels"
+              xmlns:cnvrt="clr-namespace:NCGLib.WPF.Converters;assembly=NCGLib.WPF"
+              Title="Settings" Height="300" Width="300">
+    <v:NCGLibView.DataContext>
+        <vm:SettingsViewModel />
+    </v:NCGLibView.DataContext>
+    <v:NCGLibView.Resources>
+        <cnvrt:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </v:NCGLibView.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        
+        <StackPanel Grid.Row="0">
+            <TextBlock Margin="5,5,5,2"
+                       Text="Data Source:"
+                       ToolTip="The connection string for the data source."/>
+
+            <DockPanel>
+                <Button DockPanel.Dock="Right"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,5,0" Padding="10,0,10,0"
+                        Visibility="{Binding IsPortable, Converter={StaticResource BoolToVisibilityConverter}}"
+                        Content="Browse"
+                        Command="{Binding BrowseForDatabaseCommand}"/>
+
+                <TextBox DockPanel.Dock="Left"
+                         Margin="5,2,5,5"   
+                         Text="{Binding DataSource}" />
+            </DockPanel>
+            
+            <Separator Margin="5" />
+            
+            <TextBlock Margin="5,5,5,2"
+                       Text="Automatic Tag Verification Threshold"
+                       ToolTip="This is the number of Omnis that must be associated with a tag &#10;before the tag counts as auto-verified." />
+            
+            <TextBox Margin="5,2,5,5"
+                     HorizontalAlignment="Left"
+                     MinWidth="50"
+                     Text="{Binding TagThreshold}" />
+            
+            <Separator Margin="5"></Separator>
+        </StackPanel>
+        
+        <DockPanel Grid.Row="1"
+                   LastChildFill="False">
+            <Button DockPanel.Dock="Right"
+                    Margin="5" Padding="10,0,10,0"
+                    Content="Save and Close"
+                    Command="{Binding SaveCommand}"/>
+            
+            <Button DockPanel.Dock="Right"
+                    Margin="5" Padding="10,0,10,0"
+                    Content="Cancel"
+                    Command="{Binding CloseViewCommand}"/>
+        </DockPanel>
+        
+    </Grid>
+</v:NCGLibView>
