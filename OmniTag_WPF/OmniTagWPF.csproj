@@ -146,6 +146,7 @@
     <Compile Include="ViewModels\Base\BaseViewModel.cs" />
     <Compile Include="ViewModels\Base\InputViewModel.cs" />
     <Compile Include="ViewModels\Controls\ImageButtonViewModel.cs" />
+    <Compile Include="ViewModels\Controls\TagViewerViewModel.cs" />
     <Compile Include="ViewModels\EditOmniViewModel.cs" />
     <Compile Include="ViewModels\EditTagViewModel.cs" />
     <Compile Include="ViewModels\MainOmniViewModel.cs" />
@@ -160,6 +161,9 @@
     <Compile Include="Views\Controls\ClickSelectTextBox.cs" />
     <Compile Include="Views\Controls\ImageButton.cs" />
     <Compile Include="Views\Controls\SearchTextAttachedProperty.cs" />
+    <Compile Include="Views\Controls\TagViewer.xaml.cs">
+      <DependentUpon>TagViewer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\WebBrowserBehavior.cs" />
     <Compile Include="Views\EditTagView.xaml.cs">
       <DependentUpon>EditTagView.xaml</DependentUpon>
@@ -225,6 +229,10 @@
     <Page Include="Views\AboutView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\TagViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\EditTagView.xaml">
       <SubType>Designer</SubType>

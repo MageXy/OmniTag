@@ -23,16 +23,16 @@ namespace OmniTagWPF.Views
             InitializeComponent();
         }
 
-        private void AddTagButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            TagListView.Focus();
-        }
+        //private void AddTagButton_OnClick(object sender, RoutedEventArgs e)
+        //{
+        //    TagListView.Focus();
+        //}
 
-        private void TagListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (TagListView.SelectedItem != null)
-                TagListView.ScrollIntoView(e.AddedItems[0]);
-        }
+        //private void TagListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    if (TagListView.SelectedItem != null)
+        //        TagListView.ScrollIntoView(e.AddedItems[0]);
+        //}
 
         private void OnSearchTextChanged(object sender, TextChangedEventArgs textChangedEventArgs)
         {
@@ -57,12 +57,6 @@ namespace OmniTagWPF.Views
 
             //vm.SearchText = searchText;
             SearchTextAttachedProperty.SetSearchText(comboBox, searchText);
-        }
-
-        private void OnSearchTextKeyPressed(object sender, KeyEventArgs e)
-        {
-            //if (e.Key == Key.Up || e.Key == Key.Down)
-            //    e.Handled = true;
         }
     }
 

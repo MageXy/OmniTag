@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
-using System.Globalization;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
-using System.Windows.Data;
 using System.Windows.Input;
 using NCGLib;
+using NCGLib.Extensions;
 using NCGLib.WPF.Commands;
 using OmniTag.Models;
-using OmniTagWPF.Utility;
 using OmniTagWPF.ViewModels.Base;
+using OmniTagWPF.ViewModels.Controls;
 
 namespace OmniTagWPF.ViewModels
 {
@@ -20,29 +19,14 @@ namespace OmniTagWPF.ViewModels
         {
             AddedTags = new List<Tag>();
             DeletedTags = new List<Tag>();
-            TagFilterMode = TagFilterMode.All;
         }
 
         #region Properties
 
         #region Main ViewModel Properties
-        private List<Tag> AllTags { get; set; }
+        private ObservableCollection<Tag> AllTags { get; set; }
         private List<Tag> AddedTags { get; set; }
         private List<Tag> DeletedTags { get; set; }
-
-        private List<Tag> _allFilteredTags;
-        public List<Tag> AllFilteredTags
-        {
-            get { return _allFilteredTags; }
-            set { PropNotify.SetProperty(ref _allFilteredTags, value); }
-        }
-
-        private List<Tag> _searchedFilteredTags;
-        public List<Tag> SearchedFilteredTags
-        {
-            get { return _searchedFilteredTags; }
-            set { PropNotify.SetProperty(ref _searchedFilteredTags, value); }
-        }
 
         private Tag _selectedTag;
         public Tag SelectedTag
@@ -51,25 +35,11 @@ namespace OmniTagWPF.ViewModels
             set { PropNotify.SetProperty(ref _selectedTag, value, OnSelectedTagChanging, OnSelectedTagChanged); }
         }
 
-        private string _searchText;
-        public string SearchText
+        private TagViewerViewModel _tagViewerDataContext;
+        public TagViewerViewModel TagViewerDataContext
         {
-            get { return _searchText; }
-            set { PropNotify.SetProperty(ref _searchText, value, OnSearchTextChanged); }
-        }
-
-        private string _suggestedText;
-        public string SuggestedText
-        {
-            get { return _suggestedText; }
-            set { PropNotify.SetProperty(ref _suggestedText, value); }
-        }
-
-        private TagFilterMode _tagFilterMode;
-        public TagFilterMode TagFilterMode
-        {
-            get { return _tagFilterMode; }
-            set { PropNotify.SetProperty(ref _tagFilterMode, value, x => ApplyFilter()); }
+            get { return _tagViewerDataContext; }
+            set { PropNotify.SetProperty(ref _tagViewerDataContext, value); }
         }
 
         private bool _changesMade;
@@ -154,26 +124,6 @@ namespace OmniTagWPF.ViewModels
 
         #region Calculated Properties
 
-        private string _fullSearchText;
-        public string FullSearchText
-        {
-            get { return _fullSearchText; }
-            set { PropNotify.SetProperty(ref _fullSearchText, value); }
-        }
-
-        [DependsOnProperty(nameof(FullSearchText))]
-        public bool CanNewTagBeAdded
-        {
-            get
-            {
-                if (String.IsNullOrWhiteSpace(FullSearchText))
-                    return false;
-                if (AllTags.Any(t => String.Equals(t.Name, FullSearchText, StringComparison.InvariantCultureIgnoreCase)))
-                    return false;
-                return true;
-            }
-        }
-
         [DependsOnProperty(nameof(SelectedTag))]
         public bool CanSelectedTagBeDeleted
         {
@@ -231,13 +181,7 @@ namespace OmniTagWPF.ViewModels
                 else if (IsSelectedTagManuallyVerified == true)
                     return false;
                 else
-                {
                     return true;
-                    //if (IsSelectedTagVerified == false)
-                    //    return true;
-                    //else
-                    //    return false;
-                }
             }
         }
         #endregion
@@ -248,21 +192,24 @@ namespace OmniTagWPF.ViewModels
 
         public override void LoadData()
         {
-            AllTags = Context.Tags.Where(t => t.DateDeleted == null).OrderBy(t => t.Name).ToList();
-            SearchedFilteredTags = AllTags;
-            AllFilteredTags = AllTags;
+            AllTags = new ObservableCollection<Tag>(Context.Tags.Where(t => t.DateDeleted == null).OrderBy(t => t.Name).ToList());
             SelectedTag = null;
-            SearchText = String.Empty;
+            
+            TagViewerDataContext = new TagViewerViewModel(AllTags)
+            {
+                AddTagCommand = AddNewTagCommand,
+                SearchTagCommand = SearchTagCommand,
+                ShowAddButton = true,
+                ShowStatusFilter = true
+            };
+            TagViewerDataContext.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName == nameof(TagViewerDataContext.SelectedTag))
+                {
+                    SelectedTag = TagViewerDataContext.SelectedTag;
+                }
+            };
         }
-
-        //public override void LoadData()
-        //{
-        //    All = Context.Tags.Where(t => t.DateDeleted == null).OrderBy(t => t.Name).ToList();
-        //    SearchedFilteredTags = All;
-        //    AllFilteredTags = All;
-        //    SelectedTag = null;
-        //    SearchText = String.Empty;
-        //}
 
         private void VerifyTag()
         {
@@ -273,43 +220,22 @@ namespace OmniTagWPF.ViewModels
 
         private void SearchTag()
         {
-            if (CanNewTagBeAdded)
+            if (TagViewerDataContext.FullSearchText.IsEmpty())
+                return;
+
+            if (!AllTags.Any(t => t.Name.EqualsIgnoreCase(TagViewerDataContext.FullSearchText)))
                 AddNewTag();
             else
             {
-                SelectedTag = AllTags.Single(t => t.Name == FullSearchText);
-                FullSearchText = String.Empty;
+                SelectedTag = AllTags.Single(t => t.Name == TagViewerDataContext.FullSearchText);
+                TagViewerDataContext.FullSearchText = String.Empty;
             }
-        }
-
-        private void ApplyFilter()
-        {
-            Func<Tag, bool> statusFilter;
-            switch (TagFilterMode)
-            {
-                case TagFilterMode.Verified:
-                    statusFilter = t => t.IsVerified && t.ManuallyVerified;
-                    break;
-                case TagFilterMode.AutoVerified:
-                    statusFilter = t => t.IsVerified && !t.ManuallyVerified;
-                    break;
-                case TagFilterMode.Unverified:
-                    statusFilter = t => !t.IsVerified || !t.ManuallyVerified;
-                    break;
-                case TagFilterMode.All:
-                default:
-                    statusFilter = t => true;
-                    break;
-            }
-            AllFilteredTags = AllTags.Where(statusFilter).OrderBy(t => t.Name).ToList();
-
-            SearchedFilteredTags = AllFilteredTags.Where(t => t.Name.ToLowerInvariant().Contains(SearchText.ToLowerInvariant())).ToList();
         }
 
         #region Add/Delete/Save Tag Methods
         private void AddNewTag()
         {
-            if (SearchText.Length > 20)
+            if (TagViewerDataContext.FullSearchText.Length > 20)
             {
                 MessageBox.Show("Tag name cannot be longer than 20 characters (including space).", "Error", MessageBoxButton.OK,
                     MessageBoxImage.Error, MessageBoxResult.OK);
@@ -320,13 +246,13 @@ namespace OmniTagWPF.ViewModels
                 DateCreated = DateTime.Now,
                 DateDeleted = null,
                 LastModifiedDate = DateTime.Now,
-                Name = SearchText,
+                Name = TagViewerDataContext.FullSearchText,
                 IsVerified = true,
                 ManuallyVerified = true
             };
             AllTags.Add(newTag);
             AddedTags.Add(newTag);
-            SearchText = String.Empty;
+            TagViewerDataContext.FullSearchText = String.Empty;
             SelectedTag = newTag;
             ChangesMade = true;
         }
@@ -343,8 +269,6 @@ namespace OmniTagWPF.ViewModels
                 DeletedTags.Add(SelectedTag);
             SelectedTag.DateDeleted = DateTime.Now;
             AllTags.Remove(SelectedTag);
-            ApplyFilter();
-            OnPropertyChanged(nameof(SearchText));
             ChangesMade = true;
         }
 
@@ -426,20 +350,6 @@ namespace OmniTagWPF.ViewModels
                 IsSelectedTagManuallyVerified = newTag.ManuallyVerified;
                 SelectedTagLastUpdatedTime = newTag.LastModifiedDate;
             }
-        }
-
-        private void OnSearchTextChanged(string newText)
-        {
-            //if ((SelectedTag != null) && (String.Equals(newText, SelectedTag.Name, StringComparison.InvariantCultureIgnoreCase)))
-            //    return;
-
-            //var newTag =
-            //    SearchedFilteredTags.SingleOrDefault(
-            //        t => String.Equals(newText, t.Name, StringComparison.InvariantCultureIgnoreCase));
-            //if (newTag != null)
-            //    SelectedTag = newTag;
-
-            ApplyFilter();
         }
 
         #endregion

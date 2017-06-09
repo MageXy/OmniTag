@@ -33,7 +33,9 @@
         </Grid.RowDefinitions>
 
         <!-- Dynamic List View -->
-        <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+        <cntrl:TagViewer Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+                         DataContext="{Binding TagViewerDataContext}"/>
+        <!--<Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
               Margin="0,0,5,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -46,12 +48,12 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <!--<TextBox Grid.Column="0" Grid.Row="0"
+            --><!--<TextBox Grid.Column="0" Grid.Row="0"
                      Margin="0,0,5,2"
                      Text="{Binding FullSearchText}"
                      TextChanged="OnSearchTextChanged"
                      bhvr:AutoCompleteBehavior.AutoCompleteItemsSource="{Binding SearchedFilteredTags, Converter={StaticResource TagConverter}}"
-                     bhvr:AutoCompleteBehavior.AutoCompleteStringComparison="CurrentCultureIgnoreCase" />-->
+                     bhvr:AutoCompleteBehavior.AutoCompleteStringComparison="CurrentCultureIgnoreCase" />--><!--
             <cntrl:AutoCompleteBox Grid.Column="0" Grid.Row="0"
                       Margin="0,0,5,2"
                       IsEditable="True"
@@ -62,8 +64,7 @@
                       DisplayMemberPath="Name"
                       Text="{Binding FullSearchText, UpdateSourceTrigger=PropertyChanged}"
                       cntrl:SearchTextAttachedProperty.SearchText="{Binding SearchText, Mode=TwoWay}"
-                      TextBoxBase.TextChanged="OnSearchTextChanged"
-                      PreviewKeyDown="OnSearchTextKeyPressed">
+                      TextBoxBase.TextChanged="OnSearchTextChanged">
                 <cntrl:AutoCompleteBox.InputBindings>
                     <KeyBinding Key="Enter" Command="{Binding SearchTagCommand}" />
                 </cntrl:AutoCompleteBox.InputBindings>
@@ -72,10 +73,10 @@
                 </cntrl:AutoCompleteBox.Resources>
             </cntrl:AutoCompleteBox>
 
-            <!--TextBox Grid.Column="0" Grid.Row="0"
+            --><!--TextBox Grid.Column="0" Grid.Row="0"
                  Margin="0,0,5,2"
                  HorizontalAlignment="Stretch"
-                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/-->
+                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/--><!--
 
             <Button Grid.Column="1" Grid.Row="0"
                     Margin="0,0,0,2"  Padding="5,2,5,2"
@@ -98,7 +99,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                
+
                 <TextBlock Grid.Column="0"
                            Text="Filter by status:" />
                 <StackPanel Grid.Column="1">
@@ -124,7 +125,7 @@
                                  Content="Unverified" />
                 </StackPanel>
             </Grid>
-        </Grid>
+        </Grid>-->
 
         <Rectangle Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
                    VerticalAlignment="Stretch" Width="1" Stroke="Black"/>
