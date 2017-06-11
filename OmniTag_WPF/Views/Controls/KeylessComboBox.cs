@@ -3,9 +3,9 @@ using System.Windows.Input;
 
 namespace OmniTagWPF.Views.Controls
 {
-    class AutoCompleteBox : ComboBox
+    class KeylessComboBox : ComboBox
     {
-        public AutoCompleteBox()
+        public KeylessComboBox()
         {
             
         }

@@ -8,6 +8,8 @@ using Microsoft.Win32;
 using NCGLib.WPF.Templates;
 using NCGLib.WPF.Utility;
 using OmniTagWPF.ViewModels;
+using OmniTagWPF.Views.Controls;
+
 //using WpfControls;
 
 namespace OmniTagWPF.Views
@@ -20,18 +22,6 @@ namespace OmniTagWPF.Views
         public EditOmniView()
         {
             InitializeComponent();
-        }
-
-        private void OnTagTextChanged(object sender, TextCompositionEventArgs e)
-        {
-            var vm = DataContext as EditOmniViewModel;
-            if (vm == null)
-                return;
-
-            if (TagTextBox.SelectionLength == 0)
-                vm.SearchText = TagTextBox.Text;
-            else
-                vm.SearchText = TagTextBox.Text.Substring(TagTextBox.SelectionStart);
         }
 
         private void OnWebBrowserLinkClicked(object sender, NavigatingCancelEventArgs e)
@@ -57,6 +47,24 @@ namespace OmniTagWPF.Views
                     return;
 
                 vm.PreviewHtml();
+            }
+        }
+
+        private void OnTagTextKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Tab)
+                return;
+
+            var comboBox = sender as ComboBox;
+            if (comboBox == null)
+                return;
+            var textBox = (TextBox)comboBox.Template.FindName("PART_EditableTextBox", comboBox);
+
+            if (textBox.SelectionLength > 0)
+            {
+                textBox.SelectionLength = 0;
+                textBox.CaretIndex = textBox.Text.Length;
+                e.Handled = true;
             }
         }
 

@@ -22,7 +22,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <cntrl:AutoCompleteBox Grid.Column="0" Grid.Row="0"
+        <cntrl:KeylessComboBox Grid.Column="0" Grid.Row="0"
                                Margin="0,0,5,2"
                                IsEditable="True"
                                IsTextSearchEnabled="True"
@@ -33,13 +33,13 @@
                                Text="{Binding FullSearchText, UpdateSourceTrigger=PropertyChanged}"
                                cntrl:SearchTextAttachedProperty.SearchText="{Binding SearchText, Mode=TwoWay}"
                                TextBoxBase.TextChanged="OnSearchTextChanged">
-            <cntrl:AutoCompleteBox.InputBindings>
+            <cntrl:KeylessComboBox.InputBindings>
                 <KeyBinding Key="Enter" Command="{Binding SearchTagCommand}" />
-            </cntrl:AutoCompleteBox.InputBindings>
-            <cntrl:AutoCompleteBox.Resources>
+            </cntrl:KeylessComboBox.InputBindings>
+            <cntrl:KeylessComboBox.Resources>
                 <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">0</sys:Double>
-            </cntrl:AutoCompleteBox.Resources>
-        </cntrl:AutoCompleteBox>
+            </cntrl:KeylessComboBox.Resources>
+        </cntrl:KeylessComboBox>
 
         <Button Grid.Column="1" Grid.Row="0"
                 Margin="0,0,0,2"  Padding="5,2,5,2"

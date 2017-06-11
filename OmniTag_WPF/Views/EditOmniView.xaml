@@ -3,6 +3,7 @@
               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
               xmlns:v="clr-namespace:NCGLib.WPF.Templates;assembly=NCGLib.WPF"
               xmlns:c="clr-namespace:OmniTagWPF.Views.Controls"
+              xmlns:sys="clr-namespace:System;assembly=mscorlib"
               Title="Omni Editor" Height="700" Width="650">
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
@@ -158,16 +159,22 @@
                     Padding="5,0,5,0"
                     Command="{Binding AddTagCommand}"/>
 
-            <TextBox DockPanel.Dock="Left"
-                     x:Name="TagTextBox"
-                     VerticalContentAlignment="Center"
-                     KeyboardNavigation.TabIndex="0"
-                     Text="{Binding Path=CurrentTagText, UpdateSourceTrigger=PropertyChanged}"
-                     PreviewTextInput="OnTagTextChanged">
-                <TextBox.InputBindings>
-                    <KeyBinding Command="{Binding AddTagCommand}" Key="Return" />
-                </TextBox.InputBindings>
-            </TextBox>
+            <c:KeylessComboBox x:Name="TagTextBox"
+                               KeyboardNavigation.TabIndex="0"
+                               IsEditable="True"
+                               IsTextSearchEnabled="True"
+                               IsTextSearchCaseSensitive="False"
+                               IsSynchronizedWithCurrentItem="False" 
+                               ItemsSource="{Binding TagNameList}"
+                               Text="{Binding TagSearchText, UpdateSourceTrigger=PropertyChanged}"
+                               PreviewKeyDown="OnTagTextKeyDown">
+                <c:KeylessComboBox.InputBindings>
+                    <KeyBinding Key="Enter" Command="{Binding AddTagCommand}" />
+                </c:KeylessComboBox.InputBindings>
+                <c:KeylessComboBox.Resources>
+                    <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">0</sys:Double>
+                </c:KeylessComboBox.Resources>
+            </c:KeylessComboBox>
         </DockPanel>
 
         <ScrollViewer Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2"
@@ -185,6 +192,7 @@
                                        Content="{Binding ButtonLabel}"
                                        Margin="5,2,5,2"
                                        MaxWidth="150"
+                                       KeyboardNavigation.IsTabStop="False"
                                        Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ItemsControl}, Path=DataContext.DeleteTagCommand}"
                                        CommandParameter="{Binding}" />
                     </DataTemplate>

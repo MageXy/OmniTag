@@ -114,13 +114,12 @@ namespace OmniTagWPF.ViewModels
             set { PropNotify.SetProperty(ref _suggestedText, value); }
         }
 
-        private string _currentTagText;
-        public string CurrentTagText
+        private string _tagSearchText;
+        public string TagSearchText
         {
-            get { return _currentTagText; }
-            set { PropNotify.SetProperty(ref _currentTagText, value); }
+            get { return _tagSearchText; }
+            set { PropNotify.SetProperty(ref _tagSearchText, value); }
         }
-
 
         private ObservableCollection<ImageButtonViewModel> _imageButtons;
         public ObservableCollection<ImageButtonViewModel> ImageButtons
@@ -290,26 +289,26 @@ namespace OmniTagWPF.ViewModels
 
         private void AddTag()
         {
-            if (CurrentTagText.IsEmpty())
+            if (TagSearchText.IsEmpty())
                 return;
-            if (CurrentTagText.Length > 20)
+            if (TagSearchText.Length > 20)
             {
                 MessageBox.Show("Tag name cannot be longer than 20 characters (including space).",
                     "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                 return;
             }
-            if (OmniTags.Any(t => t.Name.Equals(CurrentTagText, StringComparison.CurrentCultureIgnoreCase)))
+            if (OmniTags.Any(t => t.Name.Equals(TagSearchText, StringComparison.CurrentCultureIgnoreCase)))
             {
-                MessageBox.Show($"This Omni is already associated with the \"{CurrentTagText}\" tag.",
+                MessageBox.Show($"This Omni is already associated with the \"{TagSearchText}\" tag.",
                     "Warning", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                 return;
             }
-            var tag = Context.Tags.SingleOrDefault(t => t.Name == CurrentTagText);
+            var tag = Context.Tags.SingleOrDefault(t => t.Name == TagSearchText);
             if (tag == null)
             {
                 tag = new Tag
                 {
-                    Name = CurrentTagText,
+                    Name = TagSearchText,
                     Description = null,
                     IsVerified = false,
                     DateCreated = DateTime.Now,
@@ -321,7 +320,7 @@ namespace OmniTagWPF.ViewModels
             var buttonVm = new ImageButtonViewModel(tag);
             OmniTags.Add(tag);
             ImageButtons.Add(buttonVm);
-            CurrentTagText = "";
+            TagSearchText = "";
             ChangesMade = true;
         }
 

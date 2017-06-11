@@ -157,7 +157,7 @@
     <Compile Include="Views\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\AutoCompleteBox.cs" />
+    <Compile Include="Views\Controls\KeylessComboBox.cs" />
     <Compile Include="Views\Controls\ClickSelectTextBox.cs" />
     <Compile Include="Views\Controls\ImageButton.cs" />
     <Compile Include="Views\Controls\SearchTextAttachedProperty.cs" />
