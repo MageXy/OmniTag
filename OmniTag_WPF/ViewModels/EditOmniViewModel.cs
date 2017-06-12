@@ -182,9 +182,9 @@ namespace OmniTagWPF.ViewModels
 
         public void PreviewHtml()
         {
-            var md = new Markdown();
-            RenderedMarkdownHtml = "<meta http-equiv='Content-Type' content='text/html;charset=UTF-8'>"
-                                   + md.Transform(OmniDescription ?? String.Empty);
+            // convert all newlines to Environment.NewLine when rendering, to avoid mixing newline types.
+            RenderedMarkdownHtml = OmniTextRenderer.Render(OmniDescription?.Replace("\r\n", "\n")
+                .Replace("\n", Environment.NewLine) ?? String.Empty);
         }
 
         private void OnSearchTextChanged(string newString)

@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Navigation;
+using ColorCode;
 using Microsoft.Win32;
 using NCGLib.WPF.Templates;
 using NCGLib.WPF.Utility;
+using OmniTagWPF.Utility;
 using OmniTagWPF.ViewModels;
 using OmniTagWPF.Views.Controls;
 
@@ -124,7 +128,45 @@ namespace OmniTagWPF.Views
 
         private void OnCodeClicked(object sender, RoutedEventArgs e)
         {
-            SurroundDescriptionTextWith("`", "code text");
+            var startLineIndex = DescriptionTextBox.GetLineIndexFromCharacterIndex(DescriptionTextBox.SelectionStart);
+            var endLineIndex = DescriptionTextBox.GetLineIndexFromCharacterIndex(DescriptionTextBox.SelectionStart +
+                                                                                 DescriptionTextBox.SelectionLength);
+
+            if (startLineIndex != endLineIndex)
+            {
+                var collection = ColorCode.Languages.All.Select(l => l.Name).OrderBy(n => n).ToList();
+                collection.Insert(0, "None");
+                var vm = new ComboInputViewModel<string>(collection, "Please choose a code language:");
+                var view = ViewFactory.CreateViewWithDataContext<ComboInputView>(vm);
+                view.ShowDialog();
+
+                var language = String.Empty;
+                if (vm.UserConfirmed && vm.SelectedItem != "None")
+                    language = vm.SelectedItem;
+
+                for (var index = startLineIndex; index <= endLineIndex; index++)
+                {
+                    var lineStartIndex = DescriptionTextBox.GetCharacterIndexFromLineIndex(index);
+                    DescriptionTextBox.Text = DescriptionTextBox.Text.Insert(lineStartIndex, "    ");
+                }
+
+                if (language != String.Empty)
+                {
+                    DescriptionTextBox.Text =
+                        DescriptionTextBox.Text.Insert(
+                            DescriptionTextBox.GetCharacterIndexFromLineIndex(startLineIndex),
+                            "    " + OmniTextRenderer.LangDefinitionText + language + Environment.NewLine);
+                    endLineIndex++;
+                }
+                DescriptionTextBox.SelectionStart = DescriptionTextBox.GetCharacterIndexFromLineIndex(startLineIndex);
+                var endOfLastLineIndex = DescriptionTextBox.GetCharacterIndexFromLineIndex(endLineIndex) +
+                                         DescriptionTextBox.GetLineText(endLineIndex).Length;
+                DescriptionTextBox.SelectionLength = endOfLastLineIndex - DescriptionTextBox.SelectionStart;
+
+                DescriptionTextBox.Focus();
+            }
+            else
+                SurroundDescriptionTextWith("`", "code text");
         }
 
         private void OnAddImageClicked(object sender, RoutedEventArgs e)
