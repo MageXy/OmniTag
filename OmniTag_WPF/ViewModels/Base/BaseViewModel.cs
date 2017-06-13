@@ -1,4 +1,4 @@
-﻿using NCGLib.WPF.Templates;
+﻿using NCGLib.WPF.Templates.ViewModels;
 using OmniTagDB;
 
 namespace OmniTagWPF.ViewModels.Base

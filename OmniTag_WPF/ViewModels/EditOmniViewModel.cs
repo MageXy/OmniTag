@@ -12,7 +12,6 @@ using OmniTag.Models.Utility;
 using OmniTagWPF.Utility;
 using OmniTagWPF.ViewModels.Base;
 using OmniTagWPF.ViewModels.Controls;
-using HeyRed.MarkdownSharp;
 using NCGLib.Extensions;
 
 namespace OmniTagWPF.ViewModels

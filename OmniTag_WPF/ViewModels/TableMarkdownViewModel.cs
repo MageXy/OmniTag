@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Data;
-using OmniTagWPF.ViewModels.Base;
+using NCGLib.WPF.Utility.Input;
+using OmniTagWPF.Utility;
 
 namespace OmniTagWPF.ViewModels
 {
-    class TableMarkdownViewModel : InputViewModel
+    class TableMarkdownViewModel : InputViewModel<string>
     {
         public TableMarkdownViewModel(int numCols, int numRows) : base("Enter table data", "Enter table data")
         {
@@ -47,12 +48,19 @@ namespace OmniTagWPF.ViewModels
 
         public string GetTableString()
         {
-            if (IsCancelled)
+            if (UserCancelled)
                 return String.Empty;
             
             var tableStringCreator = new TableMarkdownGenerator(Data);
             var str = tableStringCreator.GetTableMarkdownString();
             return str;
+        }
+
+        public override void Confirm()
+        {
+            SelectedValue = GetTableString();
+
+            base.Confirm();
         }
 
         #endregion

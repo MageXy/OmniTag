@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.Remoting.Channels;
 using System.Windows.Input;
 using NCGLib;
-using NCGLib.WPF.Commands;
-using NCGLib.WPF.Templates;
+using NCGLib.WPF.Templates.ViewModels;
 using OmniTag.Models;
 using OmniTagWPF.Utility;
 

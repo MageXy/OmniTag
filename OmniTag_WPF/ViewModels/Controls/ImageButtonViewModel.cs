@@ -1,6 +1,5 @@
-﻿using System.Linq;
-using NCGLib;
-using NCGLib.WPF.Templates;
+﻿using NCGLib;
+using NCGLib.WPF.Templates.ViewModels;
 using OmniTag.Models;
 using OmniTagDB;
 using Image = OmniTagWPF.Images.Images;

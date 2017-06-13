@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Navigation;
-using ColorCode;
 using Microsoft.Win32;
-using NCGLib.WPF.Templates;
+using NCGLib.WPF.Templates.Views;
 using NCGLib.WPF.Utility;
+using NCGLib.WPF.Utility.Input;
 using OmniTagWPF.Utility;
 using OmniTagWPF.ViewModels;
-using OmniTagWPF.Views.Controls;
 
 //using WpfControls;
 
@@ -136,13 +134,14 @@ namespace OmniTagWPF.Views
             {
                 var collection = ColorCode.Languages.All.Select(l => l.Name).OrderBy(n => n).ToList();
                 collection.Insert(0, "None");
-                var vm = new ComboInputViewModel<string>(collection, "Please choose a code language:");
-                var view = ViewFactory.CreateViewWithDataContext<ComboInputView>(vm);
-                view.ShowDialog();
+                var vm = InputViewFactory.ShowComboBoxInput("Please choose a code language:", "Code Language", collection);
+                //var vm = new ComboInputViewModel<string>(collection, "Please choose a code language:");
+                //var view = ViewFactory.CreateViewWithDataContext<ComboInputView>(vm);
+                //view.ShowDialog();
 
                 var language = String.Empty;
-                if (vm.UserConfirmed && vm.SelectedItem != "None")
-                    language = vm.SelectedItem;
+                if (!vm.UserCancelled && vm.SelectedValue != "None")
+                    language = vm.SelectedValue;
 
                 for (var index = startLineIndex; index <= endLineIndex; index++)
                 {
@@ -189,13 +188,14 @@ namespace OmniTagWPF.Views
             }
             else
             {
-                var vm = new SimpleInputViewModel("Enter file URL:", "Add Image");
-                var view = ViewFactory.CreateViewWithDataContext<SimpleInputView>(vm);
-                view.ShowDialog();
-                if (vm.IsCancelled)
+                //var vm = new SimpleInputViewModel("Enter file URL:", "Add Image");
+                //var view = ViewFactory.CreateViewWithDataContext<SimpleInputView>(vm);
+                //view.ShowDialog();
+                var vm = InputViewFactory.ShowTextBoxInput("Enter file URL:", "Add Image");
+                if (vm.UserCancelled)
                     return;
 
-                result = vm.Input;
+                result = vm.SelectedValue;
             }
 
             try
@@ -211,14 +211,14 @@ namespace OmniTagWPF.Views
 
         private void OnAddHyperlinkClicked(object sender, RoutedEventArgs e)
         {
-            var vm = new SimpleInputViewModel("Enter the URL:", "Add Hyperlink");
-            vm.Input = "https://";
-            var view = ViewFactory.CreateViewWithDataContext<SimpleInputView>(vm);
+            var vm = new TextBoxInputViewModel("Enter the URL:", "Add Hyperlink");
+            vm.SelectedValue = "https://";
+            var view = ViewFactory.CreateViewWithDataContext<TextBoxInputView>(vm);
             view.ShowDialog();
-            if (vm.IsCancelled)
+            if (vm.UserCancelled)
                 return;
 
-            var result = vm.Input;
+            var result = vm.SelectedValue;
             SurroundDescriptionTextWith("[", $"]({result})", "link display text");
         }
 
@@ -228,19 +228,19 @@ namespace OmniTagWPF.Views
             var view = ViewFactory.CreateViewWithDataContext<TableMarkdownSizeView>(tableSizeVm);
             view.ShowDialog();
 
-            if (tableSizeVm.IsCancelled)
+            if (tableSizeVm.UserCancelled)
                 return;
 
             var tableVm = new TableMarkdownViewModel(tableSizeVm.NumCols, tableSizeVm.NumRows);
             view = ViewFactory.CreateViewWithDataContext<TableMarkdownView>(tableVm);
             view.ShowDialog();
 
-            if (!tableVm.IsCancelled)
+            if (!tableVm.UserCancelled)
             {
                 var startIndex = DescriptionTextBox.CaretIndex;
 
                 var part1 = DescriptionTextBox.Text.Substring(0, startIndex);
-                var part2 = "\n" + tableVm.GetTableString();
+                var part2 = "\n" + tableVm.SelectedValue; //tableVm.GetTableString();
                 var part3 = DescriptionTextBox.Text.Substring(startIndex);
 
                 DescriptionTextBox.Text = part1 + part2 + part3;

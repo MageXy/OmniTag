@@ -1,9 +1,10 @@
 ﻿using System.Windows;
-using OmniTagWPF.ViewModels.Base;
+using NCGLib.WPF.Utility.Input;
+using OmniTagWPF.Utility;
 
 namespace OmniTagWPF.ViewModels
 {
-    class TableMarkdownSizeViewModel : InputViewModel
+    class TableMarkdownSizeViewModel : InputViewModel<GridDimensions>
     {
         public TableMarkdownSizeViewModel(string message, string caption) : base(message, caption)
         {
@@ -30,7 +31,7 @@ namespace OmniTagWPF.ViewModels
 
         #region Methods
 
-        protected override void VerifyData()
+        public override void Confirm()
         {
             if (NumCols < 1)
             {
@@ -43,7 +44,9 @@ namespace OmniTagWPF.ViewModels
                 return;
             }
 
-            base.VerifyData();
+            SelectedValue = new GridDimensions(NumCols, NumRows);
+
+            base.Confirm();
         }
 
         #endregion

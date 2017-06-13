@@ -1,4 +1,4 @@
-﻿using NCGLib.WPF.Templates;
+﻿using NCGLib.WPF.Templates.Views;
 
 namespace OmniTagWPF.Views
 {

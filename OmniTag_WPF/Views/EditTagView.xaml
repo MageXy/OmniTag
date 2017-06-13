@@ -1,7 +1,7 @@
 ﻿<ncgv:NCGLibView x:Class="OmniTagWPF.Views.EditTagView"
                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                 xmlns:ncgv="clr-namespace:NCGLib.WPF.Templates;assembly=NCGLib.WPF"
+                 xmlns:ncgv="clr-namespace:NCGLib.WPF.Templates.Views;assembly=NCGLib.WPF"
                  xmlns:v="clr-namespace:OmniTagWPF.Views"
                  xmlns:vm="clr-namespace:OmniTagWPF.ViewModels"
                  xmlns:u="clr-namespace:OmniTagWPF.Utility"

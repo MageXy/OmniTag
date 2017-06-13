@@ -78,8 +78,8 @@
       <HintPath>..\packages\NCGLib.1.0.0.3\lib\net452\NCGLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NCGLib.WPF, Version=1.1.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NCGLib.WPF.1.1.0.2\lib\net452\NCGLib.WPF.dll</HintPath>
+    <Reference Include="NCGLib.WPF, Version=1.1.0.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NCGLib.WPF.1.1.0.3\lib\net452\NCGLib.WPF.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -121,26 +121,21 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Images\Images.cs" />
+    <Compile Include="Utility\GridDimensions.cs" />
     <Compile Include="Utility\OmniDataChangedEventArgs.cs" />
     <Compile Include="Utility\OmniTextRenderer.cs" />
     <Compile Include="Utility\TagFilterMode.cs" />
     <Compile Include="ViewModels\Base\BaseViewModel.cs" />
-    <Compile Include="ViewModels\Base\InputViewModel.cs" />
-    <Compile Include="ViewModels\ComboInputViewModel.cs" />
     <Compile Include="ViewModels\Controls\ImageButtonViewModel.cs" />
     <Compile Include="ViewModels\Controls\TagViewerViewModel.cs" />
     <Compile Include="ViewModels\EditOmniViewModel.cs" />
     <Compile Include="ViewModels\EditTagViewModel.cs" />
     <Compile Include="ViewModels\MainOmniViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
-    <Compile Include="ViewModels\SimpleInputViewModel.cs" />
     <Compile Include="ViewModels\TableMarkdownSizeViewModel.cs" />
     <Compile Include="ViewModels\TableMarkdownViewModel.cs" />
     <Compile Include="Views\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ComboInputView.xaml.cs">
-      <DependentUpon>ComboInputView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\KeylessComboBox.cs" />
     <Compile Include="Views\Controls\ClickSelectTextBox.cs" />
@@ -165,9 +160,6 @@
     </Compile>
     <Compile Include="Views\PortableSettingsView.xaml.cs">
       <DependentUpon>PortableSettingsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SimpleInputView.xaml.cs">
-      <DependentUpon>SimpleInputView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TableMarkdownSizeView.xaml.cs">
       <DependentUpon>TableMarkdownSizeView.xaml</DependentUpon>
@@ -215,10 +207,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\ComboInputView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\Controls\TagViewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -240,10 +228,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PortableSettingsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SimpleInputView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

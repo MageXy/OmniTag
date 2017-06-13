@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 using NCGLib.Extensions;
-using NCGLib.WPF.Templates;
+using NCGLib.WPF.Templates.Views;
 
 namespace OmniTagWPF.Views
 {

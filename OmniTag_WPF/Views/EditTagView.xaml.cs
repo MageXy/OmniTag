@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Input;
-using NCGLib.WPF.Templates;
+using NCGLib.WPF.Templates.Views;
 using OmniTag.Models;
 using OmniTagWPF.ViewModels;
 using OmniTagWPF.Views.Controls;
