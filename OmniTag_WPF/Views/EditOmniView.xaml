@@ -119,18 +119,56 @@
                             <Image Source="../Images/hyperlink.png"
                                    ToolTip="Add Hyperlink" />
                         </Button>
+                        
+                        <Button DockPanel.Dock="Right"
+                                      Margin="2" Width="22"
+                                      KeyboardNavigation.IsTabStop="False"
+                                      Click="ToggleTextWrapping">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=DescriptionTextBox, Path=TextWrapping}" Value="{x:Static TextWrapping.Wrap}">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <Image Source="../Images/text_wrap_on.png" />
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter Property="ToolTip" Value="Text Wrapping ON" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=DescriptionTextBox, Path=TextWrapping}" Value="{x:Static TextWrapping.NoWrap}">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <Image Source="../Images/text_wrap_off.png" />
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter Property="ToolTip" Value="Text Wrapping OFF" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
                     </DockPanel>
                     
                     <ScrollViewer Grid.Row="1"
-                                  HorizontalScrollBarVisibility="Auto"
                                   VerticalScrollBarVisibility="Visible">
+                        <ScrollViewer.Style>
+                            <Style TargetType="ScrollViewer">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=DescriptionTextBox, Path=TextWrapping}" Value="{x:Static TextWrapping.Wrap}">
+                                        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=DescriptionTextBox, Path=TextWrapping}" Value="{x:Static TextWrapping.NoWrap}">
+                                        <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ScrollViewer.Style>
                         <TextBox Name="DescriptionTextBox"
                                  TextWrapping="Wrap"
                                  AcceptsReturn="True"
                                  FontFamily="Anonymous Pro, Courier New, Consolas"
                                  FontSize="16"
-                                 Text="{Binding OmniDescription, UpdateSourceTrigger=PropertyChanged}"
-                                 SelectedText=""/>
+                                 Text="{Binding OmniDescription, UpdateSourceTrigger=PropertyChanged}" />
                     </ScrollViewer>
                 </Grid>
                 

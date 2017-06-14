@@ -140,9 +140,12 @@ namespace OmniTagWPF.Views
                 //view.ShowDialog();
 
                 var language = String.Empty;
-                if (!vm.UserCancelled && vm.SelectedValue != "None")
-                    language = vm.SelectedValue;
+                if (vm.UserCancelled)
+                    return;
 
+                if (vm.SelectedValue != "None")
+                    language = vm.SelectedValue;
+                
                 for (var index = startLineIndex; index <= endLineIndex; index++)
                 {
                     var lineStartIndex = DescriptionTextBox.GetCharacterIndexFromLineIndex(index);
@@ -246,6 +249,13 @@ namespace OmniTagWPF.Views
                 DescriptionTextBox.Text = part1 + part2 + part3;
                 DescriptionTextBox.Focus();
             }
+        }
+
+        private void ToggleTextWrapping(object sender, RoutedEventArgs e)
+        {
+            DescriptionTextBox.TextWrapping = (DescriptionTextBox.TextWrapping == TextWrapping.NoWrap)
+                ? TextWrapping.Wrap
+                : TextWrapping.NoWrap;
         }
     }
 }
