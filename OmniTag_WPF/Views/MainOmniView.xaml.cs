@@ -1,4 +1,5 @@
-﻿using NCGLib.WPF.Templates.Views;
+﻿using System.Windows;
+using NCGLib.WPF.Templates.Views;
 
 namespace OmniTagWPF.Views
 {
@@ -10,6 +11,7 @@ namespace OmniTagWPF.Views
         public MainOmniView()
         {
             InitializeComponent();
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace OmniTagWPF.Views
+﻿using System.Windows;
+
+namespace OmniTagWPF.Views
 {
     /// <summary>
     /// Interaction logic for HelpView.xaml
@@ -8,6 +10,7 @@
         public HelpView()
         {
             InitializeComponent();
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
     }
 }

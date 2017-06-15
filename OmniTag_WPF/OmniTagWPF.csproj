@@ -137,6 +137,7 @@
     <Compile Include="Views\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\CenteredView.cs" />
     <Compile Include="Views\Controls\KeylessComboBox.cs" />
     <Compile Include="Views\Controls\ClickSelectTextBox.cs" />
     <Compile Include="Views\Controls\ImageButton.cs" />

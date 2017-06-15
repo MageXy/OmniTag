@@ -6,7 +6,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Navigation;
 using Microsoft.Win32;
-using NCGLib.WPF.Templates.Views;
 using NCGLib.WPF.Utility;
 using NCGLib.WPF.Utility.Input;
 using OmniTagWPF.Utility;
@@ -19,7 +18,7 @@ namespace OmniTagWPF.Views
     /// <summary>
     /// Interaction logic for EditOmniView.xaml
     /// </summary>
-    public partial class EditOmniView : NCGLibView
+    public partial class EditOmniView : CenteredView
     {
         public EditOmniView()
         {

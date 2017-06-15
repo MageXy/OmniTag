@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Data;
-using NCGLib.WPF.Templates.Views;
 using OmniTag.Models;
 using OmniTagWPF.ViewModels;
 using OmniTagWPF.Views.Controls;
@@ -14,7 +13,7 @@ namespace OmniTagWPF.Views
     /// <summary>
     /// Interaction logic for EditTagView.xaml
     /// </summary>
-    public partial class EditTagView : NCGLibView
+    public partial class EditTagView : CenteredView
     {
         public EditTagView()
         {

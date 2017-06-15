@@ -10,6 +10,7 @@ namespace OmniTagWPF.Views
 		public AboutView()
 		{
 			InitializeComponent();
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
 		}
 	}
 }
