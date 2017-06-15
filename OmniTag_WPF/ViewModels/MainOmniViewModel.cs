@@ -1,11 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using NCGLib;
 using NCGLib.WPF.Commands;
 using NCGLib.WPF.Utility;
 using OmniTag.Models;
+using OmniTagWPF.Utility;
 using OmniTagWPF.ViewModels.Base;
+using OmniTagWPF.ViewModels.Controls;
 using OmniTagWPF.Views;
 
 namespace OmniTagWPF.ViewModels
@@ -13,6 +18,13 @@ namespace OmniTagWPF.ViewModels
     class MainOmniViewModel : BaseViewModel
     {
         #region Properties
+
+        private TagViewerViewModel _tagSearchDataContext;
+        public TagViewerViewModel TagSearchDataContext
+        {
+            get { return _tagSearchDataContext; }
+            set { PropNotify.SetProperty(ref _tagSearchDataContext, value); }
+        }
 
         private List<Omni> _availableOmnis;
         public List<Omni> AvailableOmnis
@@ -27,6 +39,19 @@ namespace OmniTagWPF.ViewModels
             get { return _selectedOmni; }
             set { PropNotify.SetProperty(ref _selectedOmni, value); }
         }
+
+
+        [DependsOnProperty(nameof(SelectedOmni))]
+        public string RenderedMarkdownHtml
+        {
+            get
+            {
+                return SelectedOmni == null
+                    ? "&nbsp;"
+                    : OmniTextRenderer.Render(SelectedOmni.Description?.Replace("\r\n", "\n")
+                        .Replace("\n", Environment.NewLine) ?? String.Empty);
+            }
+        }
         
         #endregion
 
@@ -34,11 +59,13 @@ namespace OmniTagWPF.ViewModels
 
         public override void LoadData()
         {
-            AvailableOmnis = Context.Omnis.ToList();
+            AvailableOmnis = Context.Omnis.Where(o => o.DateDeleted == null).OrderBy(o => o.Summary).ToList();
             if (AvailableOmnis.Count > 0)
                 SelectedOmni = AvailableOmnis.First();
 
-            
+            var tags = new ObservableCollection<Tag>(Context.Tags.Where(t => t.DateDeleted == null).OrderBy(t => t.Name).ToList());
+            TagSearchDataContext = new TagViewerViewModel(tags);
+            TagSearchDataContext.ShowAddButton = false;
         }
 
         private void EditOmni(object omniToEdit)

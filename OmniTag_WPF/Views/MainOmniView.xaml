@@ -1,27 +1,52 @@
-﻿<ncg:NCGLibView x:Class="OmniTagWPF.Views.MainOmniView"
+﻿<v:CenteredView x:Class="OmniTagWPF.Views.MainOmniView"
                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:v="clr-namespace:OmniTagWPF.Views"
                 xmlns:vm="clr-namespace:OmniTagWPF.ViewModels"
-                xmlns:ncg="clr-namespace:NCGLib.WPF.Templates.Views;assembly=NCGLib.WPF"
-                Title="MainOmniView" Height="300" Width="300">
-    <ncg:NCGLibView.DataContext>
+                xmlns:cnvrt="clr-namespace:NCGLib.WPF.Converters;assembly=NCGLib.WPF"
+                xmlns:cntrl="clr-namespace:OmniTagWPF.Views.Controls"
+                Title="OmniTag" Height="700" Width="900">
+    <v:CenteredView.DataContext>
         <vm:MainOmniViewModel />
-    </ncg:NCGLibView.DataContext>
+    </v:CenteredView.DataContext>
+    <v:CenteredView.Resources>
+        <cnvrt:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"
+                                         TrueValue="Visible"
+                                         FalseValue="Hidden" />
+        
+        <Style TargetType="FrameworkElement" x:Key="SelectedOmniNullStyle">
+            <Setter Property="IsEnabled" Value="True" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding SelectedOmni}" Value="{x:Null}">
+                    <Setter Property="IsEnabled" Value="False" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </v:CenteredView.Resources>
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
-        <Menu Grid.Column="0" Grid.Row="0">
-            <MenuItem Header="File">
-                <MenuItem Header="Settings" Command="{Binding EditSettingsCommand}"/>
-                <MenuItem Header="Exit" Command="{Binding CloseViewCommand}" />
+
+        <Menu Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3">
+            <MenuItem Header="_File">
+                <MenuItem Header="Quit" Command="{Binding CloseViewCommand}" />
+                <MenuItem Header="Settings" Command="{Binding EditSettingsCommand}" />
             </MenuItem>
-            <MenuItem Header="Edit">
-                <MenuItem Header="New Omni" />
-                <MenuItem Header="Edit Selected"  />
-                <MenuItem Header="Delete Selected" />
+            <MenuItem Header="_Edit">
+                <MenuItem Header="New Omni" Command="{Binding EditOmniCommand}" CommandParameter="{x:Null}" />
+                <MenuItem Header="Edit Omni" 
+                          Command="{Binding EditOmniCommand}"
+                          CommandParameter="{Binding SelectedOmni}"
+                          Style="{StaticResource SelectedOmniNullStyle}" />
+                <MenuItem Header="Delete Omni"
+                          Style="{StaticResource SelectedOmniNullStyle}" />
                 <Separator />
                 <MenuItem Header="Manage Tags..." Command="{Binding EditTagsCommand}" />
             </MenuItem>
@@ -30,32 +55,103 @@
                 <MenuItem Header="About" />
             </MenuItem>
         </Menu>
+
+        <cntrl:TagViewer Grid.Column="0" Grid.Row="1"
+                         Margin="5"
+                         DataContext="{Binding TagSearchDataContext}"/>
         
-        <Grid Grid.Row="1">
+        <Separator Grid.Column="1" Grid.Row="1"
+                   Margin="0,5,0,5"
+                   Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+        
+        <Grid Grid.Column="2" Grid.Row="1"
+              Margin="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="35" />
             </Grid.RowDefinitions>
-            
-            <ListView Grid.Row="0"
-                      SelectionMode="Single"
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" Grid.Row="0"
+                  Margin="0,0,2,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Margin="5"
+                           VerticalAlignment="Center"
+                           Foreground="DarkGray"
+                           Visibility="{Binding ElementName=OmniSearchBox, Path=Text.IsEmpty, Converter={StaticResource BoolToVisibilityConverter}}"
+                           Text="Search Omnis..." />
+                <TextBox Grid.Row="0"
+                         Margin="0,0,0,2"
+                         x:Name="OmniSearchBox"
+                         Background="Transparent"/>
+                <Button Grid.Row="0"
+                        Margin="0,4,4,4"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        Click="OnClearOmniSearchTextClicked">
+                    <TextBlock Text="X" FontSize="16" />
+                </Button>
+
+                <ListView Grid.Column="0" Grid.Row="1"
+                          Margin="0,2,0,0"
+                      VerticalAlignment="Stretch"
                       ItemsSource="{Binding AvailableOmnis}"
                       SelectedItem="{Binding SelectedOmni}"
-                      DisplayMemberPath="Summary"/>
-            
-            <DockPanel Grid.Row="1" LastChildFill="False">
-                <Button DockPanel.Dock="Right"
-                        Margin="5" Padding =" 20,0,20,0"
+                      DisplayMemberPath="Summary"
+                      SelectionMode="Single" />
+            </Grid>
+
+            <WebBrowser Grid.Column="1" Grid.Row="0"
+                        Margin="2,0,0,0"
+                        cntrl:WebBrowserBehavior.Html="{Binding RenderedMarkdownHtml}"
+                        Navigating="OnWebBrowserLinkClicked" />
+
+            <DockPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
+                       Margin="0,5,0,5"
+                       LastChildFill="False">
+                <Button DockPanel.Dock="Left"
+                        Padding="10,0,10,0"
                         Content="New Omni"
                         Command="{Binding EditOmniCommand}"
-                        CommandParameter="{x:Null}" />
-
+                        CommandParameter="{x:Null}"/>
                 <Button DockPanel.Dock="Right"
-                        Margin="5" Padding =" 20,0,20,0"
+                        Margin="5,0,0,0"
+                        Padding="10,0,10,0"
                         Content="Edit Omni"
                         Command="{Binding EditOmniCommand}"
-                        CommandParameter="{Binding SelectedOmni}" />
+                        CommandParameter="{Binding SelectedOmni}"
+                        Style="{StaticResource SelectedOmniNullStyle}" />
+                <Button DockPanel.Dock="Right"
+                        Padding="10,0,10,0"
+                        Content="Delete Omni"
+                        Style="{StaticResource SelectedOmniNullStyle}" />
             </DockPanel>
         </Grid>
+
+        <!--<Border Grid.Column="3" Grid.Row="1"
+                Margin="5"
+                BorderBrush="Gray"
+                BorderThickness="1">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+            
+            <TextBlock Margin="5"
+                Text="{Binding SelectedOmniDescription}"
+                FontFamily="Anonymous Pro, Courier New, Consolas"
+                FontSize="16"
+                TextWrapping="Wrap"/>
+            </ScrollViewer>
+        </Border>-->
+        
+        
     </Grid>
-</ncg:NCGLibView>
+</v:CenteredView>

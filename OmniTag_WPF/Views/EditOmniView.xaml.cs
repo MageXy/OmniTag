@@ -134,10 +134,7 @@ namespace OmniTagWPF.Views
                 var collection = ColorCode.Languages.All.Select(l => l.Name).OrderBy(n => n).ToList();
                 collection.Insert(0, "None");
                 var vm = InputViewFactory.ShowComboBoxInput("Please choose a code language:", "Code Language", collection);
-                //var vm = new ComboInputViewModel<string>(collection, "Please choose a code language:");
-                //var view = ViewFactory.CreateViewWithDataContext<ComboInputView>(vm);
-                //view.ShowDialog();
-
+                
                 var language = String.Empty;
                 if (vm.UserCancelled)
                     return;
