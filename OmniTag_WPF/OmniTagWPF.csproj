@@ -127,6 +127,7 @@
     <Compile Include="Utility\TagFilterMode.cs" />
     <Compile Include="ViewModels\Base\BaseViewModel.cs" />
     <Compile Include="ViewModels\Controls\ImageButtonViewModel.cs" />
+    <Compile Include="ViewModels\Controls\SearchViewModel.cs" />
     <Compile Include="ViewModels\Controls\TagViewerViewModel.cs" />
     <Compile Include="ViewModels\EditOmniViewModel.cs" />
     <Compile Include="ViewModels\EditTagViewModel.cs" />

@@ -1,7 +1,6 @@
 ﻿using NCGLib;
 using NCGLib.WPF.Templates.ViewModels;
 using OmniTag.Models;
-using OmniTagDB;
 using Image = OmniTagWPF.Images.Images;
 
 namespace OmniTagWPF.ViewModels.Controls
@@ -12,9 +11,7 @@ namespace OmniTagWPF.ViewModels.Controls
         {
             CurrentTag = tag;
         }
-
-        public OmniTagContext Context { get; set; }
-
+        
         private Tag _currentTag;
         public Tag CurrentTag
         {

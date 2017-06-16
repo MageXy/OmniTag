@@ -1,7 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
-using OmniTagWPF.ViewModels.Controls;
 
 namespace OmniTagWPF.Views.Controls
 {
@@ -17,7 +15,7 @@ namespace OmniTagWPF.Views.Controls
 
         #region Code-behind Methods
 
-        private void AddTagButton_OnClick(object sender, RoutedEventArgs e)
+        private void EnterTagButton_OnClick(object sender, RoutedEventArgs e)
         {
             TagListView.Focus();
         }

@@ -28,7 +28,7 @@
                                IsTextSearchEnabled="True"
                                IsTextSearchCaseSensitive="False"
                                IsSynchronizedWithCurrentItem="False" 
-                               ItemsSource="{Binding AllTags}"
+                               ItemsSource="{Binding AllValues}"
                                DisplayMemberPath="Name"
                                Text="{Binding FullSearchText, UpdateSourceTrigger=PropertyChanged}"
                                cntrl:SearchTextAttachedProperty.SearchText="{Binding SearchText, Mode=TwoWay}"
@@ -37,14 +37,14 @@
                 <Style TargetType="cntrl:KeylessComboBox">
                     <Setter Property="Margin" Value="0,0,5,2" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding ElementName=AddButton, Path=Visibility}" Value="Collapsed">
+                        <DataTrigger Binding="{Binding ElementName=EnterButton, Path=Visibility}" Value="Collapsed">
                             <Setter Property="Margin" Value="0,0,0,2" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </cntrl:KeylessComboBox.Style>
             <cntrl:KeylessComboBox.InputBindings>
-                <KeyBinding Key="Enter" Command="{Binding SearchTagCommand}" />
+                <KeyBinding Key="Enter" Command="{Binding SearchCommand}" />
             </cntrl:KeylessComboBox.InputBindings>
             <cntrl:KeylessComboBox.Resources>
                 <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">0</sys:Double>
@@ -54,26 +54,26 @@
         <TextBlock Grid.Column="0" Grid.Row="0"
                    Margin="5,0,5,0"
                    VerticalAlignment="Center"
-                   Text="Search Tags..."
+                   Text="{Binding HintText}"
                    Foreground="DarkGray"
                    IsHitTestVisible="False"
                    Visibility="{Binding ElementName=SearchBox, Path=Text.IsEmpty, Converter={StaticResource BoolVisibilityConverter}}">
         </TextBlock>
         
         <Button Grid.Column="1" Grid.Row="0"
-                x:Name="AddButton"
-                Margin="0,0,0,2"  Padding="5,2,5,2"
-                Content="Add"
-                IsEnabled="{Binding CanNewTagBeAdded}"
-                Visibility="{Binding Path=ShowAddButton, Converter={StaticResource BoolVisibilityConverter}}"
-                Command="{Binding AddTagCommand}"
-                Click="AddTagButton_OnClick"/>
+                x:Name="EnterButton"
+                Margin="0,0,0,2"  Padding="5,0,5,0"
+                Content="{Binding EnterText}"
+                IsEnabled="{Binding CanNewValueBeEntered}"
+                Visibility="{Binding Path=ShowEnterButton, Converter={StaticResource BoolVisibilityConverter}}"
+                Command="{Binding EnterCommand}"
+                Click="EnterTagButton_OnClick"/>
 
         <ListView Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
                   Name="TagListView" Margin="0,2,0,2"
                   VerticalAlignment="Stretch"
-                  ItemsSource="{Binding SearchedFilteredTags}"
-                  SelectedItem="{Binding SelectedTag}"
+                  ItemsSource="{Binding SearchedValues}"
+                  SelectedItem="{Binding SelectedValue}"
                   DisplayMemberPath="Name"
                   SelectionMode="Single"
                   SelectionChanged="TagListView_OnSelectionChanged"/>

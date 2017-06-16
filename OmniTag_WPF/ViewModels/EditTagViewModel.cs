@@ -197,16 +197,26 @@ namespace OmniTagWPF.ViewModels
             
             TagViewerDataContext = new TagViewerViewModel(AllTags)
             {
-                AddTagCommand = AddNewTagCommand,
-                SearchTagCommand = SearchTagCommand,
-                ShowAddButton = true,
-                ShowStatusFilter = true
+                EnterCommand = AddNewTagCommand,
+                SearchCommand = SearchTagCommand,
+                EnterText = "Add New",
+                ShowEnterButton = true,
+                ShowStatusFilter = true,
+                EnableEnterFunc = searchText =>
+                {
+                    if (String.IsNullOrWhiteSpace(searchText))
+                        return false;
+                    if (TagViewerDataContext.AllValues.Any(t => String.Equals(t.Name, searchText, StringComparison.InvariantCultureIgnoreCase)))
+                        return false;
+                    return true;
+                }
             };
+
             TagViewerDataContext.PropertyChanged += (sender, args) =>
             {
-                if (args.PropertyName == nameof(TagViewerDataContext.SelectedTag))
+                if (args.PropertyName == nameof(TagViewerDataContext.SelectedValue))
                 {
-                    SelectedTag = TagViewerDataContext.SelectedTag;
+                    SelectedTag = TagViewerDataContext.SelectedValue;
                 }
             };
         }

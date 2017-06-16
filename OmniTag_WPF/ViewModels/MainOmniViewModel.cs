@@ -64,8 +64,11 @@ namespace OmniTagWPF.ViewModels
                 SelectedOmni = AvailableOmnis.First();
 
             var tags = new ObservableCollection<Tag>(Context.Tags.Where(t => t.DateDeleted == null).OrderBy(t => t.Name).ToList());
-            TagSearchDataContext = new TagViewerViewModel(tags);
-            TagSearchDataContext.ShowAddButton = false;
+            TagSearchDataContext = new TagViewerViewModel(tags)
+            {
+                ShowEnterButton = true,
+                EnterText = "Add"
+            };
         }
 
         private void EditOmni(object omniToEdit)

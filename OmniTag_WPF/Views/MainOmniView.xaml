@@ -25,7 +25,7 @@
     </v:CenteredView.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" MaxWidth="200" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="3*" />
         </Grid.ColumnDefinitions>
@@ -90,10 +90,11 @@
                            Text="Search Omnis..." />
                 <TextBox Grid.Row="0"
                          Margin="0,0,0,2"
+                         VerticalContentAlignment="Center"
                          x:Name="OmniSearchBox"
                          Background="Transparent"/>
                 <Button Grid.Row="0"
-                        Margin="0,4,4,4"
+                        Margin="0,0,0,2" Width="20"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         Background="Transparent"
