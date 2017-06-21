@@ -5,7 +5,7 @@
                 xmlns:vm="clr-namespace:OmniTagWPF.ViewModels"
                 xmlns:cnvrt="clr-namespace:NCGLib.WPF.Converters;assembly=NCGLib.WPF"
                 xmlns:cntrl="clr-namespace:OmniTagWPF.Views.Controls"
-                Title="OmniTag" Height="700" Width="900">
+                Title="OmniTag" Height="700" Width="1200">
     <v:CenteredView.DataContext>
         <vm:MainOmniViewModel />
     </v:CenteredView.DataContext>
@@ -56,9 +56,38 @@
             </MenuItem>
         </Menu>
 
-        <cntrl:TagViewer Grid.Column="0" Grid.Row="1"
-                         Margin="5"
-                         DataContext="{Binding TagSearchDataContext}"/>
+        <Grid Grid.Column="0" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="120" />
+            </Grid.RowDefinitions>
+            <cntrl:TagSearchListView Grid.Column="0" Grid.Row="0"
+                             Margin="5"
+                             DataContext="{Binding TagSearchDataContext}"/>
+
+            <ScrollViewer Grid.Column="0" Grid.Row="1"
+                          VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding TagButtons, Mode=TwoWay}"
+                          KeyboardNavigation.IsTabStop="False">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel ItemHeight="40"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <cntrl:ImageButton ImageSource="{Binding ButtonImage}"
+                                               Content="{Binding ButtonLabel}"
+                                               Margin="5,2,5,2"
+                                               MaxWidth="150"
+                                               KeyboardNavigation.IsTabStop="False"
+                                               Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ItemsControl}, Path=DataContext.RemoveTagCommand}"
+                                               CommandParameter="{Binding}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
         
         <Separator Grid.Column="1" Grid.Row="1"
                    Margin="0,5,0,5"
@@ -71,11 +100,14 @@
                 <RowDefinition Height="35" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" MaxWidth="350" />
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="0" Grid.Row="0"
+            <cntrl:SearchListView Grid.Column="0" Grid.Row="0"
+                              DataContext="{Binding OmniSearchDataContext}" />
+            
+            <!--<Grid Grid.Column="0" Grid.Row="0"
                   Margin="0,0,2,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="25" />
@@ -110,7 +142,7 @@
                       SelectedItem="{Binding SelectedOmni}"
                       DisplayMemberPath="Summary"
                       SelectionMode="Single" />
-            </Grid>
+            </Grid>-->
 
             <WebBrowser Grid.Column="1" Grid.Row="0"
                         Margin="2,0,0,0"

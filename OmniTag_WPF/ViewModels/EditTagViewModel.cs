@@ -35,11 +35,11 @@ namespace OmniTagWPF.ViewModels
             set { PropNotify.SetProperty(ref _selectedTag, value, OnSelectedTagChanging, OnSelectedTagChanged); }
         }
 
-        private TagViewerViewModel _tagViewerDataContext;
-        public TagViewerViewModel TagViewerDataContext
+        private TagSearchViewModel _tagSearchDataContext;
+        public TagSearchViewModel TagSearchDataContext
         {
-            get { return _tagViewerDataContext; }
-            set { PropNotify.SetProperty(ref _tagViewerDataContext, value); }
+            get { return _tagSearchDataContext; }
+            set { PropNotify.SetProperty(ref _tagSearchDataContext, value); }
         }
 
         private bool _changesMade;
@@ -195,28 +195,30 @@ namespace OmniTagWPF.ViewModels
             AllTags = new ObservableCollection<Tag>(Context.Tags.Where(t => t.DateDeleted == null).OrderBy(t => t.Name).ToList());
             SelectedTag = null;
             
-            TagViewerDataContext = new TagViewerViewModel(AllTags)
+            TagSearchDataContext = new TagSearchViewModel(AllTags)
             {
                 EnterCommand = AddNewTagCommand,
                 SearchCommand = SearchTagCommand,
                 EnterText = "Add New",
+                DisplayMember = nameof(Tag.Name),
                 ShowEnterButton = true,
                 ShowStatusFilter = true,
                 EnableEnterFunc = searchText =>
                 {
                     if (String.IsNullOrWhiteSpace(searchText))
                         return false;
-                    if (TagViewerDataContext.AllValues.Any(t => String.Equals(t.Name, searchText, StringComparison.InvariantCultureIgnoreCase)))
+                    if (TagSearchDataContext.AllValues.Any(t => String.Equals(t.Name, searchText, StringComparison.InvariantCultureIgnoreCase)))
                         return false;
                     return true;
-                }
+                },
+                Filter = s => s.Name.ToUpper().Contains(TagSearchDataContext.SearchText.ToUpper())
             };
 
-            TagViewerDataContext.PropertyChanged += (sender, args) =>
+            TagSearchDataContext.PropertyChanged += (sender, args) =>
             {
-                if (args.PropertyName == nameof(TagViewerDataContext.SelectedValue))
+                if (args.PropertyName == nameof(TagSearchDataContext.SelectedValue))
                 {
-                    SelectedTag = TagViewerDataContext.SelectedValue;
+                    SelectedTag = TagSearchDataContext.SelectedValue;
                 }
             };
         }
@@ -230,22 +232,22 @@ namespace OmniTagWPF.ViewModels
 
         private void SearchTag()
         {
-            if (TagViewerDataContext.FullSearchText.IsEmpty())
+            if (TagSearchDataContext.FullSearchText.IsEmpty())
                 return;
 
-            if (!AllTags.Any(t => t.Name.EqualsIgnoreCase(TagViewerDataContext.FullSearchText)))
+            if (!AllTags.Any(t => t.Name.EqualsIgnoreCase(TagSearchDataContext.FullSearchText)))
                 AddNewTag();
             else
             {
-                SelectedTag = AllTags.Single(t => t.Name == TagViewerDataContext.FullSearchText);
-                TagViewerDataContext.FullSearchText = String.Empty;
+                SelectedTag = AllTags.Single(t => t.Name == TagSearchDataContext.FullSearchText);
+                TagSearchDataContext.FullSearchText = String.Empty;
             }
         }
 
         #region Add/Delete/Save Tag Methods
         private void AddNewTag()
         {
-            if (TagViewerDataContext.FullSearchText.Length > 20)
+            if (TagSearchDataContext.FullSearchText.Length > 20)
             {
                 MessageBox.Show("Tag name cannot be longer than 20 characters (including space).", "Error", MessageBoxButton.OK,
                     MessageBoxImage.Error, MessageBoxResult.OK);
@@ -256,13 +258,13 @@ namespace OmniTagWPF.ViewModels
                 DateCreated = DateTime.Now,
                 DateDeleted = null,
                 LastModifiedDate = DateTime.Now,
-                Name = TagViewerDataContext.FullSearchText,
+                Name = TagSearchDataContext.FullSearchText,
                 IsVerified = true,
                 ManuallyVerified = true
             };
             AllTags.Add(newTag);
             AddedTags.Add(newTag);
-            TagViewerDataContext.FullSearchText = String.Empty;
+            TagSearchDataContext.FullSearchText = String.Empty;
             SelectedTag = newTag;
             ChangesMade = true;
         }

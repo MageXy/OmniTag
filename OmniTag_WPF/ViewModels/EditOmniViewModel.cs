@@ -120,8 +120,8 @@ namespace OmniTagWPF.ViewModels
             set { PropNotify.SetProperty(ref _tagSearchText, value); }
         }
 
-        private ObservableCollection<ImageButtonViewModel> _imageButtons;
-        public ObservableCollection<ImageButtonViewModel> ImageButtons
+        private ObservableCollection<TagButtonViewModel> _imageButtons;
+        public ObservableCollection<TagButtonViewModel> ImageButtons
         {
             get { return _imageButtons; }
             set { PropNotify.SetProperty(ref _imageButtons, value); }
@@ -168,8 +168,8 @@ namespace OmniTagWPF.ViewModels
         {
             OmniTags = CurrentOmni.Tags.ToList();
 
-            var ibvmList = OmniTags.Select(t => new ImageButtonViewModel(t));
-            ImageButtons = new ObservableCollection<ImageButtonViewModel>(ibvmList);
+            var ibvmList = OmniTags.Select(t => new TagButtonViewModel(t));
+            ImageButtons = new ObservableCollection<TagButtonViewModel>(ibvmList);
 
             string avtStr = Context.Settings.SingleOrDefault(s => s.Name == Setting.AutoTagVerificationThreshold)?.Value;
 
@@ -316,7 +316,7 @@ namespace OmniTagWPF.ViewModels
                 AddedTags.Add(tag);
             }
             tag.DateDeleted = null; // undelete the tag (if it was in the DB but deleted)
-            var buttonVm = new ImageButtonViewModel(tag);
+            var buttonVm = new TagButtonViewModel(tag);
             OmniTags.Add(tag);
             ImageButtons.Add(buttonVm);
             TagSearchText = "";
@@ -325,7 +325,7 @@ namespace OmniTagWPF.ViewModels
 
         private void DeleteTag(object obj)
         {
-            var ibvm = obj as ImageButtonViewModel;
+            var ibvm = obj as TagButtonViewModel;
             if (ibvm == null)
                 return;
 

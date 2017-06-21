@@ -5,9 +5,9 @@ using Image = OmniTagWPF.Images.Images;
 
 namespace OmniTagWPF.ViewModels.Controls
 {
-    public class ImageButtonViewModel : SimpleBaseViewModel
+    public class TagButtonViewModel : SimpleBaseViewModel
     {
-        public ImageButtonViewModel(Tag tag)
+        public TagButtonViewModel(Tag tag)
         {
             CurrentTag = tag;
         }

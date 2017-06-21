@@ -1,0 +1,69 @@
+﻿<cntrl:SearchList x:Class="OmniTagWPF.Views.Controls.SearchListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:cntrl="clr-namespace:OmniTagWPF.Views.Controls"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:cnvrt="clr-namespace:NCGLib.WPF.Converters;assembly=NCGLib.WPF">
+    <cntrl:SearchList.Resources>
+        <cnvrt:EnumToBooleanConverter x:Key="enumBoolConverter" />
+        <cnvrt:BoolToVisibilityConverter x:Key="BoolVisibilityConverter"
+                                         TrueValue="Visible" FalseValue="Collapsed"/>
+    </cntrl:SearchList.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" MaxHeight="35" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" MaxHeight="35" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <cntrl:KeylessComboBox Grid.Column="0" Grid.Row="0"
+                               x:Name="SearchBox"
+                               Margin="0,0,0,2" VerticalContentAlignment="Center"
+                               IsEditable="True"
+                               IsTextSearchEnabled="True"
+                               IsTextSearchCaseSensitive="False"
+                               IsSynchronizedWithCurrentItem="False" 
+                               ItemsSource="{Binding AllValues}"
+                               DisplayMemberPath="{Binding DisplayMember}"
+                               Text="{Binding FullSearchText, UpdateSourceTrigger=PropertyChanged}"
+                               cntrl:SearchTextAttachedProperty.SearchText="{Binding SearchText, Mode=TwoWay}"
+                               TextBoxBase.TextChanged="OnSearchTextChanged">
+            <cntrl:KeylessComboBox.Resources>
+                <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">0</sys:Double>
+            </cntrl:KeylessComboBox.Resources>
+        </cntrl:KeylessComboBox>
+
+        <TextBlock Grid.Column="0" Grid.Row="0"
+                   Margin="5,0,0,2"
+                   VerticalAlignment="Center"
+                   Text="{Binding HintText}"
+                   Foreground="DarkGray"
+                   IsHitTestVisible="False"
+                   Visibility="{Binding ElementName=SearchBox, Path=Text.IsEmpty, Converter={StaticResource BoolVisibilityConverter}}">
+        </TextBlock>
+
+        <Button Grid.Column="0" Grid.Row="0"
+                Margin="0,0,0,2" Width="20"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Click="OnClearSearchText">
+            <TextBlock Text="X" FontSize="16" />
+        </Button>
+
+        <ListView Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
+                  Name="SearchView" Margin="0,2,0,0"
+                  VerticalAlignment="Stretch"
+                  ItemsSource="{Binding SearchedValues}"
+                  SelectedItem="{Binding SelectedValue}"
+                  DisplayMemberPath="{Binding DisplayMember}"
+                  SelectionMode="Single"
+                  SelectionChanged="OnSelectionChanged"/>
+    </Grid>
+</cntrl:SearchList>

@@ -31,101 +31,10 @@
         </Grid.RowDefinitions>
 
         <!-- Dynamic List View -->
-        <cntrl:TagViewer Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+        <cntrl:TagSearchListView Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
                          Margin="0,0,5,0"
-                         DataContext="{Binding TagViewerDataContext}"/>
-        <!--<Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
-              Margin="0,0,5,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" MaxHeight="35" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" MaxHeight="35" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            --><!--<TextBox Grid.Column="0" Grid.Row="0"
-                     Margin="0,0,5,2"
-                     Text="{Binding FullSearchText}"
-                     TextChanged="OnSearchTextChanged"
-                     bhvr:AutoCompleteBehavior.AutoCompleteItemsSource="{Binding SearchedFilteredTags, Converter={StaticResource TagConverter}}"
-                     bhvr:AutoCompleteBehavior.AutoCompleteStringComparison="CurrentCultureIgnoreCase" />--><!--
-            <cntrl:AutoCompleteBox Grid.Column="0" Grid.Row="0"
-                      Margin="0,0,5,2"
-                      IsEditable="True"
-                      IsTextSearchEnabled="True"
-                      IsTextSearchCaseSensitive="False"
-                      IsSynchronizedWithCurrentItem="False" 
-                      ItemsSource="{Binding AllFilteredTags}"
-                      DisplayMemberPath="Name"
-                      Text="{Binding FullSearchText, UpdateSourceTrigger=PropertyChanged}"
-                      cntrl:SearchTextAttachedProperty.SearchText="{Binding SearchText, Mode=TwoWay}"
-                      TextBoxBase.TextChanged="OnSearchTextChanged">
-                <cntrl:AutoCompleteBox.InputBindings>
-                    <KeyBinding Key="Enter" Command="{Binding SearchTagCommand}" />
-                </cntrl:AutoCompleteBox.InputBindings>
-                <cntrl:AutoCompleteBox.Resources>
-                    <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">0</sys:Double>
-                </cntrl:AutoCompleteBox.Resources>
-            </cntrl:AutoCompleteBox>
-
-            --><!--TextBox Grid.Column="0" Grid.Row="0"
-                 Margin="0,0,5,2"
-                 HorizontalAlignment="Stretch"
-                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/--><!--
-
-            <Button Grid.Column="1" Grid.Row="0"
-                    Margin="0,0,0,2"  Padding="5,2,5,2"
-                    Content="Add"
-                    IsEnabled="{Binding CanNewTagBeAdded}"
-                    Command="{Binding AddNewTagCommand}"
-                    Click="AddTagButton_OnClick"/>
-
-            <ListView Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
-                      Name="TagListView" Margin="0,2,0,2"
-                      VerticalAlignment="Stretch"
-                      ItemsSource="{Binding SearchedFilteredTags}"
-                      SelectedItem="{Binding SelectedTag}"
-                      DisplayMemberPath="Name"
-                      SelectionMode="Single"
-                      SelectionChanged="TagListView_OnSelectionChanged"/>
-
-            <Grid Grid.Column="0" Row="3" Grid.ColumnSpan="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0"
-                           Text="Filter by status:" />
-                <StackPanel Grid.Column="1">
-                    <RadioButton GroupName="FilterGroup" 
-                                 Margin="5,2,5,1"
-                                 VerticalAlignment="Center"
-                                 IsChecked="{Binding Path=TagFilterMode, Converter={StaticResource enumBoolConverter}, ConverterParameter={x:Static u:TagFilterMode.All}}"
-                                 Content="All" />
-                    <RadioButton GroupName="FilterGroup"
-                                 Margin="5,1,5,1"
-                                 VerticalAlignment="Center"
-                                 IsChecked="{Binding Path=TagFilterMode, Converter={StaticResource enumBoolConverter}, ConverterParameter={x:Static u:TagFilterMode.Verified}}"
-                                 Content="Verified" />
-                    <RadioButton GroupName="FilterGroup"
-                                 Margin="5,1,5,1"
-                                 VerticalAlignment="Center"
-                                 IsChecked="{Binding Path=TagFilterMode, Converter={StaticResource enumBoolConverter}, ConverterParameter={x:Static u:TagFilterMode.AutoVerified}}"
-                                 Content="Auto-Verified" />
-                    <RadioButton GroupName="FilterGroup"
-                                 Margin="5,1,5,1"
-                                 VerticalAlignment="Center"
-                                 IsChecked="{Binding Path=TagFilterMode, Converter={StaticResource enumBoolConverter}, ConverterParameter={x:Static u:TagFilterMode.Unverified}}"
-                                 Content="Unverified" />
-                </StackPanel>
-            </Grid>
-        </Grid>-->
-
+                         DataContext="{Binding TagSearchDataContext}"/>
+        
         <Rectangle Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
                    VerticalAlignment="Stretch" Width="1" Stroke="Black"/>
 

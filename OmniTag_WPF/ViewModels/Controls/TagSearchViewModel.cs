@@ -9,18 +9,18 @@ using OmniTagWPF.Utility;
 
 namespace OmniTagWPF.ViewModels.Controls
 {
-    public class TagViewerViewModel : SearchViewModel<Tag>
+    public class TagSearchViewModel : SearchViewModel<Tag>
     {
-        public TagViewerViewModel(ObservableCollection<Tag> tagList) : base(tagList)
+        public TagSearchViewModel(ObservableCollection<Tag> tagList) : base(tagList)
         {
             TagFilterMode = TagFilterMode.All;
-            AllValues.CollectionChanged += (sender, args) => { ApplyFilter(); };
             HintText = "Search Tags...";
+            EnableEnterFunc = searchText => !String.IsNullOrWhiteSpace(searchText);
         }
 
         #region Properties
 
-        public List<Tag> FilteredTags { get; set; }  
+        public List<Tag> FilteredTags { get; set; }
 
         private TagFilterMode _tagFilterMode;
         public TagFilterMode TagFilterMode
@@ -29,12 +29,28 @@ namespace OmniTagWPF.ViewModels.Controls
             set { PropNotify.SetProperty(ref _tagFilterMode, value, x => ApplyFilter()); }
         }
 
+        private Func<string, bool> _enableEnterFunc;
+        public Func<string, bool> EnableEnterFunc
+        {
+            get { return _enableEnterFunc; }
+            set { PropNotify.SetProperty(ref _enableEnterFunc, value); }
+        }
+
+        [DependsOnProperty(nameof(FullSearchText))]
+        public virtual bool CanNewValueBeEntered
+        {
+            get { return EnableEnterFunc(FullSearchText); }
+        }
+
         #endregion
 
         #region Methods
 
         protected override void ApplyFilter()
         {
+            if (IsUpdatingDisplayText)
+                return;
+
             Func<Tag, bool> statusFilter;
             switch (TagFilterMode)
             {
@@ -54,7 +70,25 @@ namespace OmniTagWPF.ViewModels.Controls
             }
             FilteredTags = AllValues.Where(statusFilter).OrderBy(t => t.Name).ToList();
 
-            SearchedValues = FilteredTags.Where(t => t.Name.ToUpper().Contains(SearchText.ToUpper())).ToList();
+            SearchedValues = FilteredTags.Where(Filter).ToList();
+        }
+
+        #endregion
+
+        #region Commands
+
+        private ICommand _enterCommand;
+        public ICommand EnterCommand
+        {
+            get { return _enterCommand; }
+            set { PropNotify.SetProperty(ref _enterCommand, value); }
+        }
+
+        private ICommand _searchCommand;
+        public ICommand SearchCommand
+        {
+            get { return _searchCommand; }
+            set { PropNotify.SetProperty(ref _searchCommand, value); }
         }
 
         #endregion

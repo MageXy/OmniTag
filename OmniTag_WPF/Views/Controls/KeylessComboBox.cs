@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace OmniTagWPF.Views.Controls
 {
-    class KeylessComboBox : ComboBox
+    public class KeylessComboBox : ComboBox
     {
         public KeylessComboBox()
         {

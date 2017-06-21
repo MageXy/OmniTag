@@ -1,15 +1,15 @@
-﻿<UserControl x:Class="OmniTagWPF.Views.Controls.TagViewer"
+﻿<cntrl:SearchList x:Class="OmniTagWPF.Views.Controls.TagSearchListView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:u="clr-namespace:OmniTagWPF.Utility"
              xmlns:cntrl="clr-namespace:OmniTagWPF.Views.Controls"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:cnvrt="clr-namespace:NCGLib.WPF.Converters;assembly=NCGLib.WPF">
-    <UserControl.Resources>
+    <cntrl:SearchList.Resources>
         <cnvrt:EnumToBooleanConverter x:Key="enumBoolConverter" />
         <cnvrt:BoolToVisibilityConverter x:Key="BoolVisibilityConverter"
                                          TrueValue="Visible" FalseValue="Collapsed"/>
-    </UserControl.Resources>
+    </cntrl:SearchList.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -24,25 +24,16 @@
 
         <cntrl:KeylessComboBox Grid.Column="0" Grid.Row="0"
                                x:Name="SearchBox"
+                               Margin="0,0,0,2" VerticalContentAlignment="Center"
                                IsEditable="True"
                                IsTextSearchEnabled="True"
                                IsTextSearchCaseSensitive="False"
                                IsSynchronizedWithCurrentItem="False" 
                                ItemsSource="{Binding AllValues}"
-                               DisplayMemberPath="Name"
+                               DisplayMemberPath="{Binding DisplayMember}"
                                Text="{Binding FullSearchText, UpdateSourceTrigger=PropertyChanged}"
                                cntrl:SearchTextAttachedProperty.SearchText="{Binding SearchText, Mode=TwoWay}"
                                TextBoxBase.TextChanged="OnSearchTextChanged">
-            <cntrl:KeylessComboBox.Style>
-                <Style TargetType="cntrl:KeylessComboBox">
-                    <Setter Property="Margin" Value="0,0,5,2" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ElementName=EnterButton, Path=Visibility}" Value="Collapsed">
-                            <Setter Property="Margin" Value="0,0,0,2" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </cntrl:KeylessComboBox.Style>
             <cntrl:KeylessComboBox.InputBindings>
                 <KeyBinding Key="Enter" Command="{Binding SearchCommand}" />
             </cntrl:KeylessComboBox.InputBindings>
@@ -50,34 +41,43 @@
                 <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">0</sys:Double>
             </cntrl:KeylessComboBox.Resources>
         </cntrl:KeylessComboBox>
-        
+
         <TextBlock Grid.Column="0" Grid.Row="0"
-                   Margin="5,0,5,0"
+                   Margin="5,0,0,2"
                    VerticalAlignment="Center"
                    Text="{Binding HintText}"
                    Foreground="DarkGray"
                    IsHitTestVisible="False"
                    Visibility="{Binding ElementName=SearchBox, Path=Text.IsEmpty, Converter={StaticResource BoolVisibilityConverter}}">
         </TextBlock>
-        
+
+        <Button Grid.Column="0" Grid.Row="0"
+                Margin="0,0,0,2" Width="20"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Click="OnClearSearchText">
+            <TextBlock Text="X" FontSize="16" />
+        </Button>
+
         <Button Grid.Column="1" Grid.Row="0"
                 x:Name="EnterButton"
-                Margin="0,0,0,2"  Padding="5,0,5,0"
+                Margin="2,0,0,2"  Padding="5,0,5,0"
                 Content="{Binding EnterText}"
                 IsEnabled="{Binding CanNewValueBeEntered}"
                 Visibility="{Binding Path=ShowEnterButton, Converter={StaticResource BoolVisibilityConverter}}"
-                Command="{Binding EnterCommand}"
-                Click="EnterTagButton_OnClick"/>
-
+                Command="{Binding EnterCommand}" />
+        
         <ListView Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
-                  Name="TagListView" Margin="0,2,0,2"
+                  Name="SearchListView" Margin="0,2,0,0"
                   VerticalAlignment="Stretch"
                   ItemsSource="{Binding SearchedValues}"
                   SelectedItem="{Binding SelectedValue}"
-                  DisplayMemberPath="Name"
+                  DisplayMemberPath="{Binding DisplayMember}"
                   SelectionMode="Single"
-                  SelectionChanged="TagListView_OnSelectionChanged"/>
-
+                  SelectionChanged="OnSelectionChanged"/>
+        
         <Grid Grid.Column="0" Row="3" Grid.ColumnSpan="2"
               Visibility="{Binding Path=ShowStatusFilter, Converter={StaticResource BoolVisibilityConverter}}">
             <Grid.ColumnDefinitions>
@@ -111,4 +111,4 @@
             </StackPanel>
         </Grid>
     </Grid>
-</UserControl>
+</cntrl:SearchList>

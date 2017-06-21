@@ -98,6 +98,8 @@
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.105.2\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -126,9 +128,9 @@
     <Compile Include="Utility\OmniTextRenderer.cs" />
     <Compile Include="Utility\TagFilterMode.cs" />
     <Compile Include="ViewModels\Base\BaseViewModel.cs" />
-    <Compile Include="ViewModels\Controls\ImageButtonViewModel.cs" />
+    <Compile Include="ViewModels\Controls\TagButtonViewModel.cs" />
     <Compile Include="ViewModels\Controls\SearchViewModel.cs" />
-    <Compile Include="ViewModels\Controls\TagViewerViewModel.cs" />
+    <Compile Include="ViewModels\Controls\TagSearchViewModel.cs" />
     <Compile Include="ViewModels\EditOmniViewModel.cs" />
     <Compile Include="ViewModels\EditTagViewModel.cs" />
     <Compile Include="ViewModels\MainOmniViewModel.cs" />
@@ -142,9 +144,13 @@
     <Compile Include="Views\Controls\KeylessComboBox.cs" />
     <Compile Include="Views\Controls\ClickSelectTextBox.cs" />
     <Compile Include="Views\Controls\ImageButton.cs" />
+    <Compile Include="Views\Controls\SearchList.cs" />
     <Compile Include="Views\Controls\SearchTextAttachedProperty.cs" />
-    <Compile Include="Views\Controls\TagViewer.xaml.cs">
-      <DependentUpon>TagViewer.xaml</DependentUpon>
+    <Compile Include="Views\Controls\TagSearchListView.xaml.cs">
+      <DependentUpon>TagSearchListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\SearchListView.xaml.cs">
+      <DependentUpon>SearchListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\WebBrowserBehavior.cs" />
     <Compile Include="Views\EditTagView.xaml.cs">
@@ -209,7 +215,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Controls\TagViewer.xaml">
+    <Page Include="Views\Controls\TagSearchListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Controls\SearchListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

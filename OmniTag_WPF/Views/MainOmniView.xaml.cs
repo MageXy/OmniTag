@@ -28,10 +28,5 @@ namespace OmniTagWPF.Views
             Process.Start(proc);
             e.Cancel = true;
         }
-
-        private void OnClearOmniSearchTextClicked(object sender, RoutedEventArgs e)
-        {
-            OmniSearchBox.Text = String.Empty;
-        }
     }
 }

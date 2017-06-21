@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.Remoting.Channels;
 using System.Windows;
 using System.Windows.Input;
 using NCGLib;
+using NCGLib.Extensions;
 using NCGLib.WPF.Commands;
 using NCGLib.WPF.Utility;
 using OmniTag.Models;
@@ -19,18 +23,27 @@ namespace OmniTagWPF.ViewModels
     {
         #region Properties
 
-        private TagViewerViewModel _tagSearchDataContext;
-        public TagViewerViewModel TagSearchDataContext
+        private List<Omni> AllOmnis { get; set; } 
+
+        private TagSearchViewModel _tagSearchDataContext;
+        public TagSearchViewModel TagSearchDataContext
         {
             get { return _tagSearchDataContext; }
             set { PropNotify.SetProperty(ref _tagSearchDataContext, value); }
         }
 
-        private List<Omni> _availableOmnis;
-        public List<Omni> AvailableOmnis
+        private SearchViewModel<Omni> _omniSearchDataContext;
+        public SearchViewModel<Omni> OmniSearchDataContext
         {
-            get { return _availableOmnis; }
-            set { PropNotify.SetProperty(ref _availableOmnis, value); }
+            get { return _omniSearchDataContext; }
+            set { PropNotify.SetProperty(ref _omniSearchDataContext, value); }
+        }
+
+        private ObservableCollection<TagButtonViewModel> _tagButtons;
+        public ObservableCollection<TagButtonViewModel> TagButtons
+        {
+            get { return _tagButtons; }
+            set { PropNotify.SetProperty(ref _tagButtons, value); }
         }
 
         private Omni _selectedOmni;
@@ -59,16 +72,47 @@ namespace OmniTagWPF.ViewModels
 
         public override void LoadData()
         {
-            AvailableOmnis = Context.Omnis.Where(o => o.DateDeleted == null).OrderBy(o => o.Summary).ToList();
-            if (AvailableOmnis.Count > 0)
-                SelectedOmni = AvailableOmnis.First();
+            TagButtons = new ObservableCollection<TagButtonViewModel>();
+            TagButtons.CollectionChanged += OnTagButtonsChanged;
+
+            AllOmnis = Context.Omnis.Where(o => o.DateDeleted == null).OrderBy(o => o.Summary).ToList();
+            if (AllOmnis.Count > 0)
+                SelectedOmni = AllOmnis.First();
 
             var tags = new ObservableCollection<Tag>(Context.Tags.Where(t => t.DateDeleted == null).OrderBy(t => t.Name).ToList());
-            TagSearchDataContext = new TagViewerViewModel(tags)
+            TagSearchDataContext = new TagSearchViewModel(tags)
             {
                 ShowEnterButton = true,
-                EnterText = "Add"
+                EnterText = "Add",
+                DisplayMember = nameof(Tag.Name),
+                EnterCommand = AddTagCommand,
+                SearchCommand = AddTagCommand,
+                UpdateSearchTextWhenSelectionChanges = true,
+                EnableEnterFunc = s => TagSearchDataContext.FilteredTags.Any(t => t.Name == s),
+                Filter = t => t.Name.ToUpper().Contains(TagSearchDataContext.SearchText.ToUpper())
             };
+
+            OmniSearchDataContext = new SearchViewModel<Omni>(new ObservableCollection<Omni>(AllOmnis))
+            {
+                DisplayMember = nameof(Omni.Summary),
+                UpdateSearchTextWhenSelectionChanges = true,
+                Filter = o => o.Summary.ToUpper().Contains(OmniSearchDataContext.SearchText.ToUpper())
+            };
+            OmniSearchDataContext.PropertyChanged += (sender, e) =>
+            {
+                if (e.PropertyName == nameof(OmniSearchDataContext.SelectedValue))
+                    SelectedOmni = OmniSearchDataContext.SelectedValue;
+            };
+        }
+
+        private void OnTagButtonsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (TagButtons.Count == 0)
+                OmniSearchDataContext.AllValues = new ObservableCollection<Omni>(AllOmnis);
+            else
+                OmniSearchDataContext.AllValues = new ObservableCollection<Omni>(
+                    AllOmnis.Where(o => TagButtons.All(vm => o.Tags.Contains(vm.CurrentTag))).ToList()
+                );
         }
 
         private void EditOmni(object omniToEdit)
@@ -107,6 +151,32 @@ namespace OmniTagWPF.ViewModels
             view.Show();
         }
 
+        private void AddTag()
+        {
+            Tag tag = TagSearchDataContext.SelectedValue;
+            if (tag == null)
+            {
+                tag = TagSearchDataContext.FilteredTags.SingleOrDefault(t => t.Name == TagSearchDataContext.FullSearchText);
+                if (tag == null)
+                    return;
+            }
+
+            if (TagButtons.All(tb => tb.CurrentTag.Name != tag.Name))
+                TagButtons.Add(new TagButtonViewModel(tag));
+
+            TagSearchDataContext.FullSearchText = String.Empty;
+            TagSearchDataContext.SelectedValue = null;
+        }
+
+        private void RemoveTag(object param)
+        {
+            var tagVM = param as TagButtonViewModel;
+            if (tagVM == null)
+                return;
+
+            TagButtons.Remove(tagVM);
+        }
+
         #endregion
 
         #region Commands
@@ -127,6 +197,18 @@ namespace OmniTagWPF.ViewModels
         public ICommand EditSettingsCommand
         {
             get { return _editSettingsCommand ?? (_editSettingsCommand = new SimpleCommand(EditSettings)); }
+        }
+
+        private ICommand _addTagCommand;
+        public ICommand AddTagCommand
+        {
+            get { return _addTagCommand ?? (_addTagCommand = new SimpleCommand(AddTag)); }
+        }
+
+        private ICommand _removeTagCommand;
+        public ICommand RemoveTagCommand
+        {
+            get { return _removeTagCommand ?? (_removeTagCommand = new ParameterCommand(RemoveTag)); }
         }
 
         #endregion

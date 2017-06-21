@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Input;
-using NCGLib;
+using NCGLib.Extensions;
 using NCGLib.WPF.Templates.ViewModels;
 
 namespace OmniTagWPF.ViewModels.Controls
@@ -13,13 +12,16 @@ namespace OmniTagWPF.ViewModels.Controls
         public SearchViewModel(ObservableCollection<T> values)
         {
             SearchText = String.Empty;
+            Filter = x => true;
             AllValues = values;
             HintText = "Search...";
             ApplyFilterOnSearchTextChanged = true;
-            EnableEnterFunc = searchText => !String.IsNullOrWhiteSpace(searchText);
+            UpdateSearchTextWhenSelectionChanges = false;
         }
 
         #region Properties
+
+        protected bool IsUpdatingDisplayText { get; set; }
 
         private ObservableCollection<T> _allValues;
         public ObservableCollection<T> AllValues
@@ -28,11 +30,25 @@ namespace OmniTagWPF.ViewModels.Controls
             set { PropNotify.SetProperty(ref _allValues, value, x => ApplyFilter()); }
         }
 
+        private Func<T, bool> _filter;
+        public Func<T, bool> Filter
+        {
+            get { return _filter; }
+            set { PropNotify.SetProperty(ref _filter, value); }
+        }
+
         private string _hintText;
         public string HintText
         {
             get { return _hintText; }
             set { PropNotify.SetProperty(ref _hintText, value); }
+        }
+
+        private string _displayMember;
+        public string DisplayMember
+        {
+            get { return _displayMember; }
+            set { PropNotify.SetProperty(ref _displayMember, value); }
         }
 
         private string _enterText;
@@ -53,7 +69,7 @@ namespace OmniTagWPF.ViewModels.Controls
         public string FullSearchText
         {
             get { return _fullSearchText; }
-            set { PropNotify.SetProperty(ref _fullSearchText, value); }
+            set { PropNotify.SetProperty(ref _fullSearchText, value, true); }
         }
 
         private string _searchText;
@@ -74,7 +90,28 @@ namespace OmniTagWPF.ViewModels.Controls
         public T SelectedValue
         {
             get { return _selectedValue; }
-            set { PropNotify.SetProperty(ref _selectedValue, value); }
+            set
+            {
+                PropNotify.SetProperty(ref _selectedValue, value, (x) =>
+                {
+                    if (UpdateSearchTextWhenSelectionChanges)
+                    {
+                        if (SelectedValue == null)
+                            return;
+
+                        IsUpdatingDisplayText = true;
+                        if (DisplayMember.IsEmpty())
+                            FullSearchText = SelectedValue.ToString() ?? String.Empty;
+                        else
+                        {
+                            var prop = SelectedValue.GetType().GetProperty(DisplayMember);
+                            FullSearchText = prop.GetValue(SelectedValue).ToString();
+                        }
+                        
+                        IsUpdatingDisplayText = false;
+                    }
+                });
+            }
         }
 
         private bool _showEnterButton;
@@ -98,20 +135,11 @@ namespace OmniTagWPF.ViewModels.Controls
             set { PropNotify.SetProperty(ref _applyFilterOnSearchTextChanged, value); }
         }
 
-        private Func<string, bool> _enableEnterFunc;
-        public Func<string, bool> EnableEnterFunc
+        private bool _updateSearchTextWhenSelectionChanges;
+        public bool UpdateSearchTextWhenSelectionChanges
         {
-            get { return _enableEnterFunc; }
-            set { PropNotify.SetProperty(ref _enableEnterFunc, value); }
-        }
-
-        [DependsOnProperty(nameof(FullSearchText))]
-        public virtual bool CanNewValueBeEntered
-        {
-            get
-            {
-                return EnableEnterFunc(FullSearchText);
-            }
+            get { return _updateSearchTextWhenSelectionChanges; }
+            set { PropNotify.SetProperty(ref _updateSearchTextWhenSelectionChanges, value); }
         }
 
         #endregion
@@ -120,26 +148,17 @@ namespace OmniTagWPF.ViewModels.Controls
 
         protected virtual void ApplyFilter()
         {
-            SearchedValues = AllValues.Where(x => x.ToString().ToUpper().Contains(SearchText.ToUpper())).ToList();
+            if (!IsUpdatingDisplayText)
+                SearchedValues = AllValues.Where(Filter).ToList();
         }
+
+
 
         #endregion
 
         #region Commands
 
-        private ICommand _searchCommand;
-        public ICommand SearchCommand
-        {
-            get { return _searchCommand; }
-            set { PropNotify.SetProperty(ref _searchCommand, value); }
-        }
-
-        private ICommand _enterCommand;
-        public ICommand EnterCommand
-        {
-            get { return _enterCommand; }
-            set { PropNotify.SetProperty(ref _enterCommand, value); }
-        }
+        
 
         #endregion
     }
