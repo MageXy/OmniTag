@@ -83,10 +83,7 @@
                     </Style>
                 </TextBlock.Style>
             </TextBlock>
-            <!--<Label Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"
-                   Visibility="{Binding IsVerifiedButtonEnabled, Converter={StaticResource LabelVisibilityConverter}}"
-                   Content="This tag has not been verified!"
-                   Foreground="Red"/>-->
+            
             <Button Grid.Column="1" Grid.Row="2"
                     Margin="0,5,0,5"
                     Padding="5,0,5,0"

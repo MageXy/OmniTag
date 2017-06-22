@@ -22,6 +22,14 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+        <Style TargetType="FrameworkElement" x:Key="TagButtonsEmptyStyle">
+            <Setter Property="Visibility" Value="Visible" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding TagButtons.Count}" Value="0">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </v:CenteredView.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -58,35 +66,47 @@
 
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="120" />
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
+            
             <cntrl:TagSearchListView Grid.Column="0" Grid.Row="0"
                              Margin="5"
                              DataContext="{Binding TagSearchDataContext}"/>
 
-            <ScrollViewer Grid.Column="0" Grid.Row="1"
-                          VerticalScrollBarVisibility="Auto">
-                <ItemsControl ItemsSource="{Binding TagButtons, Mode=TwoWay}"
+            <Separator Grid.Column="0" Grid.Row="1"
+                       Margin="5,2,5,2"
+                       Style="{StaticResource TagButtonsEmptyStyle}" />
+            
+            <StackPanel Grid.Column="0" Grid.Row="2">
+                <TextBlock Margin="5"
+                           Text="Show only Omnis with these tags:"
+                           Style="{StaticResource TagButtonsEmptyStyle}" />
+                
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              Margin="0,0,2,5">
+                    <ItemsControl ItemsSource="{Binding TagButtons, Mode=TwoWay}"
                           KeyboardNavigation.IsTabStop="False">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel ItemHeight="40"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <cntrl:ImageButton ImageSource="{Binding ButtonImage}"
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel ItemHeight="40"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <cntrl:ImageButton ImageSource="{Binding ButtonImage}"
                                                Content="{Binding ButtonLabel}"
                                                Margin="5,2,5,2"
                                                MaxWidth="150"
                                                KeyboardNavigation.IsTabStop="False"
                                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ItemsControl}, Path=DataContext.RemoveTagCommand}"
                                                CommandParameter="{Binding}" />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </StackPanel>
         </Grid>
         
         <Separator Grid.Column="1" Grid.Row="1"
@@ -105,50 +125,51 @@
             </Grid.ColumnDefinitions>
 
             <cntrl:SearchListView Grid.Column="0" Grid.Row="0"
-                              DataContext="{Binding OmniSearchDataContext}" />
+                                  DataContext="{Binding OmniSearchDataContext}" />
             
-            <!--<Grid Grid.Column="0" Grid.Row="0"
-                  Margin="0,0,2,0">
+            <Grid Grid.Column="1" Grid.Row="0"
+                  Margin="2,0,0,0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="25" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0"
-                           Margin="5"
-                           VerticalAlignment="Center"
-                           Foreground="DarkGray"
-                           Visibility="{Binding ElementName=OmniSearchBox, Path=Text.IsEmpty, Converter={StaticResource BoolToVisibilityConverter}}"
-                           Text="Search Omnis..." />
-                <TextBox Grid.Row="0"
-                         Margin="0,0,0,2"
-                         VerticalContentAlignment="Center"
-                         x:Name="OmniSearchBox"
-                         Background="Transparent"/>
-                <Button Grid.Row="0"
-                        Margin="0,0,0,2" Width="20"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Background="Transparent"
-                        BorderBrush="Transparent"
-                        Click="OnClearOmniSearchTextClicked">
-                    <TextBlock Text="X" FontSize="16" />
-                </Button>
+                <StackPanel Grid.Row="0">
+                    <TextBlock Margin="5,0,5,0"
+                               Text="{Binding SelectedOmni.Summary}"
+                               FontWeight="Bold"
+                               FontSize="16" />
+                    
+                    <ItemsControl ItemsSource="{Binding SelectedOmni.Tags, Mode=TwoWay}"
+                                  KeyboardNavigation.IsTabStop="False">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel ItemHeight="30"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="LightGray"
+                                    Background="GhostWhite"
+                                    BorderThickness="1"
+                                    Margin="5,2,5,2"
+                                    MaxWidth="150"
+                                    KeyboardNavigation.IsTabStop="False" >
+                                    <TextBlock Margin="5,0,5,0"
+                                           VerticalAlignment="Center"
+                                           Text="{Binding Name}" />
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+                
 
-                <ListView Grid.Column="0" Grid.Row="1"
-                          Margin="0,2,0,0"
-                      VerticalAlignment="Stretch"
-                      ItemsSource="{Binding AvailableOmnis}"
-                      SelectedItem="{Binding SelectedOmni}"
-                      DisplayMemberPath="Summary"
-                      SelectionMode="Single" />
-            </Grid>-->
-
-            <WebBrowser Grid.Column="1" Grid.Row="0"
-                        Margin="2,0,0,0"
-                        cntrl:WebBrowserBehavior.Html="{Binding RenderedMarkdownHtml}"
-                        Navigating="OnWebBrowserLinkClicked" />
-
+                <WebBrowser Grid.Row="1"
+                            cntrl:WebBrowserBehavior.Html="{Binding RenderedMarkdownHtml}"
+                            Navigating="OnWebBrowserLinkClicked" />
+            </Grid>
+            
             <DockPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
                        Margin="0,5,0,5"
                        LastChildFill="False">
