@@ -15,6 +15,13 @@ namespace OmniTagWPF.Views
             InitializeComponent();
         }
 
+        public bool ShowTagSearch { get; set; }
+
+        private void OnShowTagSearchClicked(object sender, RoutedEventArgs e)
+        {
+            ShowTagSearch = !ShowTagSearch;
+        }
+
         private void OnWebBrowserLinkClicked(object sender, NavigatingCancelEventArgs e)
         {
             if (e.Uri == null) // is navigating to string HTML

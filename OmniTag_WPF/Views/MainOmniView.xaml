@@ -5,7 +5,8 @@
                 xmlns:vm="clr-namespace:OmniTagWPF.ViewModels"
                 xmlns:cnvrt="clr-namespace:NCGLib.WPF.Converters;assembly=NCGLib.WPF"
                 xmlns:cntrl="clr-namespace:OmniTagWPF.Views.Controls"
-                Title="OmniTag" Height="700" Width="1200">
+                Title="OmniTag" Height="700" Width="1200"
+                x:Name="MainOmniWindow">
     <v:CenteredView.DataContext>
         <vm:MainOmniViewModel />
     </v:CenteredView.DataContext>
@@ -33,7 +34,18 @@
     </v:CenteredView.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" MaxWidth="200" />
+            <ColumnDefinition MaxWidth="200">
+                <ColumnDefinition.Style>
+                    <Style TargetType="ColumnDefinition">
+                        <Setter Property="Width" Value="*" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ShowTagSearch}" Value="False">
+                                <Setter Property="Width" Value="0" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ColumnDefinition.Style>
+            </ColumnDefinition>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="3*" />
         </Grid.ColumnDefinitions>
@@ -44,6 +56,10 @@
 
         <Menu Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3">
             <MenuItem Header="_File">
+                <MenuItem Header="Show Tag Filter" 
+                          IsCheckable="True"
+                          IsChecked="{Binding ShowTagSearch}" />
+                <Separator />
                 <MenuItem Header="Settings" Command="{Binding EditSettingsCommand}" />
                 <MenuItem Header="Quit" Command="{Binding CloseViewCommand}" />
             </MenuItem>
@@ -173,39 +189,32 @@
             <DockPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
                        Margin="0,5,0,5"
                        LastChildFill="False">
-                <Button DockPanel.Dock="Left"
-                        Padding="10,0,10,0"
-                        Content="New Omni"
-                        Command="{Binding EditOmniCommand}"
-                        CommandParameter="{x:Null}"/>
                 <Button DockPanel.Dock="Right"
-                        Margin="5,0,0,0"
-                        Padding="10,0,10,0"
+                        Padding="20,0,20,0"
                         Content="Edit Omni"
                         Command="{Binding EditOmniCommand}"
                         CommandParameter="{Binding SelectedOmni}"
                         Style="{StaticResource SelectedOmniNullStyle}" />
-                <Button DockPanel.Dock="Right"
+                
+                <Button DockPanel.Dock="Left"
                         Padding="10,0,10,0"
-                        Content="Delete Omni"
-                        Style="{StaticResource SelectedOmniNullStyle}" />
+                        Command="{Binding ToggleTagSearchCommand}">
+                    <Button.Content>
+                        <TextBlock>
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Text" Value=">> Show Tag Search" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ShowTagSearch}" Value="True">
+                                            <Setter Property="Text" Value="&lt;&lt; Hide Tag Search" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Button.Content>
+                </Button>
             </DockPanel>
         </Grid>
-
-        <!--<Border Grid.Column="3" Grid.Row="1"
-                Margin="5"
-                BorderBrush="Gray"
-                BorderThickness="1">
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-            
-            <TextBlock Margin="5"
-                Text="{Binding SelectedOmniDescription}"
-                FontFamily="Anonymous Pro, Courier New, Consolas"
-                FontSize="16"
-                TextWrapping="Wrap"/>
-            </ScrollViewer>
-        </Border>-->
-
-
     </Grid>
 </v:CenteredView>

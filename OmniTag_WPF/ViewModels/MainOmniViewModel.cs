@@ -39,6 +39,13 @@ namespace OmniTagWPF.ViewModels
             set { PropNotify.SetProperty(ref _omniSearchDataContext, value); }
         }
 
+        private bool _showTagSearch;
+        public bool ShowTagSearch
+        {
+            get { return _showTagSearch; }
+            set { PropNotify.SetProperty(ref _showTagSearch, value); }
+        }
+
         private ObservableCollection<TagButtonViewModel> _tagButtons;
         public ObservableCollection<TagButtonViewModel> TagButtons
         {
@@ -72,6 +79,11 @@ namespace OmniTagWPF.ViewModels
 
         public override void LoadData()
         {
+            var setting = Context.GetSettingOrDefaultAndSave(Setting.ShowTagSearchOnStartup, "false");
+
+            bool parse;
+            ShowTagSearch = Boolean.TryParse(setting.Value, out parse) && parse;
+
             TagButtons = new ObservableCollection<TagButtonViewModel>();
             TagButtons.CollectionChanged += OnTagButtonsChanged;
 
@@ -207,6 +219,12 @@ namespace OmniTagWPF.ViewModels
         public ICommand RemoveTagCommand
         {
             get { return _removeTagCommand ?? (_removeTagCommand = new ParameterCommand(RemoveTag)); }
+        }
+
+        private ICommand _toggleTagSearchCommand;
+        public ICommand ToggleTagSearchCommand
+        {
+            get { return _toggleTagSearchCommand ?? (_toggleTagSearchCommand = new SimpleCommand(() => ShowTagSearch = !ShowTagSearch)); }
         }
 
         #endregion

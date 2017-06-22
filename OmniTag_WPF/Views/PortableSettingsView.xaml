@@ -36,14 +36,30 @@
                 </DockPanel>
             </GroupBox>
 
-            <GroupBox Margin="5,0,5,0"
-                      Header="Automatic Tag Verification Threshold"
-                      ToolTip="This is the number of Omnis that must be associated with a tag &#10;before the tag counts as auto-verified.">
+            <GroupBox Margin="5"
+                      Header="App Settings">
                 
-                <TextBox Margin="5"
-                         HorizontalAlignment="Left"
-                         MinWidth="50"
-                         Text="{Binding TagThreshold}" />
+                <StackPanel>
+                    <CheckBox VerticalContentAlignment="Center"
+                              Margin="5"
+                              IsChecked="{Binding ShowTagFilter}"
+                              ToolTip="If true, the tag filter will be shown automatically when OmniTag starts up.">
+                        <TextBlock Text="Show tag filter on startup"
+                                   VerticalAlignment="Center" />
+                    </CheckBox>
+                    <DockPanel LastChildFill="False"
+                               ToolTip="This is the number of Omnis that must be associated with a tag &#10;before the tag counts as auto-verified.">
+                        <TextBlock DockPanel.Dock="Left"
+                                   Text="Automatic Tag Verification Threshold"
+                                   Margin="5"
+                                   VerticalAlignment="Center" />
+                        <TextBox DockPanel.Dock="Right"
+                                 Margin="5"
+                                 HorizontalAlignment="Left"
+                                 MinWidth="50"
+                                 Text="{Binding TagThreshold}" />
+                    </DockPanel>
+                </StackPanel>
             </GroupBox>
         </StackPanel>
         

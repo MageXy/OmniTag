@@ -5,6 +5,7 @@ namespace OmniTag.Models
     public class Setting : BaseModelEntity
     {
         public const string AutoTagVerificationThreshold = "Auto_Tag_Verification_Threshold";
+        public const string ShowTagSearchOnStartup = "Show_Tag_Search_On_Startup";
 
         private string _name;
         public string Name

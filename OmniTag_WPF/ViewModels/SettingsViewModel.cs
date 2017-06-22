@@ -10,6 +10,7 @@ using NCGLib.Extensions;
 using NCGLib.WPF.Commands;
 using OmniTag.Models;
 using OmniTagWPF.Properties;
+using OmniTagWPF.Utility;
 
 namespace OmniTagWPF.ViewModels
 {
@@ -43,8 +44,15 @@ namespace OmniTagWPF.ViewModels
             set { PropNotify.SetProperty(ref _tagThreshold, value); }
         }
 
+        private bool _showTagFilter;
+        public bool ShowTagFilter
+        {
+            get { return _showTagFilter; }
+            set { PropNotify.SetProperty(ref _showTagFilter, value); }
+        }
         
         private Setting AutoTagVerifyThresholdSetting { get; set; }
+        private Setting ShowTagFilterSetting { get; set; }
 
 
         #endregion
@@ -75,20 +83,11 @@ namespace OmniTagWPF.ViewModels
             }
             _originalDataSource = DataSource;
 
-            AutoTagVerifyThresholdSetting = Context.Settings.SingleOrDefault(s => s.Name == Setting.AutoTagVerificationThreshold);
-            if (AutoTagVerifyThresholdSetting == null)
-            {
-                AutoTagVerifyThresholdSetting = new Setting
-                {
-                    Name = Setting.AutoTagVerificationThreshold,
-                    Value = "5",
-                    DateCreated = DateTime.Now,
-                    LastModifiedDate = DateTime.Now
-                };
-                Context.Settings.Add(AutoTagVerifyThresholdSetting);
-                Context.SaveChanges();
-            }
+            AutoTagVerifyThresholdSetting = Context.GetSettingOrDefaultAndSave(Setting.AutoTagVerificationThreshold, "5");
             TagThreshold = AutoTagVerifyThresholdSetting.Value;
+
+            ShowTagFilterSetting = Context.GetSettingOrDefaultAndSave(Setting.ShowTagSearchOnStartup, "false");
+            ShowTagFilter = Boolean.Parse(ShowTagFilterSetting.Value);
 
             IsLoading = false;
         }
@@ -117,6 +116,7 @@ namespace OmniTagWPF.ViewModels
 
             var success = SaveConnectionString();
             success = success && SaveTagThreshold();
+            success = success && SaveShowTagFilter();
 
             if (!success)
                 return;
@@ -170,6 +170,12 @@ namespace OmniTagWPF.ViewModels
                         tag.IsVerified = false;
                 }
             }
+            return true;
+        }
+
+        private bool SaveShowTagFilter()
+        {
+            ShowTagFilterSetting.Value = ShowTagFilter.ToString();
             return true;
         }
 

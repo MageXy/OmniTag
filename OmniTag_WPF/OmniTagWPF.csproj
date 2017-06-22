@@ -126,6 +126,7 @@
     <Compile Include="Utility\GridDimensions.cs" />
     <Compile Include="Utility\OmniDataChangedEventArgs.cs" />
     <Compile Include="Utility\OmniTextRenderer.cs" />
+    <Compile Include="Utility\SettingExtensions.cs" />
     <Compile Include="Utility\TagFilterMode.cs" />
     <Compile Include="ViewModels\Base\BaseViewModel.cs" />
     <Compile Include="ViewModels\Controls\TagButtonViewModel.cs" />
