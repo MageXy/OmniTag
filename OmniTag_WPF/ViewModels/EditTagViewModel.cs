@@ -271,8 +271,8 @@ namespace OmniTagWPF.ViewModels
 
         private void DeleteSelectedTag()
         {
-            var result = MessageBox.Show(String.Format("Are you sure you want to delete the [{0}] tag?", SelectedTag.Name),
-                                         String.Format("Delete Tag [{0}]", SelectedTag.Name),
+            var result = MessageBox.Show($"Are you sure you want to delete the [{SelectedTag.Name}] tag? It will be disassociated from any Omnis.",
+                                         $"Delete Tag [{SelectedTag.Name}]",
                                          MessageBoxButton.YesNo);
             if (result == MessageBoxResult.No)
                 return;
@@ -281,6 +281,7 @@ namespace OmniTagWPF.ViewModels
                 DeletedTags.Add(SelectedTag);
             SelectedTag.DateDeleted = DateTime.Now;
             AllTags.Remove(SelectedTag);
+
             ChangesMade = true;
         }
 
@@ -310,7 +311,10 @@ namespace OmniTagWPF.ViewModels
             foreach (var tag in AddedTags)
                 tag.LastModifiedDate = DateTime.Now;
             foreach (var tag in DeletedTags)
+            {
                 tag.LastModifiedDate = DateTime.Now;
+                tag.Omnis.Clear();
+            }
 
             // "Hard save" all changes made to all tags into the database. 
             Context.Tags.AddRange(AddedTags);
