@@ -1,4 +1,7 @@
-﻿namespace OmniTagWPF.Views
+﻿using System.Windows.Input;
+using NCGLib.Extensions;
+
+namespace OmniTagWPF.Views
 {
     /// <summary>
     /// Interaction logic for SettingsView.xaml
@@ -8,6 +11,12 @@
         public PortableSettingsView()
         {
             InitializeComponent();
+        }
+
+        private void ValidateText(object sender, TextCompositionEventArgs e)
+        {
+            if (!e.Text.IsNumeric())
+                e.Handled = true;
         }
     }
 }

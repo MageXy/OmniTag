@@ -1,17 +1,27 @@
 ﻿using System;
 using OmniTagWPF.ViewModels.Base;
 using System.Configuration;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Markup;
 using Microsoft.Win32;
+using NCGLib.Extensions;
 using NCGLib.WPF.Commands;
+using OmniTag.Models;
+using OmniTagWPF.Properties;
 
 namespace OmniTagWPF.ViewModels
 {
     public class SettingsViewModel : BaseViewModel
     {
         #region Properties
+
+        private bool _dataSourceChanged;
+        private string _originalDataSource;
+
+        public bool IsPortable { get { return Context.IsPortable; } }
+        
         private string _dataSource;
         public string DataSource
         {
@@ -26,9 +36,17 @@ namespace OmniTagWPF.ViewModels
             }
         }
 
-        private bool _dataSourceChanged;
+        private string _tagThreshold;
+        public string TagThreshold
+        {
+            get { return _tagThreshold; }
+            set { PropNotify.SetProperty(ref _tagThreshold, value); }
+        }
 
-        public bool IsPortable { get { return Context.IsPortable; } }
+        
+        private Setting AutoTagVerifyThresholdSetting { get; set; }
+
+
         #endregion
 
         #region Methods
@@ -55,6 +73,22 @@ namespace OmniTagWPF.ViewModels
                 else
                     DataSource = ConfigurationManager.ConnectionStrings["SQLServerDatabaseContext"].ConnectionString;
             }
+            _originalDataSource = DataSource;
+
+            AutoTagVerifyThresholdSetting = Context.Settings.SingleOrDefault(s => s.Name == Setting.AutoTagVerificationThreshold);
+            if (AutoTagVerifyThresholdSetting == null)
+            {
+                AutoTagVerifyThresholdSetting = new Setting
+                {
+                    Name = Setting.AutoTagVerificationThreshold,
+                    Value = "5",
+                    DateCreated = DateTime.Now,
+                    LastModifiedDate = DateTime.Now
+                };
+                Context.Settings.Add(AutoTagVerifyThresholdSetting);
+                Context.SaveChanges();
+            }
+            TagThreshold = AutoTagVerifyThresholdSetting.Value;
 
             IsLoading = false;
         }
@@ -71,6 +105,35 @@ namespace OmniTagWPF.ViewModels
 
         private void SaveChanges()
         {
+            if (_dataSourceChanged)
+            {
+                var result = MessageBox.Show("Updating the data source setting requires OmniTag to restart. " +
+                                             "Unsaved work will be lost.\n\nAre you sure you want to continue?",
+                    "Alert", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.OK);
+
+                if (result == MessageBoxResult.No)
+                    return;
+            }
+
+            var success = SaveConnectionString();
+            success = success && SaveTagThreshold();
+
+            if (!success)
+                return;
+
+            Context.SaveChanges();
+
+            if (_dataSourceChanged)
+            {
+                System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+                Application.Current.Shutdown();
+                return;
+            }
+            RequestCloseView();
+        }
+
+        private bool SaveConnectionString()
+        {
             var connectionString = DataSource;
             var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             if (IsPortable)
@@ -83,18 +146,31 @@ namespace OmniTagWPF.ViewModels
                 config.ConnectionStrings.ConnectionStrings["SQLServerDatabaseContext"].ConnectionString = connectionString;
             }
             config.Save(ConfigurationSaveMode.Modified);
+            return true;
+        }
 
-            if (_dataSourceChanged)
+        private bool SaveTagThreshold()
+        {
+            int threshold;
+            if (!Int32.TryParse(TagThreshold, out threshold) || (threshold < 0))
             {
-                MessageBox.Show("The data source has been modified. OmniTag will now restart to prevent data corruption.",
-                    "Alert", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
-
-                System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
-                Application.Current.Shutdown();
-                return;
+                MessageBox.Show("Automatic tag verification threshold must be a positive whole number.", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                return false;
             }
-                
-            RequestCloseView();
+
+            AutoTagVerifyThresholdSetting.Value = TagThreshold;
+            foreach (var tag in Context.Tags)
+            {
+                if (tag.Omnis.Count >= Int32.Parse(TagThreshold))
+                    tag.IsVerified = true;
+                else
+                {
+                    if (!tag.ManuallyVerified)
+                        tag.IsVerified = false;
+                }
+            }
+            return true;
         }
 
         #endregion

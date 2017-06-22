@@ -19,42 +19,6 @@ namespace OmniTagWPF.Views
         {
             InitializeComponent();
         }
-
-        //private void AddTagButton_OnClick(object sender, RoutedEventArgs e)
-        //{
-        //    TagSearchListView.Focus();
-        //}
-
-        //private void TagListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //    if (TagSearchListView.SelectedItem != null)
-        //        TagSearchListView.ScrollIntoView(e.AddedItems[0]);
-        //}
-
-        private void OnSearchTextChanged(object sender, TextChangedEventArgs textChangedEventArgs)
-        {
-            var vm = DataContext as EditTagViewModel;
-            if (vm == null)
-                return;
-
-            //var textBox = sender as TextBox;
-            //if (textBox == null)
-            //    return;
-
-            var comboBox = sender as ComboBox;
-            if (comboBox == null)
-                return;
-            var textBox = (TextBox)comboBox.Template.FindName("PART_EditableTextBox", comboBox);
-
-            string searchText;
-            if (textBox.SelectionLength == 0)
-                searchText = textBox.Text;
-            else
-                searchText = textBox.Text.Substring(0, textBox.SelectionStart);
-
-            //vm.SearchText = searchText;
-            SearchTextAttachedProperty.SetSearchText(comboBox, searchText);
-        }
     }
 
     class VerifiedLabelTextConverter : IValueConverter

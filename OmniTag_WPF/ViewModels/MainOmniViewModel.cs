@@ -76,15 +76,14 @@ namespace OmniTagWPF.ViewModels
             TagButtons.CollectionChanged += OnTagButtonsChanged;
 
             AllOmnis = Context.Omnis.Where(o => o.DateDeleted == null).OrderBy(o => o.Summary).ToList();
-            if (AllOmnis.Count > 0)
-                SelectedOmni = AllOmnis.First();
-
+            
             var tags = new ObservableCollection<Tag>(Context.Tags.Where(t => t.DateDeleted == null).OrderBy(t => t.Name).ToList());
             TagSearchDataContext = new TagSearchViewModel(tags)
             {
+                HintText = "Filter by Tag...",
+                DisplayMember = nameof(Tag.Name),
                 ShowEnterButton = true,
                 EnterText = "Add",
-                DisplayMember = nameof(Tag.Name),
                 EnterCommand = AddTagCommand,
                 SearchCommand = AddTagCommand,
                 UpdateSearchTextWhenSelectionChanges = true,
@@ -95,7 +94,6 @@ namespace OmniTagWPF.ViewModels
             OmniSearchDataContext = new SearchViewModel<Omni>(new ObservableCollection<Omni>(AllOmnis))
             {
                 DisplayMember = nameof(Omni.Summary),
-                UpdateSearchTextWhenSelectionChanges = true,
                 Filter = o => o.Summary.ToUpper().Contains(OmniSearchDataContext.SearchText.ToUpper())
             };
             OmniSearchDataContext.PropertyChanged += (sender, e) =>

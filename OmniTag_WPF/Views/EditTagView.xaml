@@ -8,13 +8,11 @@
                  xmlns:sys="clr-namespace:System;assembly=mscorlib"
                  Title="Tag Manager" Height="400" Width="600">
     <v:CenteredView.Resources>
-        <cnvrt:EnumToBooleanConverter x:Key="enumBoolConverter" />
         <cnvrt:BoolToVisibilityConverter x:Key="LabelVisibilityConverter"
                                          TrueValue="Visible" FalseValue="Hidden" NullValue="Hidden" />
         <cnvrt:BoolToVisibilityConverter x:Key="ButtonVisibilityConverter"
                                          TrueValue="Visible" FalseValue="Visible" NullValue="Hidden" />
         <v:VerifiedLabelTextConverter x:Key="VerifiedLabelTextConverter" />
-        <v:TagConverter x:Key="TagConverter" />
     </v:CenteredView.Resources>
     <v:CenteredView.DataContext>
         <vm:EditTagViewModel />
@@ -68,6 +66,7 @@
                      TextWrapping="Wrap" />
 
             <TextBlock Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"
+                       Margin="5"
                        VerticalAlignment="Center"
                        Visibility="{Binding IsVerifiedLabelVisible, Converter={StaticResource LabelVisibilityConverter}}">
                 <TextBlock.Style>
