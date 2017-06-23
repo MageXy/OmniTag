@@ -8,7 +8,6 @@ using NCGLib;
 using NCGLib.Extensions;
 using NCGLib.WPF.Commands;
 using OmniTag.Models;
-using OmniTagWPF.Utility;
 using OmniTagWPF.ViewModels.Base;
 using OmniTagWPF.ViewModels.Controls;
 

@@ -125,6 +125,10 @@ namespace OmniTagWPF.Views
 
         private void OnCodeClicked(object sender, RoutedEventArgs e)
         {
+            var textwrap = DescriptionTextBox.TextWrapping;
+            if (textwrap == TextWrapping.Wrap)
+                DescriptionTextBox.TextWrapping = TextWrapping.NoWrap;
+            
             var startLineIndex = DescriptionTextBox.GetLineIndexFromCharacterIndex(DescriptionTextBox.SelectionStart);
             var endLineIndex = DescriptionTextBox.GetLineIndexFromCharacterIndex(DescriptionTextBox.SelectionStart +
                                                                                  DescriptionTextBox.SelectionLength);
@@ -137,8 +141,11 @@ namespace OmniTagWPF.Views
                 
                 var language = String.Empty;
                 if (vm.UserCancelled)
+                {
+                    DescriptionTextBox.TextWrapping = textwrap;
                     return;
-
+                }
+                
                 if (vm.SelectedValue != "None")
                     language = vm.SelectedValue;
                 
@@ -165,6 +172,8 @@ namespace OmniTagWPF.Views
             }
             else
                 SurroundDescriptionTextWith("`", "code text");
+
+            DescriptionTextBox.TextWrapping = textwrap;
         }
 
         private void OnAddImageClicked(object sender, RoutedEventArgs e)
