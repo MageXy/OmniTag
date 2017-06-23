@@ -8,12 +8,13 @@ using NCGLib;
 using NCGLib.Extensions;
 using NCGLib.WPF.Commands;
 using OmniTag.Models;
+using OmniTagWPF.Utility;
 using OmniTagWPF.ViewModels.Base;
 using OmniTagWPF.ViewModels.Controls;
 
 namespace OmniTagWPF.ViewModels
 {
-    public class EditTagViewModel : BaseViewModel
+    class EditTagViewModel : DataChangeViewModel
     {
         public EditTagViewModel()
         {
@@ -323,7 +324,9 @@ namespace OmniTagWPF.ViewModels
             AddedTags.Clear();
             DeletedTags.Clear();
             ChangesMade = false;
+            OnDataChanged();
         }
+
         #endregion
 
         #region OnChanging/OnChanged Methods

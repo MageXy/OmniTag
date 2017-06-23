@@ -36,6 +36,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release %28Portable%29|AnyCPU'">
     <OutputPath>bin\Release %28Portable%29\</OutputPath>
@@ -46,6 +47,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug %28Portable%29|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -124,11 +126,12 @@
     </Compile>
     <Compile Include="Images\Images.cs" />
     <Compile Include="Utility\GridDimensions.cs" />
-    <Compile Include="Utility\OmniDataChangedEventArgs.cs" />
+    <Compile Include="Utility\DataChangedEventArgs.cs" />
     <Compile Include="Utility\OmniTextRenderer.cs" />
     <Compile Include="Utility\SettingExtensions.cs" />
     <Compile Include="Utility\TagFilterMode.cs" />
     <Compile Include="ViewModels\Base\BaseViewModel.cs" />
+    <Compile Include="ViewModels\Base\DataChangeViewModel.cs" />
     <Compile Include="ViewModels\Controls\TagButtonViewModel.cs" />
     <Compile Include="ViewModels\Controls\SearchViewModel.cs" />
     <Compile Include="ViewModels\Controls\TagSearchViewModel.cs" />

@@ -107,10 +107,9 @@ namespace OmniTagDB
             modelBuilder.Entity<Setting>()
                 .Property(s => s.Value)
                 .IsRequired()
+                .HasMaxLength(20)
                 .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute()));
-
-
-
+            
             #endregion
         }
 
@@ -130,6 +129,21 @@ namespace OmniTagDB
             {
                 entry.State = EntityState.Unchanged;
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            var entities = ChangeTracker.Entries().Where(e => e.State == EntityState.Added ||
+                                                              e.State == EntityState.Deleted ||
+                                                              e.State == EntityState.Modified ||
+                                                              e.State == EntityState.Unchanged);
+
+            foreach (var entry in entities)
+            {
+                entry.State = EntityState.Detached;
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

@@ -16,37 +16,31 @@ using NCGLib.Extensions;
 
 namespace OmniTagWPF.ViewModels
 {
-    class EditOmniViewModel : BaseViewModel
+    class EditOmniViewModel : DataChangeViewModel
     {
         public EditOmniViewModel()
         {
-            CurrentOmni = new Omni
-            {
-                DateCreated = DateTime.Now,
-                LastModifiedDate = DateTime.Now
-            };
+            _omniID = -1;
             _isNewOmni = true;
             Initialize();
         }
 
-        public EditOmniViewModel(Omni currentOmni)
+        public EditOmniViewModel(int omniID)
         {
-            CurrentOmni = currentOmni;
+            _omniID = omniID;
             _isNewOmni = false;
             Initialize();
         }
 
         private void Initialize()
         {
-            _omniSummary = CurrentOmni.Summary;
-            _omniDescription = CurrentOmni.Description;
-            _currentOmniLastUpdatedTime = CurrentOmni.LastModifiedDate;
-
             AddedTags = new List<Tag>();
             DeletedTags = new List<Tag>();
         }
 
         #region Properties
+
+        private int _omniID;
 
         private Omni CurrentOmni { get; set; }
         private List<Tag> AddedTags { get; set; }
@@ -166,6 +160,23 @@ namespace OmniTagWPF.ViewModels
 
         public override void LoadData()
         {
+            if (_isNewOmni)
+            {
+                CurrentOmni = new Omni
+                {
+                    DateCreated = DateTime.Now,
+                    LastModifiedDate = DateTime.Now
+                };
+            }
+            else
+            {
+                CurrentOmni = Context.Omnis.Single(o => o.Id == _omniID);
+            }
+
+            OmniSummary = CurrentOmni.Summary;
+            OmniDescription = CurrentOmni.Description;
+            CurrentOmniLastUpdatedTime = CurrentOmni.LastModifiedDate;
+
             OmniTags = CurrentOmni.Tags.ToList();
 
             var ibvmList = OmniTags.Select(t => new TagButtonViewModel(t));
@@ -351,25 +362,9 @@ namespace OmniTagWPF.ViewModels
             proc.Start();
         }
 
-        private void OnDataChanged()
-        {
-            var handler = DataChanged;
-            if (handler != null)
-                handler(this, new OmniDataChangedEventArgs(CurrentOmni));
-        }
-
-        public override void RequestCloseView()
-        {
-            base.RequestCloseView();
-
-            DataChanged = null;
-        }
-
         #endregion
 
         #region Commands
-
-        public event EventHandler DataChanged;
 
         private ICommand _saveOmniCommand;
         public ICommand SaveOmniCommand

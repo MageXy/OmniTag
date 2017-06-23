@@ -75,6 +75,7 @@
                 <MenuItem Header="Manage Tags..." Command="{Binding EditTagsCommand}" />
             </MenuItem>
             <MenuItem Header="Help">
+                <MenuItem Header="Debug > Reload" Command="{Binding ReloadCommand}" />
                 <MenuItem Header="Help Topics" />
                 <MenuItem Header="About" />
             </MenuItem>

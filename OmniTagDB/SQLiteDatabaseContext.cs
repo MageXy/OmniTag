@@ -1,13 +1,10 @@
 using System;
-using System.Data.Entity.Migrations.Model;
-using System.IO;
 using OmniTag.Models;
 using SQLite.CodeFirst;
 
 namespace OmniTagDB
 {
     using System.Data.Entity;
-    using System.Data.SQLite;
 
     public class SQLiteDatabaseContext : OmniTagContext
     {
@@ -44,6 +41,14 @@ namespace OmniTagDB
             {
                 Name = Setting.AutoTagVerificationThreshold,
                 Value = "5",
+                DateCreated = DateTime.Now,
+                LastModifiedDate = DateTime.Now
+            });
+
+            context.Settings.Add(new Setting
+            {
+                Name = Setting.ShowTagSearchOnStartup,
+                Value = "False",
                 DateCreated = DateTime.Now,
                 LastModifiedDate = DateTime.Now
             });

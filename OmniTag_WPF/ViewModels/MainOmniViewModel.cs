@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.Remoting.Channels;
 using System.Windows;
 using System.Windows.Input;
 using NCGLib;
-using NCGLib.Extensions;
 using NCGLib.WPF.Commands;
 using NCGLib.WPF.Utility;
 using OmniTag.Models;
+using OmniTagDB;
 using OmniTagWPF.Utility;
 using OmniTagWPF.ViewModels.Base;
 using OmniTagWPF.ViewModels.Controls;
@@ -115,6 +113,32 @@ namespace OmniTagWPF.ViewModels
             };
         }
 
+        public override void Reload()
+        {
+            var selectedTagIds = TagButtons.Select(ibvm => ibvm.CurrentTag.Id);
+            TagButtons.CollectionChanged -= OnTagButtonsChanged;
+            var selectedOmniId = SelectedOmni?.Id ?? -1;
+            
+            Context.Dispose();
+            Context = OmniTagDatabaseContextFactory.GetNewContext();
+
+            AllOmnis = Context.Omnis.Where(o => o.DateDeleted == null).OrderBy(o => o.Summary).ToList();
+            var tags = new ObservableCollection<Tag>(Context.Tags.Where(t => t.DateDeleted == null).OrderBy(t => t.Name).ToList());
+            TagSearchDataContext.AllValues = tags;
+            
+            var selectedTagList = tags.Where(t => selectedTagIds.Contains(t.Id))
+                .ToList()
+                .Select(t => new TagButtonViewModel(t));
+
+            TagButtons = new ObservableCollection<TagButtonViewModel>(selectedTagList);
+            TagButtons.CollectionChanged += OnTagButtonsChanged;
+            OnTagButtonsChanged(TagButtons, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+
+            OmniSearchDataContext.SelectedValue = selectedOmniId == -1
+                ? null
+                : OmniSearchDataContext.AllValues.Single(o => o.Id == selectedOmniId);
+        }
+
         private void OnTagButtonsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (TagButtons.Count == 0)
@@ -128,10 +152,15 @@ namespace OmniTagWPF.ViewModels
         private void EditOmni(object omniToEdit)
         {
             Window view;
+            EditOmniViewModel vm;
+            EventHandler reloadAction = delegate { Reload(); };
             if (omniToEdit == null)
             {
-                view = ViewFactory.CreateViewWithDataContext<EditOmniView>(new EditOmniViewModel());
+                vm = new EditOmniViewModel();
+                vm.DataChanged += reloadAction;
+                view = ViewFactory.CreateViewWithDataContext<EditOmniView>(vm);
                 view.ShowDialog();
+                vm.DataChanged -= reloadAction;
                 return;
             }
 
@@ -142,8 +171,11 @@ namespace OmniTagWPF.ViewModels
                 return;
             }
 
-            view = ViewFactory.CreateViewWithDataContext<EditOmniView>(new EditOmniViewModel(omni));
+            vm = new EditOmniViewModel(omni.Id);
+            vm.DataChanged += reloadAction;
+            view = ViewFactory.CreateViewWithDataContext<EditOmniView>(vm);
             view.ShowDialog();
+            vm.DataChanged -= reloadAction;
         }
 
         private void EditTags()
@@ -187,6 +219,13 @@ namespace OmniTagWPF.ViewModels
             TagButtons.Remove(tagVM);
         }
 
+        private void ToggleTagSearch()
+        {
+            ShowTagSearch = !ShowTagSearch;
+            if (!ShowTagSearch)
+                TagButtons.Clear();
+        }
+
         #endregion
 
         #region Commands
@@ -224,7 +263,13 @@ namespace OmniTagWPF.ViewModels
         private ICommand _toggleTagSearchCommand;
         public ICommand ToggleTagSearchCommand
         {
-            get { return _toggleTagSearchCommand ?? (_toggleTagSearchCommand = new SimpleCommand(() => ShowTagSearch = !ShowTagSearch)); }
+            get { return _toggleTagSearchCommand ?? (_toggleTagSearchCommand = new SimpleCommand(ToggleTagSearch)); }
+        }
+
+        private ICommand _reloadCommand;
+        public ICommand ReloadCommand
+        {
+            get { return _reloadCommand ?? (_reloadCommand = new SimpleCommand(Reload)); }
         }
 
         #endregion

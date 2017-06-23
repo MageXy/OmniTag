@@ -27,6 +27,16 @@ namespace OmniTagDB
                 DateCreated = DateTime.Now,
                 LastModifiedDate = DateTime.Now
             });
+
+            context.Settings.Add(new Setting
+            {
+                Name = Setting.ShowTagSearchOnStartup,
+                Value = "False",
+                DateCreated = DateTime.Now,
+                LastModifiedDate = DateTime.Now
+            });
+
+            context.SaveChanges();
         }
     }
 }
