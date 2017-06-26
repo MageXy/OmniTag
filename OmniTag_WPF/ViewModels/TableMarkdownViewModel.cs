@@ -17,6 +17,9 @@ namespace OmniTagWPF.ViewModels
                 Data.Columns.Add();
             for (var r = 0; r < NumberOfRows; r++)
                 Data.Rows.Add(Data.NewRow());
+
+            UseFullBorder = false;
+            UseHeaderBorder = true;
         }
 
         #region Properties
@@ -42,6 +45,27 @@ namespace OmniTagWPF.ViewModels
             set { PropNotify.SetProperty(ref _data, value); }
         }
 
+        private bool _useFullBorder;
+        public bool UseFullBorder
+        {
+            get { return _useFullBorder; }
+            set
+            {
+                PropNotify.SetProperty(ref _useFullBorder, value, n =>
+                {
+                    if (n == true)
+                        UseHeaderBorder = true;
+                });
+            }
+        }
+
+        private bool _useHeaderBorder;
+        public bool UseHeaderBorder
+        {
+            get { return _useHeaderBorder; }
+            set { PropNotify.SetProperty(ref _useHeaderBorder, value); }
+        }
+
         #endregion
 
         #region Methods
@@ -52,12 +76,13 @@ namespace OmniTagWPF.ViewModels
                 return String.Empty;
             
             var tableStringCreator = new TableMarkdownGenerator(Data);
-            var str = tableStringCreator.GetTableMarkdownString();
+            var str = tableStringCreator.GetTableMarkdownString(UseFullBorder, UseHeaderBorder);
             return str;
         }
 
         public override void Confirm()
         {
+            UserCancelled = false;
             SelectedValue = GetTableString();
 
             base.Confirm();
@@ -120,7 +145,7 @@ namespace OmniTagWPF.ViewModels
             }
         }
 
-        public string GetTableMarkdownString()
+        public string GetTableMarkdownString(bool useFullBorders, bool useHeaderBorders)
         {
             /* Top Row Border */
             var retVal = PrintHomogeneousRow(Corner_TL, Corner_TR, ColumnSplit_Top, Horiz_DoubleLine);
@@ -129,16 +154,19 @@ namespace OmniTagWPF.ViewModels
             retVal += PrintTextRow(0, Vert_DoubleLine, Vert_DoubleLine, Vert_SingleLine);
 
             /* Header/Body Separator */
-            retVal += PrintHomogeneousRow(ColumnSplit_Left, ColumnSplit_Right, Intersection, Horiz_SingleLine);
+            if (useHeaderBorders)
+                retVal += PrintHomogeneousRow(ColumnSplit_Left, ColumnSplit_Right, Intersection, Horiz_SingleLine);
 
             /* Data */
             for (var r = 1; r < Table.Rows.Count; r++)
+            {
                 retVal += PrintTextRow(r, Vert_DoubleLine, Vert_DoubleLine, Vert_SingleLine);
-
+                if (useFullBorders && (r < Table.Rows.Count-1))
+                    retVal += PrintHomogeneousRow(ColumnSplit_Left, ColumnSplit_Right, Intersection, Horiz_SingleLine);
+            }
+            
             /* Bottom Row Border */
             retVal += PrintHomogeneousRow(Corner_BL, Corner_BR, ColumnSplit_Bottom, Horiz_DoubleLine);
-
-            retVal = $"\n{retVal}\n";
 
             return retVal;
         }

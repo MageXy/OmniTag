@@ -248,7 +248,7 @@ namespace OmniTagWPF.Views
                 var startIndex = DescriptionTextBox.CaretIndex;
 
                 var part1 = DescriptionTextBox.Text.Substring(0, startIndex);
-                var part2 = "\n" + tableVm.SelectedValue; //tableVm.GetTableString();
+                var part2 = $"\n{tableVm.SelectedValue}\n";
                 var part3 = DescriptionTextBox.Text.Substring(startIndex);
 
                 DescriptionTextBox.Text = part1 + part2 + part3;

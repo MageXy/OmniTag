@@ -170,8 +170,8 @@
     <Compile Include="Views\EditOmniView.xaml.cs">
       <DependentUpon>EditOmniView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PortableSettingsView.xaml.cs">
-      <DependentUpon>PortableSettingsView.xaml</DependentUpon>
+    <Compile Include="Views\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TableMarkdownSizeView.xaml.cs">
       <DependentUpon>TableMarkdownSizeView.xaml</DependentUpon>
@@ -243,7 +243,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\PortableSettingsView.xaml">
+    <Page Include="Views\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

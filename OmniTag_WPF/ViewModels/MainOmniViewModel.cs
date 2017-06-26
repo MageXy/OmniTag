@@ -136,7 +136,7 @@ namespace OmniTagWPF.ViewModels
 
             OmniSearchDataContext.SelectedValue = selectedOmniId == -1
                 ? null
-                : OmniSearchDataContext.AllValues.Single(o => o.Id == selectedOmniId);
+                : OmniSearchDataContext.AllValues.SingleOrDefault(o => o.Id == selectedOmniId);
         }
 
         private void OnTagButtonsChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -189,7 +189,7 @@ namespace OmniTagWPF.ViewModels
             if (!Context.IsPortable)
                 return;
 
-            var view = ViewFactory.CreateWindow<PortableSettingsView>();
+            var view = ViewFactory.CreateWindow<SettingsView>();
             view.Show();
         }
 

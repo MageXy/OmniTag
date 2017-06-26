@@ -1,15 +1,11 @@
 ﻿using System;
 using OmniTagWPF.ViewModels.Base;
 using System.Configuration;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Markup;
 using Microsoft.Win32;
-using NCGLib.Extensions;
 using NCGLib.WPF.Commands;
 using OmniTag.Models;
-using OmniTagWPF.Properties;
 using OmniTagWPF.Utility;
 
 namespace OmniTagWPF.ViewModels
