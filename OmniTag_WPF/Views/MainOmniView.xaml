@@ -76,8 +76,8 @@
             </MenuItem>
             <MenuItem Header="Help">
                 <MenuItem Header="Debug > Reload" Command="{Binding ReloadCommand}" />
-                <MenuItem Header="Help Topics" />
-                <MenuItem Header="About" />
+                <MenuItem Header="Help Topics" Command="{Binding HelpTopicsCommand}"/>
+                <MenuItem Header="About" Command="{Binding AboutCommand}" />
             </MenuItem>
         </Menu>
 

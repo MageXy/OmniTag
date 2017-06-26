@@ -1,7 +1,8 @@
 ﻿<Window x:Class="OmniTagWPF.Views.AboutView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="AboutView" Height="235" Width="317">
+        Title="AboutView" Height="235" Width="317"
+        Icon="../Images/logo.png">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />

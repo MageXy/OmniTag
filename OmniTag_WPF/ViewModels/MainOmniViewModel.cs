@@ -272,6 +272,33 @@ namespace OmniTagWPF.ViewModels
             get { return _reloadCommand ?? (_reloadCommand = new SimpleCommand(Reload)); }
         }
 
+        private ICommand _helpTopicsCommand;
+        public ICommand HelpTopicsCommand
+        {
+            get
+            {
+                return _helpTopicsCommand ?? (_helpTopicsCommand = new SimpleCommand(() =>
+                {
+                    var view = ViewFactory.CreateWindow<HelpView>();
+                    view.Show();
+                }));
+            }
+        }
+
+        private ICommand _aboutCommand;
+        public ICommand AboutCommand
+        {
+            get
+            {
+                return _aboutCommand ?? (_aboutCommand = new SimpleCommand(() =>
+                {
+                    var view = ViewFactory.CreateWindow<AboutView>();
+                    view.Show();
+                }));
+            }
+        }
+
+
         #endregion
     }
 }
