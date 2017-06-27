@@ -3,7 +3,8 @@
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:v="clr-namespace:OmniTagWPF.Views"
                 xmlns:cnvrt="clr-namespace:NCGLib.WPF.Converters;assembly=NCGLib.WPF"
-                Title="Enter Table Data" Width="350" SizeToContent="Height">
+                Title="Enter Table Data" Width="350" SizeToContent="Height"
+                Icon="../Images/logo.png">
     <v:CenteredView.Resources>
         <cnvrt:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     </v:CenteredView.Resources>

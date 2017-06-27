@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Windows;
+using System.Windows.Input;
 using NCGLib.Extensions;
 using NCGLib.WPF.Templates.Views;
 
@@ -13,6 +14,7 @@ namespace OmniTagWPF.Views
         {
             InitializeComponent();
             ColumnTextBox.Focus();
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
 
         private void ValidateText(object sender, TextCompositionEventArgs e)

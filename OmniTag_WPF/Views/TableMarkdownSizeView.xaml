@@ -3,7 +3,8 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:v="clr-namespace:NCGLib.WPF.Templates.Views;assembly=NCGLib.WPF"
                  xmlns:cntrl="clr-namespace:OmniTagWPF.Views.Controls"
-                 Title="Enter table size" MinWidth="20" MinHeight="130" SizeToContent="WidthAndHeight">
+                 Title="Enter table size" MinWidth="20" MinHeight="130" SizeToContent="WidthAndHeight"
+                 Icon="../Images/logo.png">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
