@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows;
+﻿using System.Diagnostics;
 using System.Windows.Navigation;
 
 namespace OmniTagWPF.Views
@@ -13,13 +11,6 @@ namespace OmniTagWPF.Views
         public MainOmniView()
         {
             InitializeComponent();
-        }
-
-        public bool ShowTagSearch { get; set; }
-
-        private void OnShowTagSearchClicked(object sender, RoutedEventArgs e)
-        {
-            ShowTagSearch = !ShowTagSearch;
         }
 
         private void OnWebBrowserLinkClicked(object sender, NavigatingCancelEventArgs e)

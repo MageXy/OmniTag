@@ -31,14 +31,13 @@
                   CanUserAddRows="False" />
 
         <StackPanel Grid.Column="0" Grid.Row="2">
-            <CheckBox x:Name="FullBorderCheckBox"
-                      Margin="5,0,5,2"
-                      Content="Add border between all cells"
-                      IsChecked="{Binding UseFullBorder}" />
-            <CheckBox Content="Separate header row with border"
-                      Margin="5,0,5,2"
-                      IsChecked="{Binding UseHeaderBorder}" 
-                      IsEnabled="{Binding ElementName=FullBorderCheckBox, Path=IsChecked, Converter={StaticResource InverseBooleanConverter}}"/>
+            <CheckBox Margin="5,0,5,2"
+                      Content="Table has header row"
+                      IsChecked="{Binding UseHeaderBorder}" />
+            <CheckBox Margin="5,0,5,2"
+                      Content="Auto-space column widths"
+                      IsChecked="{Binding UsePrettyPrint}" />
+            
         </StackPanel>
         
         <DockPanel Grid.Column="0" Grid.Row="3"

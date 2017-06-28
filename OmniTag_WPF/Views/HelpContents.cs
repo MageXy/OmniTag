@@ -1,26 +1,49 @@
-﻿namespace OmniTagWPF.Views
+﻿using System.Collections.Generic;
+
+namespace OmniTagWPF.Views
 {
     static class HelpContents
     {
-        public const string Introduction = "Introduction";
-        public const string Omnis = "Omnis";
-        public const string Tags = "Tags";
+        public static readonly HelpTopic Introduction = new HelpTopic(_introduction, _introductionText);
+        public static readonly HelpTopic Omnis = new HelpTopic(_omnis, _omnisText);
+        public static readonly HelpTopic OmniMarkdown = new HelpTopic(_omniDE, _omniDEText);
+        public static readonly HelpTopic Tags = new HelpTopic(_tags, _tagsText);
 
-        public const string IntroductionText = "Welcome to OmniTagger, the flexible organization solution that can be used to sort " +
-                                               "effectively anything.";
+        private const string _introduction = "Introduction";
+        private const string _omnis = "Omnis";
+        private const string _omniDE = "   Description Markdown";
+        private const string _tags = "Tags";
+        private const string _tagManager = "Tags";
 
-        public const string OmnisText = "An Omni is a way to store a single piece of information into a single concrete record. Omnis " +
-                                        "can contain many types of information - a step-by-step set of instructions on how to bake a pie, " +
-                                        "a friend's birthday date, a shopping list, etc... Practically anything that you want to document " +
-                                        "in some way can be stored in an Omni.\n\nEach Omni is made up of three main parts: a summary, " +
-                                        "a description, and the associated tags. The summary is merely a description of the contents of an " +
-                                        "Omni (for example, \"Recipe for Chocolate Cake\"). The description is the details (\"1 cup sugar, " +
-                                        "2 cups flour, 10 buckets chocolate milk. Mix all ingredients together, bake for an hour, then eat.\" " +
-                                        "Finally, the tags are the method of organizing your Omnis to be in discrete groups. Our recipe " +
-                                        "example might have the tags [recipe],[food], and [guilty pleasure].\n\n(Side note: Don't try that " +
-                                        "recipe. I'm pretty sure you'll end up with choco-chunk milksoup.)";
+        private const string _introductionText =
+            "Welcome to OmniTag, a flexible knowledge repository that specializes in quick reference and lookups. " +
+            "OmniTag can be used to keep track of any sort of information - shopping lists, to-do lists, step-by-step guides, " +
+            "meeting minutes, notes... Anything you want to remember, OmniTag will track for you! Through the use of a " +
+            "intuitive tagging system, users can mark specific tidbits of knowledge with tags that make future reference " +
+            "quick and easy.";
 
-        public const string TagsText = "A Tag is a way to simply and effectively organize your Omnis. Think of a Tag like a folder - you can " +
+        private const string _omnisText =
+            "An **Omni** is that core part of the OmniTag applicatin. A single Omni represents a piece of information. " +
+            "That information might be something like recipe for chocolate cake, or a guide on how to run a program on " +
+            "your computer, or a list of tings you want to buy your friend for their birthday. Literally *any* scrap of " +
+            "knowledge can be an Omni.\n\nAn Omni is primarily made up of two main parts: the **summary**, and the **details**. " +
+            "The summary, as you might guess, gives a short explanation of the main idea of what the Omni is. The description " +
+            "is the details about the Omni. So, using the chocolate cake recipe above, the summary might be something like " +
+            "\"Recipe for Chocolate Cake\" and the description would provide step-by-step instructions on how to mix " +
+            "ingredients together, how long to bake the cake, how to apply frosting, etc.";
+        
+        private const string _omniDEText = 
+            "On the Omni editor screen, you can edit the Omni description to give details about the Omni. One of the " +
+            "features of OmniTag is that ability to include special formatting for your description. This can be " +
+            "achieved using special markdown codes, similar to several online forums.\n\nUsing the OmniTag markdown " +
+            "can *add a little **extra flair*** to your notes, plus it can help readability as well. Only a limited " +
+            "number of markdown codes are implemented, so please see below for a list of code syntax that you can use. " +
+            "\n\n" +
+           @"|Example Output     |Code Syntax       |
+|-------------------|------------------|
+|*Italic Text*      |`*Italic Text*`   |";
+
+        private const string _tagsText = "A Tag is a way to simply and effectively organize your Omnis. Think of a Tag like a folder - you can " +
                                        "label the folder, and anything you put inside should be related. The benefit of using tags, however," +
                                        "is that a single Omni can belong to multiple Tags. For example, a list of your favorite books might " +
                                        "belongs to the [books] tag... but it could also belong to the [favorite], [lists], and [reading] tags. " +
@@ -33,5 +56,31 @@
                                        "there are no Omnis associated with the given tag, it will be deleted. Verifying the tag will guarantee " +
                                        "that the Tag will remain even if no Omnis are associated with it. Verified Tags can only be deleted " +
                                        "manually.";
+
+        private const string _tagManagerText = "Tags";
+
+        public static IEnumerable<HelpTopic> GetAllHelpTopics()
+        {
+            return new List<HelpTopic>
+            {
+                Introduction,
+                Omnis,
+                OmniMarkdown,
+                Tags
+            };
+        }
+    }
+
+    class HelpTopic
+    {
+        public HelpTopic(string topicName, string topicDetails)
+        {
+            Name = topicName;
+            Details = topicDetails;
+        }
+
+        public string Name { get; set; }
+
+        public string Details { get; set; }
     }
 }

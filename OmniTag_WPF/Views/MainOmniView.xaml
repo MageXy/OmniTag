@@ -182,7 +182,7 @@
                 </StackPanel>
 
 
-                <WebBrowser Grid.Row="1"
+                <WebBrowser Grid.Row="1" x:Name="OmniDescription"
                             cntrl:WebBrowserBehavior.Html="{Binding RenderedMarkdownHtml}"
                             Navigating="OnWebBrowserLinkClicked" />
             </Grid>

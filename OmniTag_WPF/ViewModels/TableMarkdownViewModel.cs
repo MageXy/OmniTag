@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using NCGLib.WPF.Utility.Input;
-using OmniTagWPF.Utility;
 
 namespace OmniTagWPF.ViewModels
 {
@@ -17,9 +16,9 @@ namespace OmniTagWPF.ViewModels
                 Data.Columns.Add();
             for (var r = 0; r < NumberOfRows; r++)
                 Data.Rows.Add(Data.NewRow());
-
-            UseFullBorder = false;
+            
             UseHeaderBorder = true;
+            UsePrettyPrint = true;
         }
 
         #region Properties
@@ -45,25 +44,18 @@ namespace OmniTagWPF.ViewModels
             set { PropNotify.SetProperty(ref _data, value); }
         }
 
-        private bool _useFullBorder;
-        public bool UseFullBorder
-        {
-            get { return _useFullBorder; }
-            set
-            {
-                PropNotify.SetProperty(ref _useFullBorder, value, n =>
-                {
-                    if (n == true)
-                        UseHeaderBorder = true;
-                });
-            }
-        }
-
         private bool _useHeaderBorder;
         public bool UseHeaderBorder
         {
             get { return _useHeaderBorder; }
             set { PropNotify.SetProperty(ref _useHeaderBorder, value); }
+        }
+
+        private bool _usePrettyPrint;
+        public bool UsePrettyPrint
+        {
+            get { return _usePrettyPrint; }
+            set { PropNotify.SetProperty(ref _usePrettyPrint, value); }
         }
 
         #endregion
@@ -76,7 +68,7 @@ namespace OmniTagWPF.ViewModels
                 return String.Empty;
             
             var tableStringCreator = new TableMarkdownGenerator(Data);
-            var str = tableStringCreator.GetTableMarkdownString(UseFullBorder, UseHeaderBorder);
+            var str = tableStringCreator.GetTableMarkdownString(UseHeaderBorder, UsePrettyPrint);
             return str;
         }
 
@@ -97,21 +89,6 @@ namespace OmniTagWPF.ViewModels
 
     class TableMarkdownGenerator
     {
-        private const string Corner_TL          = "╔";
-        private const string Corner_TR          = "╗";
-        private const string Corner_BL          = "╚";
-        private const string Corner_BR          = "╝";
-        private const string Horiz_DoubleLine   = "═";
-        private const string Horiz_SingleLine   = "─";
-        private const string Vert_DoubleLine    = "║";
-        private const string Vert_SingleLine    = "│";
-        private const string Intersection       = "┼";
-        private const string ColumnSplit_Top    = "╤";
-        private const string ColumnSplit_Bottom = "╧";
-        private const string ColumnSplit_Left   = "╟";
-        private const string ColumnSplit_Right  = "╢";
-        private const string Indent             = "    ";
-
         public TableMarkdownGenerator(DataTable table)
         {
             Table = table;
@@ -145,60 +122,53 @@ namespace OmniTagWPF.ViewModels
             }
         }
 
-        public string GetTableMarkdownString(bool useFullBorders, bool useHeaderBorders)
+        public string GetTableMarkdownString(bool useHeaderBorders, bool prettyPrint)
         {
-            /* Top Row Border */
-            var retVal = PrintHomogeneousRow(Corner_TL, Corner_TR, ColumnSplit_Top, Horiz_DoubleLine);
+            var retVal = useHeaderBorders
+                ? PrintTextRow(0, prettyPrint) + PrintTableHeaderRow(prettyPrint)
+                : PrintTableHeaderRow(prettyPrint) + PrintTextRow(0, prettyPrint);
 
-            /* Column Headers */
-            retVal += PrintTextRow(0, Vert_DoubleLine, Vert_DoubleLine, Vert_SingleLine);
-
-            /* Header/Body Separator */
-            if (useHeaderBorders)
-                retVal += PrintHomogeneousRow(ColumnSplit_Left, ColumnSplit_Right, Intersection, Horiz_SingleLine);
-
-            /* Data */
             for (var r = 1; r < Table.Rows.Count; r++)
             {
-                retVal += PrintTextRow(r, Vert_DoubleLine, Vert_DoubleLine, Vert_SingleLine);
-                if (useFullBorders && (r < Table.Rows.Count-1))
-                    retVal += PrintHomogeneousRow(ColumnSplit_Left, ColumnSplit_Right, Intersection, Horiz_SingleLine);
+                retVal += PrintTextRow(r, prettyPrint);
             }
-            
-            /* Bottom Row Border */
-            retVal += PrintHomogeneousRow(Corner_BL, Corner_BR, ColumnSplit_Bottom, Horiz_DoubleLine);
 
             return retVal;
         }
 
-        private string PrintHomogeneousRow(string leftBorder, string rightBorder, string columnSeparator, string filler)
+        private string PrintTableHeaderRow(bool prettyPrint = true)
         {
-            var retVal = Indent + leftBorder;
+            var retVal = "|";
             for (var count = 0; count < Table.Columns.Count; count++)
             {
-                for (int x = 0; x < _widestInColumn[count]+2; x++)
-                    retVal += filler;
+                if (prettyPrint)
+                {
+                    for (int x = 0; x < _widestInColumn[count] + 2; x++)
+                        retVal += "-";
+                }
+                else
+                    retVal += "-";
 
-                if (count < Table.Columns.Count - 1)
-                    retVal += columnSeparator;
+                retVal += "|";
             }
-            retVal += rightBorder + "\n";
+            retVal += "\n";
 
             return retVal;
         }
 
-        private string PrintTextRow(int rowIndex, string leftBorder, string rightBorder, string columnSeparator)
+        private string PrintTextRow(int rowIndex, bool prettyPrint = true)
         {
-            var retVal = Indent + leftBorder;
+            var retVal = "|";
             for (var count = 0; count < Table.Columns.Count; count++)
             {
-                retVal += " " + Table.Rows[rowIndex][count].ToString()
-                                .PadRight(_widestInColumn[count] + 1);
+                var padWidth = prettyPrint ? _widestInColumn[count] + 1 : 0;
+                if (prettyPrint)
+                    retVal += " ";
+                retVal += Table.Rows[rowIndex][count].ToString().PadRight(padWidth);
 
-                if (count < Table.Columns.Count - 1)
-                    retVal += columnSeparator;
+                retVal += "|";
             }
-            retVal += rightBorder + "\n";
+            retVal += "\n";
 
             return retVal;
         }

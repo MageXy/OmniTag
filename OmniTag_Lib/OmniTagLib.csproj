@@ -53,8 +53,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NCGLib, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NCGLib.1.0.0.3\lib\net452\NCGLib.dll</HintPath>
+    <Reference Include="NCGLib, Version=1.0.0.4, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NCGLib.1.0.0.4\lib\net452\NCGLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NCGLib.WPF, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
