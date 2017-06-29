@@ -99,6 +99,10 @@
                 <MenuItem Header="_Help Topics" Command="{Binding HelpTopicsCommand}"/>
                 <MenuItem Header="_About" Command="{Binding AboutCommand}" />
             </MenuItem>
+            <MenuItem Header="_Debug" x:Name="DebugMenu" Visibility="Collapsed">
+                <MenuItem Header="_Reload" Command="{Binding ReloadCommand}" />
+                <MenuItem Header="Export HTML" Command="{Binding ExportHtmlCommand}" />
+            </MenuItem>
         </Menu>
 
         <Grid Grid.Column="0" Grid.Row="1">

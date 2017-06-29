@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Navigation;
@@ -15,6 +16,9 @@ namespace OmniTagWPF.Views
         public MainOmniView()
         {
             InitializeComponent();
+            #if DEBUG
+            DebugMenu.Visibility = Visibility.Visible;
+            #endif
         }
 
         private void OnWebBrowserLinkClicked(object sender, NavigatingCancelEventArgs e)

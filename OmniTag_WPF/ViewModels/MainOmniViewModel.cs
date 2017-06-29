@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -61,7 +62,11 @@ namespace OmniTagWPF.ViewModels
         [DependsOnProperty(nameof(SelectedOmni))]
         public IEnumerable<Tag> SelectedOmniTags
         {
-            get { return SelectedOmni?.Tags.Where(t => t.DateDeleted == null) ?? new List<Tag>(); }
+            get
+            {
+                return SelectedOmni?.Tags.Where(t => t.DateDeleted == null).OrderBy(t => t.Name) 
+                    ?? (IEnumerable<Tag>)new List<Tag>();
+            }
         }
 
         [DependsOnProperty(nameof(SelectedOmni))]
@@ -271,6 +276,29 @@ namespace OmniTagWPF.ViewModels
                 TagButtons.Clear();
         }
 
+        private void ExportHtml()
+        {
+            if (SelectedOmni == null)
+                return;
+
+            var desktop = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                    $"Omni_{SelectedOmni.Id}_Desc.html"
+                );
+            try
+            {
+                File.WriteAllLines(desktop, RenderedMarkdownHtml.Split('\n'));
+                MessageBox.Show("HTML code for selected Omni has been saved to the desktop.", "Success",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("There was an error saving the HTML file for the selected Omni. Details:\n\n" + e.Message,
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw;
+            }
+        }
+
         #endregion
 
         #region Commands
@@ -341,6 +369,18 @@ namespace OmniTagWPF.ViewModels
                     view.Show();
                 }));
             }
+        }
+
+        private ICommand _reloadCommand;
+        public ICommand ReloadCommand
+        {
+            get { return _reloadCommand ?? (_reloadCommand = new SimpleCommand(Reload)); }
+        }
+
+        private ICommand _exportHtmlCommand;
+        public ICommand ExportHtmlCommand
+        {
+            get { return _exportHtmlCommand ?? (_exportHtmlCommand = new SimpleCommand(ExportHtml)); }
         }
 
 
