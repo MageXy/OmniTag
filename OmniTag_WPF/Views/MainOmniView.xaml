@@ -32,6 +32,19 @@
             </Style.Triggers>
         </Style>
     </v:CenteredView.Resources>
+    <v:CenteredView.InputBindings>
+        <KeyBinding Gesture="Ctrl+N"
+                    Command="{Binding EditOmniCommand}"
+                    CommandParameter="{x:Null}" />
+        <KeyBinding Gesture="Ctrl+E"
+                    Command="{Binding EditOmniCommand}"
+                    CommandParameter="{Binding SelectedOmni}" />
+        <KeyBinding Gesture="Ctrl+Del"
+                    Command="{Binding EditOmniCommand}"
+                    CommandParameter="{x:Null}" />
+        <KeyBinding Gesture="Ctrl+T"
+                    Command="{Binding EditTagsCommand}" />
+    </v:CenteredView.InputBindings>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition MaxWidth="200">
@@ -56,28 +69,34 @@
 
         <Menu Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3">
             <MenuItem Header="_File">
-                <MenuItem Header="Show Tag Filter" 
+                <MenuItem Header="Show _Tag Filter" 
                           IsCheckable="True"
                           IsChecked="{Binding ShowTagSearch}" />
                 <Separator />
-                <MenuItem Header="Settings" Command="{Binding EditSettingsCommand}" />
-                <MenuItem Header="Quit" Command="{Binding CloseViewCommand}" />
+                <MenuItem Header="_Settings" Command="{Binding EditSettingsCommand}" />
+                <MenuItem Header="_Quit" Command="{Binding CloseViewCommand}" />
             </MenuItem>
             <MenuItem Header="_Edit">
-                <MenuItem Header="New Omni" Command="{Binding EditOmniCommand}" CommandParameter="{x:Null}" />
-                <MenuItem Header="Edit Omni" 
+                <MenuItem Header="_New Omni" 
+                          InputGestureText="Ctrl+N"
+                          Command="{Binding EditOmniCommand}" 
+                          CommandParameter="{x:Null}" />
+                <MenuItem Header="_Edit Omni" 
+                          InputGestureText="Ctrl+E"
                           Command="{Binding EditOmniCommand}"
                           CommandParameter="{Binding SelectedOmni}"
                           Style="{StaticResource SelectedOmniNullStyle}" />
-                <MenuItem Header="Delete Omni"
+                <MenuItem Header="_Delete Omni"
+                          InputGestureText="Ctrl+Del"
                           Style="{StaticResource SelectedOmniNullStyle}" />
                 <Separator />
-                <MenuItem Header="Manage Tags..." Command="{Binding EditTagsCommand}" />
+                <MenuItem Header="_Manage Tags..."
+                          InputGestureText="Ctrl+T"
+                          Command="{Binding EditTagsCommand}" />
             </MenuItem>
-            <MenuItem Header="Help">
-                <MenuItem Header="Debug > Reload" Command="{Binding ReloadCommand}" />
-                <MenuItem Header="Help Topics" Command="{Binding HelpTopicsCommand}"/>
-                <MenuItem Header="About" Command="{Binding AboutCommand}" />
+            <MenuItem Header="_Help">
+                <MenuItem Header="_Help Topics" Command="{Binding HelpTopicsCommand}"/>
+                <MenuItem Header="_About" Command="{Binding AboutCommand}" />
             </MenuItem>
         </Menu>
 

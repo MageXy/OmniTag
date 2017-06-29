@@ -266,12 +266,6 @@ namespace OmniTagWPF.ViewModels
             get { return _toggleTagSearchCommand ?? (_toggleTagSearchCommand = new SimpleCommand(ToggleTagSearch)); }
         }
 
-        private ICommand _reloadCommand;
-        public ICommand ReloadCommand
-        {
-            get { return _reloadCommand ?? (_reloadCommand = new SimpleCommand(Reload)); }
-        }
-
         private ICommand _helpTopicsCommand;
         public ICommand HelpTopicsCommand
         {
