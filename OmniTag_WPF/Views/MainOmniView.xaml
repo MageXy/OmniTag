@@ -40,7 +40,7 @@
                     Command="{Binding EditOmniCommand}"
                     CommandParameter="{Binding SelectedOmni}" />
         <KeyBinding Gesture="Ctrl+Del"
-                    Command="{Binding EditOmniCommand}"
+                    Command="{Binding DeleteOmniCommand}"
                     CommandParameter="{x:Null}" />
         <KeyBinding Gesture="Ctrl+T"
                     Command="{Binding EditTagsCommand}" />
@@ -88,6 +88,7 @@
                           Style="{StaticResource SelectedOmniNullStyle}" />
                 <MenuItem Header="_Delete Omni"
                           InputGestureText="Ctrl+Del"
+                          Command="{Binding DeleteOmniCommand}"
                           Style="{StaticResource SelectedOmniNullStyle}" />
                 <Separator />
                 <MenuItem Header="_Manage Tags..."
@@ -176,7 +177,7 @@
                                FontWeight="Bold"
                                FontSize="16" />
 
-                    <ItemsControl ItemsSource="{Binding SelectedOmni.Tags, Mode=TwoWay}"
+                    <ItemsControl ItemsSource="{Binding SelectedOmniTags}"
                                   KeyboardNavigation.IsTabStop="False">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -190,10 +191,10 @@
                                     BorderThickness="1"
                                     Margin="5,2,5,2"
                                     MaxWidth="150"
-                                    KeyboardNavigation.IsTabStop="False" >
+                                    KeyboardNavigation.IsTabStop="False">
                                     <TextBlock Margin="5,0,5,0"
                                            VerticalAlignment="Center"
-                                           Text="{Binding Name}" />
+                                           Text="{Binding Name}"/>
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -203,7 +204,8 @@
 
                 <WebBrowser Grid.Row="1" x:Name="OmniDescription"
                             cntrl:WebBrowserBehavior.Html="{Binding RenderedMarkdownHtml}"
-                            Navigating="OnWebBrowserLinkClicked" />
+                            Navigating="OnWebBrowserLinkClicked"
+                            PreviewKeyDown="OnShortcutEnteredInWebBrowser"/>
             </Grid>
 
             <DockPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"

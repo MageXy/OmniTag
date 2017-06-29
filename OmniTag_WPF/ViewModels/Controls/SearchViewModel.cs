@@ -17,6 +17,8 @@ namespace OmniTagWPF.ViewModels.Controls
             HintText = "Search...";
             ApplyFilterOnSearchTextChanged = true;
             UpdateSearchTextWhenSelectionChanges = false;
+
+            AllValues.CollectionChanged += (s, e) => ApplyFilter();
         }
 
         #region Properties

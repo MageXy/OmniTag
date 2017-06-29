@@ -58,6 +58,11 @@ namespace OmniTagWPF.ViewModels
             set { PropNotify.SetProperty(ref _selectedOmni, value); }
         }
 
+        [DependsOnProperty(nameof(SelectedOmni))]
+        public IEnumerable<Tag> SelectedOmniTags
+        {
+            get { return SelectedOmni?.Tags.Where(t => t.DateDeleted == null) ?? new List<Tag>(); }
+        }
 
         [DependsOnProperty(nameof(SelectedOmni))]
         public string RenderedMarkdownHtml
@@ -178,9 +183,49 @@ namespace OmniTagWPF.ViewModels
             vm.DataChanged -= reloadAction;
         }
 
+        private void DeleteOmni()
+        {
+            if (SelectedOmni == null)
+                return;
+
+            var result = MessageBox.Show("This Omni will be deleted. This action cannot be undone.\n\nAre you sure " +
+                                         "you want to continue?", "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Question,
+                                         MessageBoxResult.No);
+            if (result == MessageBoxResult.No)
+                return;
+
+            var tagList = new List<Tag>();
+            foreach (var tag in SelectedOmni.Tags)
+            {
+                if (tag.Omnis.Count - 1 == 0)
+                {
+                    tag.DateDeleted = DateTime.Now;
+                    tagList.Add(tag);
+                }
+            }
+
+            if (tagList.Count > 0)
+            {
+                var tagListStr = tagList.Aggregate(String.Empty, (str, t) => str + $"\n[{t.Name}]");
+                MessageBox.Show("The following unverified tags were deleted because this " +
+                            "was the only Omni they were associated with:\n" + tagListStr,
+                            "Alert", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
+            }
+            
+            SelectedOmni.DateDeleted = DateTime.Now;
+            Context.SaveChanges();
+            Reload();
+        }
+
         private void EditTags()
         {
+            EventHandler reloadAction = delegate { Reload(); };
             var view = ViewFactory.CreateWindow<EditTagView>();
+            var vm = view.DataContext as EditTagViewModel;
+            if (vm != null)
+            {
+                vm.DataChanged += reloadAction;
+            }
             view.Show();
         }
 
@@ -234,6 +279,12 @@ namespace OmniTagWPF.ViewModels
         public ICommand EditOmniCommand
         {
             get { return _editOmniCommand ?? (_editOmniCommand = new ParameterCommand(EditOmni)); }
+        }
+
+        private ICommand _deleteOmniCommand;
+        public ICommand DeleteOmniCommand
+        {
+            get { return _deleteOmniCommand ?? (_deleteOmniCommand = new SimpleCommand(DeleteOmni)); }
         }
 
         private ICommand _editTagsCommand;

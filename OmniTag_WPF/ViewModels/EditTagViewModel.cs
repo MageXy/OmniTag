@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -253,17 +254,44 @@ namespace OmniTagWPF.ViewModels
                     MessageBoxImage.Error, MessageBoxResult.OK);
                 return;
             }
-            var newTag = new Tag
+
+            // Check if this tag has been deleted before, then prompt the user to see if we should restore or replace it.
+            var newTag = DeletedTags.SingleOrDefault(t => t.Name == TagSearchDataContext.FullSearchText);
+            if (newTag == null)
+                newTag = Context.Tags.SingleOrDefault(t => t.DateDeleted != null && t.Name == TagSearchDataContext.FullSearchText);
+
+            if (newTag != null)
             {
-                DateCreated = DateTime.Now,
-                DateDeleted = null,
-                LastModifiedDate = DateTime.Now,
-                Name = TagSearchDataContext.FullSearchText,
-                IsVerified = true,
-                ManuallyVerified = true
-            };
+                var result = 
+                    MessageBox.Show($"The tag [{newTag.Name}] was previously deleted. You can either restore this tag and all Omni associations, " +
+                                "or replace the deleted tag with a brand new one.\n\nWhen this tag is undeleted, do you want to restore " +
+                                "Omni associations?", "Confirm Restore", MessageBoxButton.YesNoCancel, MessageBoxImage.Question, MessageBoxResult.Yes);
+                if (result == MessageBoxResult.Cancel)
+                    return;
+                else if (result == MessageBoxResult.No)
+                {
+                    newTag.Omnis.Clear();
+                    Context.Tags.Remove(newTag);
+                    newTag = null;
+                }
+                DeletedTags.Remove(newTag);
+            }
+
+            if (newTag == null)
+            {
+                newTag = new Tag
+                {
+                    Name = TagSearchDataContext.FullSearchText,
+                };
+                AddedTags.Add(newTag);
+            }
+
+            newTag.DateDeleted = null;
+            newTag.LastModifiedDate = DateTime.Now;
+            newTag.IsVerified = true;
+            newTag.ManuallyVerified = true;
+            
             AllTags.Add(newTag);
-            AddedTags.Add(newTag);
             TagSearchDataContext.FullSearchText = String.Empty;
             SelectedTag = newTag;
             ChangesMade = true;
@@ -281,7 +309,7 @@ namespace OmniTagWPF.ViewModels
                 DeletedTags.Add(SelectedTag);
             SelectedTag.DateDeleted = DateTime.Now;
             AllTags.Remove(SelectedTag);
-
+            SelectedTag = null;
             ChangesMade = true;
         }
 
@@ -311,10 +339,7 @@ namespace OmniTagWPF.ViewModels
             foreach (var tag in AddedTags)
                 tag.LastModifiedDate = DateTime.Now;
             foreach (var tag in DeletedTags)
-            {
                 tag.LastModifiedDate = DateTime.Now;
-                tag.Omnis.Clear();
-            }
 
             // "Hard save" all changes made to all tags into the database. 
             Context.Tags.AddRange(AddedTags);
