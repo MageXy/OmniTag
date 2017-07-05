@@ -8,9 +8,11 @@ using System.Windows.Input;
 using NCGLib;
 using NCGLib.Extensions;
 using NCGLib.WPF.Commands;
+using NCGLib.WPF.Utility;
 using OmniTag.Models;
 using OmniTagWPF.ViewModels.Base;
 using OmniTagWPF.ViewModels.Controls;
+using OmniTagWPF.Views;
 
 namespace OmniTagWPF.ViewModels
 {
@@ -124,6 +126,17 @@ namespace OmniTagWPF.ViewModels
         #endregion
 
         #region Calculated Properties
+
+        [DependsOnProperty(nameof(SelectedTag))]
+        public string OmniCount
+        {
+            get
+            {
+                if (SelectedTag == null)
+                    return String.Empty;
+                return $"{SelectedTag.Omnis.Count} Omnis.";
+            }
+        }
 
         [DependsOnProperty(nameof(SelectedTag))]
         public bool CanSelectedTagBeDeleted
@@ -243,6 +256,16 @@ namespace OmniTagWPF.ViewModels
                 SelectedTag = AllTags.Single(t => t.Name == TagSearchDataContext.FullSearchText);
                 TagSearchDataContext.FullSearchText = String.Empty;
             }
+        }
+
+        private void ViewAssociatedOmnis()
+        {
+            if (SelectedTag == null)
+                return;
+
+            var vm = new AssociatedOmnisViewModel(SelectedTag);
+            var view = ViewFactory.CreateViewWithDataContext<AssociatedOmnisView>(vm);
+            view.ShowDialog();
         }
 
         #region Add/Delete/Save Tag Methods
@@ -429,6 +452,12 @@ namespace OmniTagWPF.ViewModels
         public ICommand SearchTagCommand
         {
             get { return _searchTagCommand ?? (_searchTagCommand = new SimpleCommand(SearchTag)); }
+        }
+
+        private ICommand _viewAssociatedOmnisCommand;
+        public ICommand ViewAssociatedOmnisCommand
+        {
+            get { return _viewAssociatedOmnisCommand ?? (_viewAssociatedOmnisCommand = new SimpleCommand(ViewAssociatedOmnis)); }
         }
 
         #endregion
