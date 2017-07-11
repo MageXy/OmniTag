@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NCGLib;
 using NCGLib.WPF.Templates.ViewModels;
@@ -39,8 +40,10 @@ namespace OmniTagWPF.ViewModels
             {
                 return SelectedHelpTopic == null
                     ? "&nbsp;"
-                    : OmniTextRenderer.Render(SelectedHelpTopic.Details.Replace("\r\n", "\n")
-                        .Replace("\n", Environment.NewLine) ?? String.Empty);
+                    : OmniTextRenderer.Render(
+                            SelectedHelpTopic.Details.Replace("\r\n", "\n").Replace("\n", Environment.NewLine) ?? String.Empty,
+                            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "OmniTag/TempImages/")
+                        );
             }
         }
 

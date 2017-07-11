@@ -102,6 +102,8 @@
             <MenuItem Header="_Debug" x:Name="DebugMenu" Visibility="Collapsed">
                 <MenuItem Header="_Reload" Command="{Binding ReloadCommand}" />
                 <MenuItem Header="Export HTML" Command="{Binding ExportHtmlCommand}" />
+                <MenuItem Header="Import image into database" Command="{Binding DatabaseImageImportCommand}" />
+                <MenuItem Header="Read image from database" Command="{Binding DatabaseImageReadCommand}" />
             </MenuItem>
         </Menu>
 

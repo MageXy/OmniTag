@@ -6,6 +6,7 @@ namespace OmniTag.Models
     {
         public const string AutoTagVerificationThreshold = "Auto_Tag_Verification_Threshold";
         public const string ShowTagSearchOnStartup = "Show_Tag_Search_On_Startup";
+        public const string EmbeddedImageTempDirectory = "Embedded_Image_Temp_Directory";
 
         private string _name;
         public string Name

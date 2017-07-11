@@ -11,6 +11,7 @@ namespace OmniTagDB
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Omni> Omnis { get; set; }
         public DbSet<Setting> Settings { get; set; }
+        public DbSet<Image> Images { get; set; }
 
         protected OmniTagContext(string nameOrConnectionString) : base(nameOrConnectionString)
         {
@@ -107,7 +108,6 @@ namespace OmniTagDB
             modelBuilder.Entity<Setting>()
                 .Property(s => s.Value)
                 .IsRequired()
-                .HasMaxLength(20)
                 .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute()));
             
             #endregion

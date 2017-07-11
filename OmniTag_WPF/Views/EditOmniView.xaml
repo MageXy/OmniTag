@@ -113,6 +113,15 @@
                                    ToolTip="Add Online Image" />
                         </Button>
                         <Button DockPanel.Dock="Left"
+                                Name="AddImageDatabaseButton"
+                                Margin="2" Width="22"
+                                KeyboardNavigation.IsTabStop="False"
+                                Click="OnAddImageClicked">
+                            <Image Source="../Images/add_image_db.png"
+                                   ToolTip="Add Image to Database" />
+                        </Button>
+                        
+                        <Button DockPanel.Dock="Left"
                                 Margin="2" Width="22"
                                 KeyboardNavigation.IsTabStop="False"
                                 Click="OnAddHyperlinkClicked">

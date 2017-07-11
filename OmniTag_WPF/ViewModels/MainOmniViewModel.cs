@@ -15,6 +15,8 @@ using OmniTagWPF.Utility;
 using OmniTagWPF.ViewModels.Base;
 using OmniTagWPF.ViewModels.Controls;
 using OmniTagWPF.Views;
+using MessageBox = System.Windows.MessageBox;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace OmniTagWPF.ViewModels
 {
@@ -22,8 +24,9 @@ namespace OmniTagWPF.ViewModels
     {
         #region Properties
 
-        private List<Omni> AllOmnis { get; set; } 
-
+        private List<Omni> AllOmnis { get; set; }
+        private string _imageTempLocation;
+        
         private TagSearchViewModel _tagSearchDataContext;
         public TagSearchViewModel TagSearchDataContext
         {
@@ -76,8 +79,10 @@ namespace OmniTagWPF.ViewModels
             {
                 return SelectedOmni == null
                     ? "&nbsp;"
-                    : OmniTextRenderer.Render(SelectedOmni.Description?.Replace("\r\n", "\n")
-                        .Replace("\n", Environment.NewLine) ?? String.Empty);
+                    : OmniTextRenderer.Render(
+                            SelectedOmni.Description?.Replace("\r\n", "\n").Replace("\n", Environment.NewLine) ?? String.Empty,
+                            _imageTempLocation
+                        );
             }
         }
         
@@ -91,6 +96,9 @@ namespace OmniTagWPF.ViewModels
 
             bool parse;
             ShowTagSearch = Boolean.TryParse(setting.Value, out parse) && parse;
+
+            _imageTempLocation = Context.GetSettingOrDefaultAndSave(Setting.EmbeddedImageTempDirectory,
+                OmniTextRenderer.DefaultEmbeddedImageLocation).Value;
 
             TagButtons = new ObservableCollection<TagButtonViewModel>();
             TagButtons.CollectionChanged += OnTagButtonsChanged;
@@ -299,6 +307,41 @@ namespace OmniTagWPF.ViewModels
             }
         }
 
+        private void DatabaseImportImage()
+        {
+            var ofd = new OpenFileDialog
+            {
+                Title = "Select image file...",
+                Multiselect = false,
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            };
+            var ofdResult = ofd.ShowDialog(); 
+            if ((ofdResult ?? false) == false)
+                return;
+
+            var imageData = File.ReadAllBytes(ofd.FileName);
+
+            var image = new Image
+            {
+                DateCreated = DateTime.Now,
+                LastModifiedDate = DateTime.Now,
+                ImageData = imageData,
+                FileName = ofd.SafeFileName,
+                Omni = SelectedOmni
+            };
+            Context.Images.Add(image);
+            Context.SaveChanges();
+        }
+
+        private void ReadDatabaseImage()
+        {
+            var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            foreach (var image in SelectedOmni.Images)
+            {
+                File.WriteAllBytes(Path.Combine(desktop, image.FileName), image.ImageData);
+            }
+        }
+
         #endregion
 
         #region Commands
@@ -383,6 +426,17 @@ namespace OmniTagWPF.ViewModels
             get { return _exportHtmlCommand ?? (_exportHtmlCommand = new SimpleCommand(ExportHtml)); }
         }
 
+        private ICommand _databaseImageImportCommand;
+        public ICommand DatabaseImageImportCommand
+        {
+            get { return _databaseImageImportCommand ?? (_databaseImageImportCommand = new SimpleCommand(DatabaseImportImage)); }
+        }
+
+        private ICommand _databaseImageReadCommand;
+        public ICommand DatabaseImageReadCommand
+        {
+            get { return _databaseImageReadCommand ?? (_databaseImageReadCommand = new SimpleCommand(ReadDatabaseImage)); }
+        }
 
         #endregion
     }

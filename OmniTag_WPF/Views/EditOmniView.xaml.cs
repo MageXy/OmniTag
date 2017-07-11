@@ -182,19 +182,13 @@ namespace OmniTagWPF.Views
 
             if (sender == AddImageLocalButton)
             {
-                var ofd = new OpenFileDialog
-                {
-                    Title = "Select image file...",
-                    Multiselect = false,
-                    InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-                };
-                var ofdResult = ofd.ShowDialog();
-                if ((ofdResult ?? false) == false)
+                var ofd = SelectImage(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+                if (ofd.FileName == null)
                     return;
 
                 result = ofd.FileName;
             }
-            else
+            else if (sender == AddImageOnlineButton)
             {
                 //var vm = new SimpleInputViewModel("Enter file URL:", "Add Image");
                 //var view = ViewFactory.CreateViewWithDataContext<SimpleInputView>(vm);
@@ -205,11 +199,26 @@ namespace OmniTagWPF.Views
 
                 result = vm.SelectedValue;
             }
+            else
+            {
+                var ofd = SelectImage(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+                if (ofd == null)
+                    return;
+
+                var vm = DataContext as EditOmniViewModel;
+                if (vm == null)
+                    return;
+
+                var imageDesc = vm.EmbedImage(ofd.FileName, ofd.SafeFileName).Replace(" ", "%20");
+                
+                SurroundDescriptionTextWith("![",$@"](dbfile:///{imageDesc})", "image description");
+                return;
+            }
 
             try
             {
                 var uri = new Uri(result);
-                SurroundDescriptionTextWith("![", $"]({uri.AbsoluteUri})", "image alt text");
+                SurroundDescriptionTextWith("![", $"]({uri.AbsoluteUri})", "image description");
             }
             catch (UriFormatException)
             {
@@ -261,6 +270,21 @@ namespace OmniTagWPF.Views
             DescriptionTextBox.TextWrapping = (DescriptionTextBox.TextWrapping == TextWrapping.NoWrap)
                 ? TextWrapping.Wrap
                 : TextWrapping.NoWrap;
+        }
+
+        public OpenFileDialog SelectImage(string initialDirectory)
+        {
+            var ofd = new OpenFileDialog
+            {
+                Title = "Select image file...",
+                Multiselect = false,
+                InitialDirectory = initialDirectory
+            };
+            var ofdResult = ofd.ShowDialog();
+            if ((ofdResult ?? false) == false)
+                return null;
+
+            return ofd;
         }
     }
 }

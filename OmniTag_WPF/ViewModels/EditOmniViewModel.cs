@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -13,10 +14,11 @@ using OmniTagWPF.Utility;
 using OmniTagWPF.ViewModels.Base;
 using OmniTagWPF.ViewModels.Controls;
 using NCGLib.Extensions;
+using MessageBox = System.Windows.MessageBox;
 
 namespace OmniTagWPF.ViewModels
 {
-    class EditOmniViewModel : DataChangeViewModel
+    class EditOmniViewModel : DataChangeViewModel, IMarkdownViewer
     {
         public EditOmniViewModel()
         {
@@ -47,6 +49,7 @@ namespace OmniTagWPF.ViewModels
         private List<Tag> DeletedTags { get; set; }
         private bool _isNewOmni;
         private int _autoVerifyThreshold;
+        private string _imageTempDirectory;
         
         private string _omniSummary;
         public string OmniSummary
@@ -182,10 +185,12 @@ namespace OmniTagWPF.ViewModels
             var ibvmList = OmniTags.Select(t => new TagButtonViewModel(t));
             ImageButtons = new ObservableCollection<TagButtonViewModel>(ibvmList);
 
-            string avtStr = Context.Settings.SingleOrDefault(s => s.Name == Setting.AutoTagVerificationThreshold)?.Value;
-
+            string avtStr = Context.GetSettingOrDefault(Setting.AutoTagVerificationThreshold, "5").Value;
             if (!Int32.TryParse(avtStr, out _autoVerifyThreshold))
                 _autoVerifyThreshold = 5;
+
+            _imageTempDirectory = Context.GetSettingOrDefault(Setting.EmbeddedImageTempDirectory,
+                OmniTextRenderer.DefaultEmbeddedImageLocation).Value;
 
             TagNameList = Context.Tags.Select(t => t.Name).ToList();
         }
@@ -193,8 +198,10 @@ namespace OmniTagWPF.ViewModels
         public void PreviewHtml()
         {
             // convert all newlines to Environment.NewLine when rendering, to avoid mixing newline types.
-            RenderedMarkdownHtml = OmniTextRenderer.Render(OmniDescription?.Replace("\r\n", "\n")
-                .Replace("\n", Environment.NewLine) ?? String.Empty);
+            RenderedMarkdownHtml = OmniTextRenderer.Render(
+                OmniDescription?.Replace("\r\n", "\n").Replace("\n", Environment.NewLine) ?? String.Empty,
+                _imageTempDirectory
+            );
         }
 
         private void OnSearchTextChanged(string newString)
@@ -347,6 +354,22 @@ namespace OmniTagWPF.ViewModels
             ChangesMade = true;
         }
 
+        public string EmbedImage(string filePath, string imageDescription)
+        {
+            var imageDesc = $"{Guid.NewGuid()}_{imageDescription}";
+            var image = new Image
+            {
+                DateCreated = DateTime.Now,
+                LastModifiedDate = DateTime.Now,
+                Omni = CurrentOmni,
+                FileName = imageDesc,
+                ImageData = File.ReadAllBytes(filePath)
+            };
+            Context.Images.Add(image);
+            ChangesMade = true;
+            return imageDesc;
+        }
+
         private void ShowHelp()
         {
             var result = MessageBox.Show("The editor screen makes use of a simplified version of Markdown. Not all " +
@@ -389,7 +412,7 @@ namespace OmniTagWPF.ViewModels
         {
             get { return _showHelpCommand ?? (_showHelpCommand = new SimpleCommand(ShowHelp)); }
         }
-
+        
         #endregion
     }
 }
