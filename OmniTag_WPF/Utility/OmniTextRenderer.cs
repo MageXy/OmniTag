@@ -41,19 +41,20 @@ namespace OmniTagWPF.Utility
         /// <param name="imageFolder">The folder that will contain the temporary images.</param>
         /// <param name="images">A list of embedded images from the database.</param>
         /// <returns></returns>
-        public static string Render(string inputText, string imageFolder, List<Image> images = null)
+        public static string Render(string inputText, string imageFolder, IEnumerable<Image> images = null)
         {
             var md = new Markdown() { ExtraMode = true };
             var color = new CodeColorizer();
 
-            if (images != null)
+            var imageList = images as IList<Image> ?? images.ToList();
+            if (images != null && imageList.Any())
             {
                 Directory.CreateDirectory(imageFolder);
-                foreach (var img in images)
+                foreach (var img in imageList)
                 {
                     var filePath = Path.Combine(imageFolder, img.FileName);
-                    if (!File.Exists(filePath))
-                        File.WriteAllBytes(filePath, img.ImageData);
+                    //if (!File.Exists(filePath))
+                    File.WriteAllBytes(filePath, img.ImageData);
                 }
             }
 
@@ -103,12 +104,17 @@ namespace OmniTagWPF.Utility
             }
             #endregion
             
-            // HTML styling for tables so they have borders between cells
-            outputString = "<style>" +
-                                "table, th, td { border:1px solid black; border-collapse: collapse; } " +
-                                "th, td { padding-right: 5px; padding-left: 5px; }" +
-                             "</style>" + 
-                             outputString;
+            // Set the title of this HTML page to be a random name to "disable" caching, 
+            // otherwise embedded images will not always load the most recent version. 
+            // Also set the styles for tables so they have borders 
+            outputString = "<head>" +
+                           "<title>" + Guid.NewGuid() + "</title>" +
+                           "<style>" +
+                               "table, th, td { border:1px solid black; border-collapse: collapse; } " +
+                               "th, td { padding-right: 5px; padding-left: 5px; }" +
+                           "</style>" + 
+                           "</head>" +
+                           outputString;
             
             return outputString;
         }

@@ -1,0 +1,83 @@
+﻿<v:CenteredView x:Class="OmniTagWPF.Views.OmniImageView"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:v="clr-namespace:OmniTagWPF.Views"
+                Height="400" Width="600">
+    <v:CenteredView.Resources>
+        <Style x:Key="ListButtonStyle" TargetType="Button">
+            <Setter Property="Visibility" Value="Hidden" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Border}}}"
+                             Value="True">
+                    <Setter Property="Visibility" Value="Visible" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </v:CenteredView.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0"
+                   Margin="5"
+                   TextWrapping="Wrap"
+                   Text="The following images for this Omni are embedded in the database:" />
+        <ItemsControl Grid.Row="1"
+                      ItemsSource="{Binding OmniImages}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Margin="5"
+                            Width="150" Height="150"
+                            BorderBrush="DarkGray"
+                            BorderThickness="1"
+                            Background="Transparent">
+                        <Grid>
+                            <Image Source="{Binding ImageData}"
+                                   Stretch="Uniform"
+                                   StretchDirection="DownOnly"/>
+                            <Grid VerticalAlignment="Bottom">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Column="0"
+                                        ToolTip="Delete"
+                                        Command="{Binding Path=DataContext.RemoveImageCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}}"
+                                        CommandParameter="{Binding}"
+                                        Style="{StaticResource ListButtonStyle}">
+                                    <Image Source="../Images/red_x.png"
+                                           Stretch="None"/>
+                                </Button>
+                                <Button Grid.Column="1"
+                                        ToolTip="Replace"
+                                        Command="{Binding Path=DataContext.ReplaceImageCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}}"
+                                        CommandParameter="{Binding}"
+                                        Style="{StaticResource ListButtonStyle}">
+                                    <Image Source="../Images/replace_image.png"
+                                           Stretch="None" />
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                    
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        
+        <DockPanel Grid.Row="2"
+                   LastChildFill="False">
+            <Button DockPanel.Dock="Right"
+                    Margin="5" Padding="20,0,20,0"
+                    Content="Close"
+                    Command="{Binding CloseViewCommand}" />
+        </DockPanel>
+    </Grid>
+</v:CenteredView>

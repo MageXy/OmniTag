@@ -14,6 +14,8 @@ using OmniTagWPF.Utility;
 using OmniTagWPF.ViewModels.Base;
 using OmniTagWPF.ViewModels.Controls;
 using NCGLib.Extensions;
+using NCGLib.WPF.Utility;
+using OmniTagWPF.Views;
 using MessageBox = System.Windows.MessageBox;
 
 namespace OmniTagWPF.ViewModels
@@ -94,6 +96,13 @@ namespace OmniTagWPF.ViewModels
         {
             get { return _omniTags; }
             set { PropNotify.SetProperty(ref _omniTags, value); }
+        }
+
+        private ObservableCollection<Image> _omniImages;
+        public ObservableCollection<Image> OmniImages
+        {
+            get { return _omniImages; }
+            set { PropNotify.SetProperty(ref _omniImages, value); }
         }
 
         private string _searchText;
@@ -181,6 +190,7 @@ namespace OmniTagWPF.ViewModels
             CurrentOmniLastUpdatedTime = CurrentOmni.LastModifiedDate;
 
             OmniTags = CurrentOmni.Tags.ToList();
+            OmniImages = new ObservableCollection<Image>(CurrentOmni.Images.ToList());
 
             var ibvmList = OmniTags.Select(t => new TagButtonViewModel(t));
             ImageButtons = new ObservableCollection<TagButtonViewModel>(ibvmList);
@@ -200,7 +210,8 @@ namespace OmniTagWPF.ViewModels
             // convert all newlines to Environment.NewLine when rendering, to avoid mixing newline types.
             RenderedMarkdownHtml = OmniTextRenderer.Render(
                 OmniDescription?.Replace("\r\n", "\n").Replace("\n", Environment.NewLine) ?? String.Empty,
-                _imageTempDirectory
+                _imageTempDirectory,
+                OmniImages
             );
         }
 
@@ -255,6 +266,15 @@ namespace OmniTagWPF.ViewModels
             {
                 CurrentOmni.Description = OmniDescription;
                 CurrentOmni.LastModifiedDate = DateTime.Now;
+
+                foreach (var imageFileName in CurrentOmni.Images.Select(i => i.FileName).ToList())
+                {
+                    if (!CurrentOmni.Description.Contains(imageFileName.Replace(" ", "%20")))
+                    {
+                        var img = Context.Images.Single(i => i.FileName == imageFileName);
+                        Context.Images.Remove(img);
+                    }
+                }
             }
 
             if (!OmniTags.IsEqualTo(CurrentOmni.Tags))
@@ -366,8 +386,25 @@ namespace OmniTagWPF.ViewModels
                 ImageData = File.ReadAllBytes(filePath)
             };
             Context.Images.Add(image);
+            OmniImages.Add(image);
             ChangesMade = true;
             return imageDesc;
+        }
+
+        private void ShowAssociatedImages()
+        {
+            var vm = new OmniImageViewModel(CurrentOmni, Context);
+            var view = ViewFactory.CreateViewWithDataContext<OmniImageView>(vm);
+            view.ShowDialog();
+
+            ChangesMade = ChangesMade || vm.ChangesMade;
+
+            foreach (var img in vm.RemovedImages)
+            {
+                if (OmniImages.Remove(img))
+                    ChangesMade = true;
+            }
+
         }
 
         private void ShowHelp()
@@ -405,6 +442,12 @@ namespace OmniTagWPF.ViewModels
         public ICommand DeleteTagCommand
         {
             get { return _deleteTagCommand ?? (_deleteTagCommand = new ParameterCommand(DeleteTag)); }
+        }
+
+        private ICommand _showAssociatedImagesCommand;
+        public ICommand ShowAssociatedImagesCommand
+        {
+            get { return _showAssociatedImagesCommand ?? (_showAssociatedImagesCommand = new SimpleCommand(ShowAssociatedImages)); }
         }
 
         private ICommand _showHelpCommand;

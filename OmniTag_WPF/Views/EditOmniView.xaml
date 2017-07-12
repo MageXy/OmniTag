@@ -266,6 +266,21 @@
                     Margin="5" Padding="20,0,20,0"
                     Content="Help"
                     Command="{Binding ShowHelpCommand}" />
+            <Button DockPanel.Dock="Left"
+                    Margin="5" Padding="20,0,20,0"
+                    Content="Images..."
+                    Command="{Binding ShowAssociatedImagesCommand}">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Visibility" Value="Visible" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding OmniImages.Count}" Value="0">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
 
             <TextBlock DockPanel.Dock="Left"
                        VerticalAlignment="Center"

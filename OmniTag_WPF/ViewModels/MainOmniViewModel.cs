@@ -81,7 +81,8 @@ namespace OmniTagWPF.ViewModels
                     ? "&nbsp;"
                     : OmniTextRenderer.Render(
                             SelectedOmni.Description?.Replace("\r\n", "\n").Replace("\n", Environment.NewLine) ?? String.Empty,
-                            _imageTempLocation
+                            _imageTempLocation,
+                            SelectedOmni.Images.ToList()
                         );
             }
         }

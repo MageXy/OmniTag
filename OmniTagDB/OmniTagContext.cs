@@ -36,7 +36,7 @@ namespace OmniTagDB
             #region Image
 
             modelBuilder.Entity<Image>()
-                .HasKey(i => i.Id);
+                .HasKey(i => new { i.Id });
 
             modelBuilder.Entity<Image>()
                 .Property(i => i.FileName)
