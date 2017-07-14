@@ -4,7 +4,7 @@
                 xmlns:v="clr-namespace:OmniTagWPF.Views"
                 xmlns:vm="clr-namespace:OmniTagWPF.ViewModels"
                 xmlns:cnvrt="clr-namespace:NCGLib.WPF.Converters;assembly=NCGLib.WPF"
-                Title="Settings" Height="300" Width="300">
+                Title="Settings" Height="350" Width="375">
     <v:CenteredView.DataContext>
         <vm:SettingsViewModel />
     </v:CenteredView.DataContext>
@@ -58,6 +58,28 @@
                     </DockPanel>
                 </StackPanel>
             </GroupBox>
+            
+            <GroupBox Margin="5"
+                      Header="Temporary Image Location">
+                <StackPanel>
+                    <DockPanel>
+                        <Button DockPanel.Dock="Right"
+                                Margin="0,5,5,5"
+                                HorizontalAlignment="Right" Padding="10,0,10,0"
+                                Visibility="{Binding IsPortable, Converter={StaticResource BoolToVisibilityConverter}}"
+                                Content="Browse"
+                                Command="{Binding BrowseForTempImagesCommand}"/>
+
+                        <TextBox DockPanel.Dock="Left"
+                                 Margin="5"
+                                 Text="{Binding TempImageLocation}" />
+                    </DockPanel>
+                    
+                    <Button Margin="5,0,5,5"
+                            Content="Clear Temporary Image Cache" 
+                            Command="{Binding ClearTempImagesCommand}" />
+                </StackPanel>
+            </GroupBox>
         </StackPanel>
         
         <DockPanel Grid.Row="1"
@@ -71,6 +93,11 @@
                     Margin="5" Padding="10,0,10,0"
                     Content="Cancel"
                     Command="{Binding CloseViewCommand}"/>
+            
+            <Button DockPanel.Dock="Left"
+                    Margin="5" Padding="10,0,10,0"
+                    Content="Reset Defaults"
+                    Command="{Binding ResetDefaultsCommand}" />
         </DockPanel>
         
     </Grid>

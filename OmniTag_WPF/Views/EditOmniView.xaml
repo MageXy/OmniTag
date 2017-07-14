@@ -5,6 +5,11 @@
                 xmlns:c="clr-namespace:OmniTagWPF.Views.Controls"
                 xmlns:sys="clr-namespace:System;assembly=mscorlib"
                 Title="Omni Editor" Height="700" Width="650">
+    <v:CenteredView.Resources>
+        <ItemsPanelTemplate x:Key="MenuItemPanelTemplate">
+            <StackPanel Margin="-20,0,0,0" Background="{x:Static SystemColors.MenuBarBrush}" />
+        </ItemsPanelTemplate>
+    </v:CenteredView.Resources>
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -46,98 +51,132 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <DockPanel Grid.Row="0"
-                               LastChildFill="False"
-                               Background="{x:Static SystemColors.MenuBarBrush}">
-                        <Button DockPanel.Dock="Left"
-                                Margin="0,2,2,2" Width="22"
-                                KeyboardNavigation.IsTabStop="False"
-                                ToolTip="Bold (strong)"
-                                Click="OnBoldClicked">
-                            <TextBlock Text="B"
-                                       FontWeight="Bold"
-                                       FontSize="14" />
-                        </Button>
-                        <Button DockPanel.Dock="Left"
-                                Margin="2" Width="22"
-                                KeyboardNavigation.IsTabStop="False"
-                                ToolTip="Italics (emphasis)"
-                                Click="OnItalicsClicked">
-                            <TextBlock Text="I"
-                                       FontSize="14"
-                                       FontStyle="Italic" />
-                        </Button>
-                        <Button DockPanel.Dock="Left"
-                                Margin="2" Width="22"
-                                KeyboardNavigation.IsTabStop="False"
+                    <Menu Grid.Row="0">
+                        <Menu.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <DockPanel HorizontalAlignment="Stretch" />
+                            </ItemsPanelTemplate>
+                        </Menu.ItemsPanel>
+                        <MenuItem KeyboardNavigation.IsTabStop="False"
+                                  ToolTip="Bold (strong)"
+                                  Click="OnBoldClicked">
+                            <MenuItem.Header>
+                                <TextBlock Text="B"
+                                           FontWeight="Bold"
+                                           FontSize="14" />
+                            </MenuItem.Header>
+                        </MenuItem>
+
+                        <MenuItem KeyboardNavigation.IsTabStop="False"
+                                  ToolTip="Italics (emphasis)"
+                                  Click="OnItalicsClicked">
+                            <MenuItem.Header>
+                                <TextBlock Text="I"
+                                           FontSize="14"
+                                           FontStyle="Italic" />
+                            </MenuItem.Header>
+                        </MenuItem>
+
+                        <MenuItem KeyboardNavigation.IsTabStop="False"
                                 ToolTip="Strikethrough Text"
                                 Click="OnStrikeClicked">
-                            <Grid>
-                                <TextBlock Text="S"
-                                           HorizontalAlignment="Center"
-                                           FontSize="14" />
-                                <Line Stretch="Fill" Stroke="Black" StrokeThickness="1" X1="1" Width="10" VerticalAlignment="Center"></Line>
-                            </Grid>
-                        </Button>
-                        <Button DockPanel.Dock="Left"
-                                Margin="2,2,8,2" Width="22"
-                                KeyboardNavigation.IsTabStop="False"
-                                ToolTip="Code Text"
-                                Click="OnCodeClicked">
-                            <TextBlock Text="&lt;>"
-                                       FontSize="12" />
-                        </Button>
+                            <MenuItem.Header>
+                                <Grid>
+                                    <TextBlock Text="S"
+                                               HorizontalAlignment="Center"
+                                               FontSize="14" />
+                                    <Line Stretch="Fill" Stroke="Black" StrokeThickness="1" X1="1" Width="10" VerticalAlignment="Center" />
+                                </Grid>
+                            </MenuItem.Header>
+                        </MenuItem>
 
+                        <MenuItem KeyboardNavigation.IsTabStop="False"
+                                  ToolTip="Code Text"
+                                  Click="OnCodeClicked"> 
+                            <MenuItem.Header>
+                                <TextBlock Text="&lt;>"
+                                           FontSize="12" />
+                            </MenuItem.Header>
+                        </MenuItem>
+                        
+                        <Separator ></Separator>
 
-                        <Button DockPanel.Dock="Left"
-                                Margin="2" Width="22"
-                                KeyboardNavigation.IsTabStop="False"
-                                Click="OnAddTableClicked">
-                            <Image Source="../Images/add_table.png"
-                                   ToolTip="Add Table" />
-                        </Button>
-                        <Button DockPanel.Dock="Left"
-                                Name="AddImageLocalButton"
-                                Margin="2" Width="22"
-                                KeyboardNavigation.IsTabStop="False"
-                                Click="OnAddImageClicked">
-                            <Image Source="../Images/add_image_local.png"
-                                   ToolTip="Add Local Image" />
-                        </Button>
-                        <Button DockPanel.Dock="Left"
-                                Name="AddImageOnlineButton"
-                                Margin="2" Width="22"
-                                KeyboardNavigation.IsTabStop="False"
-                                Click="OnAddImageClicked">
-                            <Image Source="../Images/add_image_online.png"
-                                   ToolTip="Add Online Image" />
-                        </Button>
-                        <Button DockPanel.Dock="Left"
-                                Name="AddImageDatabaseButton"
-                                Margin="2" Width="22"
-                                KeyboardNavigation.IsTabStop="False"
-                                Click="OnAddImageClicked">
-                            <Image Source="../Images/add_image_db.png"
-                                   ToolTip="Add Image to Database" />
-                        </Button>
+                        <MenuItem KeyboardNavigation.IsTabStop="False"
+                                  Click="OnAddTableClicked">
+                            <MenuItem.Header>
+                                <Image Source="../Images/add_table.png"
+                                       Margin="0,2,0,2"
+                                       ToolTip="Add Table" />
+                            </MenuItem.Header>
+                        </MenuItem>
                         
-                        <Button DockPanel.Dock="Left"
-                                Margin="2" Width="22"
-                                KeyboardNavigation.IsTabStop="False"
-                                Click="OnAddHyperlinkClicked">
-                            <Image Source="../Images/hyperlink.png"
-                                   ToolTip="Add Hyperlink" />
-                        </Button>
-                        
-                        <Button DockPanel.Dock="Right"
-                                      Margin="2" Width="22"
+                        <MenuItem KeyboardNavigation.IsTabStop="False">
+                            <MenuItem.Header>
+                                <Image Source="../Images/add_image.png"
+                                       Margin="0,2,0,2"
+                                       ToolTip="Add Image" />
+                            </MenuItem.Header>
+
+                            <MenuItem Name="AddImageLocalButton"
+                                      Margin="-25,0,0,0"
+                                      Background="{x:Static SystemColors.MenuBarBrush}"
                                       KeyboardNavigation.IsTabStop="False"
-                                      Click="ToggleTextWrapping">
-                            <Button.Style>
-                                <Style TargetType="Button">
+                                      ItemsPanel="{StaticResource MenuItemPanelTemplate}"
+                                      Click="OnAddImageClicked">
+                                <MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="../Images/add_image_local.png" Margin="0,0,10,0" />
+                                        <TextBlock Text="Add Local Image" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </MenuItem.Header>
+                            </MenuItem>
+
+                            <MenuItem Name="AddImageOnlineButton"
+                                      Margin="-25,0,0,0"
+                                      Background="{x:Static SystemColors.MenuBarBrush}"
+                                      KeyboardNavigation.IsTabStop="False"
+                                      ItemsPanel="{StaticResource MenuItemPanelTemplate}"
+                                      Click="OnAddImageClicked">
+                                <MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="../Images/add_image_online.png" Margin="0,0,10,0" />
+                                        <TextBlock Text="Add Online Image" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </MenuItem.Header>
+                            </MenuItem>
+
+                            <MenuItem Name="AddImageDatabaseButton"
+                                      Margin="-25,0,0,0"
+                                      Background="{x:Static SystemColors.MenuBarBrush}"
+                                      KeyboardNavigation.IsTabStop="False"
+                                      ItemsPanel="{StaticResource MenuItemPanelTemplate}"
+                                      Click="OnAddImageClicked">
+                                <MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="../Images/add_image_db.png" Margin="0,0,10,0" />
+                                        <TextBlock Text="Embed Image into Database" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </MenuItem.Header>
+                            </MenuItem>
+                        </MenuItem>
+
+                        <MenuItem KeyboardNavigation.IsTabStop="False"
+                                  Click="OnAddHyperlinkClicked">
+                            <MenuItem.Header>
+                                <Image Source="../Images/hyperlink.png"
+                                       Margin="0,2,0,2"
+                                       ToolTip="Add Hyperlink" />
+                            </MenuItem.Header>
+                        </MenuItem>
+
+                        <MenuItem KeyboardNavigation.IsTabStop="False"
+                                  HorizontalAlignment="Right"
+                                  Click="ToggleTextWrapping">
+                            <MenuItem.Style>
+                                <Style TargetType="MenuItem">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding ElementName=DescriptionTextBox, Path=TextWrapping}" Value="{x:Static TextWrapping.Wrap}">
-                                            <Setter Property="Content">
+                                            <Setter Property="Header">
                                                 <Setter.Value>
                                                     <Image Source="../Images/text_wrap_on.png" />
                                                 </Setter.Value>
@@ -145,7 +184,7 @@
                                             <Setter Property="ToolTip" Value="Text Wrapping ON" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding ElementName=DescriptionTextBox, Path=TextWrapping}" Value="{x:Static TextWrapping.NoWrap}">
-                                            <Setter Property="Content">
+                                            <Setter Property="Header">
                                                 <Setter.Value>
                                                     <Image Source="../Images/text_wrap_off.png" />
                                                 </Setter.Value>
@@ -154,9 +193,9 @@
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </Button.Style>
-                        </Button>
-                    </DockPanel>
+                            </MenuItem.Style>
+                        </MenuItem>
+                    </Menu>
                     
                     <ScrollViewer Grid.Row="1"
                                   VerticalScrollBarVisibility="Visible">

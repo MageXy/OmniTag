@@ -7,7 +7,6 @@ using ColorCode;
 using MarkdownDeep;
 using NCGLib.Extensions;
 using OmniTag.Models;
-using OmniTagDB;
 
 namespace OmniTagWPF.Utility
 {
@@ -17,7 +16,7 @@ namespace OmniTagWPF.Utility
         public const string CodeBlockStart = "<pre><code>";
         public const string CodeBlockEnd = "</code></pre>";
         public static readonly string DefaultEmbeddedImageLocation = 
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "OmniTag/TempImages/");
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"OmniTag\TempImages\");
 
         public static readonly Dictionary<string, ILanguage> LanguageMap;
 
@@ -53,7 +52,6 @@ namespace OmniTagWPF.Utility
                 foreach (var img in imageList)
                 {
                     var filePath = Path.Combine(imageFolder, img.FileName);
-                    //if (!File.Exists(filePath))
                     File.WriteAllBytes(filePath, img.ImageData);
                 }
             }

@@ -24,53 +24,55 @@
                    Margin="5"
                    TextWrapping="Wrap"
                    Text="The following images for this Omni are embedded in the database:" />
-        <ItemsControl Grid.Row="1"
+        <ScrollViewer Grid.Row="1">
+            <ItemsControl
                       ItemsSource="{Binding OmniImages}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Border Margin="5"
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="5"
                             Width="150" Height="150"
                             BorderBrush="DarkGray"
                             BorderThickness="1"
                             Background="Transparent">
-                        <Grid>
-                            <Image Source="{Binding ImageData}"
-                                   Stretch="Uniform"
-                                   StretchDirection="DownOnly"/>
-                            <Grid VerticalAlignment="Bottom">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
+                            <Grid>
+                                <Image Source="{Binding ImageData}"
+                                       Stretch="Uniform"
+                                       StretchDirection="DownOnly"/>
+                                <Grid VerticalAlignment="Bottom">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
 
-                                <Button Grid.Column="0"
-                                        ToolTip="Delete"
-                                        Command="{Binding Path=DataContext.RemoveImageCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}}"
-                                        CommandParameter="{Binding}"
-                                        Style="{StaticResource ListButtonStyle}">
-                                    <Image Source="../Images/red_x.png"
-                                           Stretch="None"/>
-                                </Button>
-                                <Button Grid.Column="1"
-                                        ToolTip="Replace"
-                                        Command="{Binding Path=DataContext.ReplaceImageCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}}"
-                                        CommandParameter="{Binding}"
-                                        Style="{StaticResource ListButtonStyle}">
-                                    <Image Source="../Images/replace_image.png"
+                                    <Button Grid.Column="0"
+                                            ToolTip="Delete"
+                                            Command="{Binding Path=DataContext.RemoveImageCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}}"
+                                            CommandParameter="{Binding}"
+                                            Style="{StaticResource ListButtonStyle}">
+                                        <Image Source="../Images/red_x.png"
+                                               Stretch="None"/>
+                                    </Button>
+                                    <Button Grid.Column="1"
+                                            ToolTip="Replace"
+                                            Command="{Binding Path=DataContext.ReplaceImageCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}}"
+                                            CommandParameter="{Binding}"
+                                            Style="{StaticResource ListButtonStyle}">
+                                        <Image Source="../Images/replace_image.png"
                                            Stretch="None" />
-                                </Button>
+                                    </Button>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    </Border>
-                    
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+                        </Border>
+
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
         
         <DockPanel Grid.Row="2"
                    LastChildFill="False">

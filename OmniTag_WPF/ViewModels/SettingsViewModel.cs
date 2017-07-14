@@ -1,12 +1,16 @@
 ﻿using System;
 using OmniTagWPF.ViewModels.Base;
 using System.Configuration;
+using System.IO;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Input;
-using Microsoft.Win32;
 using NCGLib.WPF.Commands;
 using OmniTag.Models;
 using OmniTagWPF.Utility;
+using Application = System.Windows.Application;
+using MessageBox = System.Windows.MessageBox;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace OmniTagWPF.ViewModels
 {
@@ -46,11 +50,25 @@ namespace OmniTagWPF.ViewModels
             get { return _showTagFilter; }
             set { PropNotify.SetProperty(ref _showTagFilter, value); }
         }
+
+        private string _tempImageLocation;
+        public string TempImageLocation
+        {
+            get
+            {
+                return String.Equals(Path.GetFullPath(_tempImageLocation), 
+                        Path.GetFullPath(OmniTextRenderer.DefaultEmbeddedImageLocation), 
+                        StringComparison.InvariantCultureIgnoreCase)
+                    ? "[default location]"
+                    : _tempImageLocation;
+            }
+            set { PropNotify.SetProperty(ref _tempImageLocation, value); }
+        }
         
         private Setting AutoTagVerifyThresholdSetting { get; set; }
         private Setting ShowTagFilterSetting { get; set; }
-
-
+        private Setting TempImageLocationSetting { get; set; }
+        
         #endregion
 
         #region Methods
@@ -85,6 +103,10 @@ namespace OmniTagWPF.ViewModels
             ShowTagFilterSetting = Context.GetSettingOrDefaultAndSave(Setting.ShowTagSearchOnStartup, "false");
             ShowTagFilter = Boolean.Parse(ShowTagFilterSetting.Value);
 
+            TempImageLocationSetting = Context.GetSettingOrDefaultAndSave(Setting.EmbeddedImageTempDirectory,
+                    OmniTextRenderer.DefaultEmbeddedImageLocation);
+            TempImageLocation = TempImageLocationSetting.Value;
+
             IsLoading = false;
         }
 
@@ -93,9 +115,38 @@ namespace OmniTagWPF.ViewModels
             var ofd = new OpenFileDialog();
             ofd.Multiselect = false;
             ofd.Filter = "SQLite Database (*.db)|*.db|All Files (*.*)|*.*";
-            ofd.ShowDialog();
+            var result = ofd.ShowDialog();
+            if (!(result ?? false))
+                return;
 
             DataSource = ofd.FileName;
+        }
+
+        private void BrowseForTempImages()
+        {
+            var ofd = new FolderBrowserDialog();
+            var result = ofd.ShowDialog();
+            if (result != DialogResult.OK)
+                return;
+
+            TempImageLocation = ofd.SelectedPath + "\\";
+        }
+
+        private void ClearTempImages()
+        {
+            DirectoryInfo di = new DirectoryInfo(_tempImageLocation);
+            foreach (var file in di.GetFiles())
+                file.Delete();
+
+            MessageBox.Show("Temporary image cache has been cleared.", "Images Cleared", MessageBoxButton.OK,
+                MessageBoxImage.Information, MessageBoxResult.OK);
+        }
+
+        private void ResetDefaults()
+        {
+            TempImageLocation = OmniTextRenderer.DefaultEmbeddedImageLocation;
+            TagThreshold = "5";
+            ShowTagFilter = false;
         }
 
         private void SaveChanges()
@@ -113,6 +164,7 @@ namespace OmniTagWPF.ViewModels
             var success = SaveConnectionString();
             success = success && SaveTagThreshold();
             success = success && SaveShowTagFilter();
+            success = success && SaveTempImageLocation();
 
             if (!success)
                 return;
@@ -175,6 +227,12 @@ namespace OmniTagWPF.ViewModels
             return true;
         }
 
+        private bool SaveTempImageLocation()
+        {
+            TempImageLocationSetting.Value = _tempImageLocation;
+            return true;
+        }
+
         #endregion
 
         #region Commands
@@ -183,6 +241,24 @@ namespace OmniTagWPF.ViewModels
         public ICommand BrowseForDatabaseCommand
         {
             get { return _browseForDatabaseCommand ?? (_browseForDatabaseCommand = new SimpleCommand(BrowseForDatabase)); }
+        }
+
+        private ICommand _browseForTempImagesCommand;
+        public ICommand BrowseForTempImagesCommand
+        {
+            get { return _browseForTempImagesCommand ?? (_browseForTempImagesCommand = new SimpleCommand(BrowseForTempImages)); }
+        }
+
+        private ICommand _clearTempImagesCommand;
+        public ICommand ClearTempImagesCommand
+        {
+            get { return _clearTempImagesCommand ?? (_clearTempImagesCommand = new SimpleCommand(ClearTempImages)); }
+        }
+
+        private ICommand _resetDefaultsCommand;
+        public ICommand ResetDefaultsCommand
+        {
+            get { return _resetDefaultsCommand ?? (_resetDefaultsCommand = new SimpleCommand(ResetDefaults)); }
         }
 
         private ICommand _saveCommand;

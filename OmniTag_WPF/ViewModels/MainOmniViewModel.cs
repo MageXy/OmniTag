@@ -308,41 +308,6 @@ namespace OmniTagWPF.ViewModels
             }
         }
 
-        private void DatabaseImportImage()
-        {
-            var ofd = new OpenFileDialog
-            {
-                Title = "Select image file...",
-                Multiselect = false,
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-            };
-            var ofdResult = ofd.ShowDialog(); 
-            if ((ofdResult ?? false) == false)
-                return;
-
-            var imageData = File.ReadAllBytes(ofd.FileName);
-
-            var image = new Image
-            {
-                DateCreated = DateTime.Now,
-                LastModifiedDate = DateTime.Now,
-                ImageData = imageData,
-                FileName = ofd.SafeFileName,
-                Omni = SelectedOmni
-            };
-            Context.Images.Add(image);
-            Context.SaveChanges();
-        }
-
-        private void ReadDatabaseImage()
-        {
-            var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            foreach (var image in SelectedOmni.Images)
-            {
-                File.WriteAllBytes(Path.Combine(desktop, image.FileName), image.ImageData);
-            }
-        }
-
         #endregion
 
         #region Commands
@@ -425,18 +390,6 @@ namespace OmniTagWPF.ViewModels
         public ICommand ExportHtmlCommand
         {
             get { return _exportHtmlCommand ?? (_exportHtmlCommand = new SimpleCommand(ExportHtml)); }
-        }
-
-        private ICommand _databaseImageImportCommand;
-        public ICommand DatabaseImageImportCommand
-        {
-            get { return _databaseImageImportCommand ?? (_databaseImageImportCommand = new SimpleCommand(DatabaseImportImage)); }
-        }
-
-        private ICommand _databaseImageReadCommand;
-        public ICommand DatabaseImageReadCommand
-        {
-            get { return _databaseImageReadCommand ?? (_databaseImageReadCommand = new SimpleCommand(ReadDatabaseImage)); }
         }
 
         #endregion
