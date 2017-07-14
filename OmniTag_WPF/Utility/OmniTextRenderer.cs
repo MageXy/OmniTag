@@ -65,6 +65,9 @@ namespace OmniTagWPF.Utility
 
             outputString = md.Transform(outputString);
 
+            // Remove "finalized" HTML values, since we're not done processing yet. 
+            outputString = Deconvert(outputString);
+
             #region Colorize code blocks
             var n = 1;
             var startIndex = outputString.IndexOfNth(CodeBlockStart, n);
@@ -129,6 +132,44 @@ namespace OmniTagWPF.Utility
                 return retVal;
             else
                 return null;
+        }
+
+        private static string Deconvert(string str)
+        {
+            var strArray = str.Split('\n');
+            var startDeconversion = false;
+
+            for (var i=0; i<strArray.Length; i++)
+            {
+                var line = strArray[i];
+                if (line.Trim().StartsWith($"<pre><code>{LangDefinitionText}"))
+                {
+                    startDeconversion = true;
+                    continue;
+                }
+
+                if (startDeconversion && line.Contains("</code></pre>"))
+                {
+                    startDeconversion = false;
+                }
+
+                if (startDeconversion)
+                    strArray[i] = DeconvertLine(line);
+            }
+            var retVal = strArray.Aggregate((o, n) => o += "\n" + n);
+            return retVal;
+        }
+
+        private static string DeconvertLine(string str)
+        {
+            var regex = new Regex("&.*?;");
+            var retString = str;
+            foreach (var match in regex.Matches(str))
+            {
+                var decodeTag = System.Net.WebUtility.HtmlDecode(match.ToString());
+                retString = retString.Replace(match.ToString(), decodeTag);
+            }
+            return retString;
         }
     }
 }
