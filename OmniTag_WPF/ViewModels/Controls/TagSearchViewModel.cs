@@ -91,6 +91,13 @@ namespace OmniTagWPF.ViewModels.Controls
             set { PropNotify.SetProperty(ref _searchCommand, value); }
         }
 
+        private ICommand _clickSelectCommand;
+        public ICommand ClickSelectCommand
+        {
+            get { return _clickSelectCommand; }
+            set { PropNotify.SetProperty(ref _clickSelectCommand, value); }
+        }
+
         #endregion
     }
 }

@@ -11,15 +11,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OmniTagDB", "OmniTagDB\Omni
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Analysis|Any CPU = Analysis|Any CPU
 		Debug (Portable)|Any CPU = Debug (Portable)|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release (Portable)|Any CPU = Release (Portable)|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{77CC8ABC-D8E3-4326-A7F6-50523D74DEC3}.Analysis|Any CPU.ActiveCfg = Release|Any CPU
-		{77CC8ABC-D8E3-4326-A7F6-50523D74DEC3}.Analysis|Any CPU.Build.0 = Release|Any CPU
 		{77CC8ABC-D8E3-4326-A7F6-50523D74DEC3}.Debug (Portable)|Any CPU.ActiveCfg = Debug (Portable)|Any CPU
 		{77CC8ABC-D8E3-4326-A7F6-50523D74DEC3}.Debug (Portable)|Any CPU.Build.0 = Debug (Portable)|Any CPU
 		{77CC8ABC-D8E3-4326-A7F6-50523D74DEC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -28,8 +25,6 @@ Global
 		{77CC8ABC-D8E3-4326-A7F6-50523D74DEC3}.Release (Portable)|Any CPU.Build.0 = Release (Portable)|Any CPU
 		{77CC8ABC-D8E3-4326-A7F6-50523D74DEC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77CC8ABC-D8E3-4326-A7F6-50523D74DEC3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{57B617D0-34B4-465B-A092-7DE854084C57}.Analysis|Any CPU.ActiveCfg = Release|Any CPU
-		{57B617D0-34B4-465B-A092-7DE854084C57}.Analysis|Any CPU.Build.0 = Release|Any CPU
 		{57B617D0-34B4-465B-A092-7DE854084C57}.Debug (Portable)|Any CPU.ActiveCfg = Debug (Portable)|Any CPU
 		{57B617D0-34B4-465B-A092-7DE854084C57}.Debug (Portable)|Any CPU.Build.0 = Debug (Portable)|Any CPU
 		{57B617D0-34B4-465B-A092-7DE854084C57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -38,8 +33,6 @@ Global
 		{57B617D0-34B4-465B-A092-7DE854084C57}.Release (Portable)|Any CPU.Build.0 = Release (Portable)|Any CPU
 		{57B617D0-34B4-465B-A092-7DE854084C57}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57B617D0-34B4-465B-A092-7DE854084C57}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4218900C-6CCB-4E4C-A739-FB1FC9F206F7}.Analysis|Any CPU.ActiveCfg = Release|Any CPU
-		{4218900C-6CCB-4E4C-A739-FB1FC9F206F7}.Analysis|Any CPU.Build.0 = Release|Any CPU
 		{4218900C-6CCB-4E4C-A739-FB1FC9F206F7}.Debug (Portable)|Any CPU.ActiveCfg = Debug (Portable)|Any CPU
 		{4218900C-6CCB-4E4C-A739-FB1FC9F206F7}.Debug (Portable)|Any CPU.Build.0 = Debug (Portable)|Any CPU
 		{4218900C-6CCB-4E4C-A739-FB1FC9F206F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

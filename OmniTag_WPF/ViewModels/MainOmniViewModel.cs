@@ -115,6 +115,7 @@ namespace OmniTagWPF.ViewModels
                 EnterText = "Add",
                 EnterCommand = AddTagCommand,
                 SearchCommand = AddTagCommand,
+                ClickSelectCommand = AddTagCommand,
                 UpdateSearchTextWhenSelectionChanges = true,
                 EnableEnterFunc = s => TagSearchDataContext.FilteredTags.Any(t => t.Name == s),
                 Filter = t => t.Name.ToUpper().Contains(TagSearchDataContext.SearchText.ToUpper())

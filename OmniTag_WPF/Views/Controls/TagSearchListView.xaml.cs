@@ -1,4 +1,8 @@
-﻿namespace OmniTagWPF.Views.Controls
+﻿using System.Windows;
+using System.Windows.Controls;
+using OmniTagWPF.ViewModels.Controls;
+
+namespace OmniTagWPF.Views.Controls
 {
     /// <summary>
     /// Interaction logic for TagSearchListView.xaml
@@ -16,6 +20,16 @@
         //{
         //    SearchListView.Focus();
         //}
+
+        private void DoubleClickListItem(object sender, RoutedEventArgs e)
+        {
+            var list = sender as ListView;
+            if (list?.SelectedItem == null)
+                return;
+            
+            var vm = DataContext as TagSearchViewModel;
+            vm?.ClickSelectCommand?.Execute(list.SelectedItem);
+        }
 
         #endregion
     }

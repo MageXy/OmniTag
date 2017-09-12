@@ -1,10 +1,10 @@
 ﻿<cntrl:SearchList x:Class="OmniTagWPF.Views.Controls.TagSearchListView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:u="clr-namespace:OmniTagWPF.Utility"
-             xmlns:cntrl="clr-namespace:OmniTagWPF.Views.Controls"
-             xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             xmlns:cnvrt="clr-namespace:NCGLib.WPF.Converters;assembly=NCGLib.WPF">
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:u="clr-namespace:OmniTagWPF.Utility"
+                  xmlns:cntrl="clr-namespace:OmniTagWPF.Views.Controls"
+                  xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                  xmlns:cnvrt="clr-namespace:NCGLib.WPF.Converters;assembly=NCGLib.WPF">
     <cntrl:SearchList.Resources>
         <cnvrt:EnumToBooleanConverter x:Key="enumBoolConverter" />
         <cnvrt:BoolToVisibilityConverter x:Key="BoolVisibilityConverter"
@@ -76,7 +76,8 @@
                   SelectedItem="{Binding SelectedValue}"
                   DisplayMemberPath="{Binding DisplayMember}"
                   SelectionMode="Single"
-                  SelectionChanged="OnSelectionChanged"/>
+                  SelectionChanged="OnSelectionChanged"
+                  MouseDoubleClick="DoubleClickListItem" />
         
         <Grid Grid.Column="0" Row="3" Grid.ColumnSpan="2"
               Visibility="{Binding Path=ShowStatusFilter, Converter={StaticResource BoolVisibilityConverter}}">

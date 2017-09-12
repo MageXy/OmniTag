@@ -45,7 +45,7 @@ namespace OmniTagWPF.Utility
             var md = new Markdown() { ExtraMode = true };
             var color = new CodeColorizer();
 
-            var imageList = images as IList<Image> ?? images.ToList();
+            var imageList = images as IList<Image> ?? images?.ToList();
             if (images != null && imageList.Any())
             {
                 Directory.CreateDirectory(imageFolder);
@@ -122,7 +122,7 @@ namespace OmniTagWPF.Utility
 
         private static ILanguage ParseCodeLanguage(string str)
         {
-            var startsWith = "###CodeLanguage:";
+            var startsWith = LangDefinitionText;
             if (!str.StartsWith(startsWith))
                 return null;
 
@@ -142,13 +142,13 @@ namespace OmniTagWPF.Utility
             for (var i=0; i<strArray.Length; i++)
             {
                 var line = strArray[i];
-                if (line.Trim().StartsWith($"<pre><code>{LangDefinitionText}"))
+                if (line.Trim().StartsWith($"{CodeBlockStart}{LangDefinitionText}"))
                 {
                     startDeconversion = true;
                     continue;
                 }
 
-                if (startDeconversion && line.Contains("</code></pre>"))
+                if (startDeconversion && line.Contains($"{CodeBlockEnd}"))
                 {
                     startDeconversion = false;
                 }

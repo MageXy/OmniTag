@@ -27,7 +27,7 @@ namespace OmniTagWPF.Views
             "quick and easy.";
 
         private const string _omnisText =
-            "An **Omni** is that core part of the OmniTag applicatin. A single Omni represents a piece of information. " +
+            "An **Omni** is that core part of the OmniTag application. A single Omni represents a piece of information. " +
             "That information might be something like recipe for chocolate cake, or a guide on how to run a program on " +
             "your computer, or a list of tings you want to buy your friend for their birthday. Literally *any* scrap of " +
             "knowledge can be an Omni.\n\nAn Omni is primarily made up of two main parts: the **summary**, and the **details**. " +
@@ -87,7 +87,7 @@ namespace OmniTagWPF.Views
             "| Space columns between | vertical pipes.|\n\n" +
             "The `|---|` line signifies the beginning of a table.If a row appears above this line, that row will be the " +
             "*column headers*.\n\n" +
-            "Tables do not have to be perfectly aligned in the code, though it does look nicer that way.As long as the " +
+            "Tables do not have to be perfectly aligned in the code, though it does look nicer that way. As long as the " +
             "vertical pipes are placed between the content of columns, the table will format correctly.\n\n" +
             "###Code Blocks\n\n" +
             "OmniTag also supports limited syntax highlighting for certain programming languages.You can specify the " +
