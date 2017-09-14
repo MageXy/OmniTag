@@ -57,8 +57,8 @@
       <HintPath>..\packages\NCGLib.1.0.0.4\lib\net452\NCGLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NCGLib.WPF, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NCGLib.WPF.1.1.1\lib\net452\NCGLib.WPF.dll</HintPath>
+    <Reference Include="NCGLib.WPF, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NCGLib.WPF.1.1.2\lib\net452\NCGLib.WPF.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

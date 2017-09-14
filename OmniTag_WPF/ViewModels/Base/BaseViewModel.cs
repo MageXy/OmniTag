@@ -1,4 +1,5 @@
-﻿using NCGLib.WPF.Templates.ViewModels;
+﻿using System.ComponentModel;
+using NCGLib.WPF.Templates.ViewModels;
 using OmniTagDB;
 
 namespace OmniTagWPF.ViewModels.Base
@@ -11,11 +12,10 @@ namespace OmniTagWPF.ViewModels.Base
         }
 
         protected OmniTagContext Context { get; set; }
-
-        public override void RequestCloseView()
+        
+        public override void OnViewClosing(CancelEventArgs e)
         {
-            base.RequestCloseView();
-
+            base.OnViewClosing(e);
             Context.Dispose();
         }
     }
