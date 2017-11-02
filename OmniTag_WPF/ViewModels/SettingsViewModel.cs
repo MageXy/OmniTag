@@ -16,6 +16,8 @@ namespace OmniTagWPF.ViewModels
 {
     public class SettingsViewModel : BaseViewModel
     {
+        private const string DefaultLocation = "[default location]";
+
         #region Properties
 
         private bool _dataSourceChanged;
@@ -56,10 +58,13 @@ namespace OmniTagWPF.ViewModels
         {
             get
             {
+                if (String.IsNullOrWhiteSpace(_tempImageLocation))
+                    return DefaultLocation;
+                
                 return String.Equals(Path.GetFullPath(_tempImageLocation), 
                         Path.GetFullPath(OmniTextRenderer.DefaultEmbeddedImageLocation), 
                         StringComparison.InvariantCultureIgnoreCase)
-                    ? "[default location]"
+                    ? DefaultLocation
                     : _tempImageLocation;
             }
             set { PropNotify.SetProperty(ref _tempImageLocation, value); }
@@ -229,8 +234,29 @@ namespace OmniTagWPF.ViewModels
 
         private bool SaveTempImageLocation()
         {
-            TempImageLocationSetting.Value = _tempImageLocation;
-            return true;
+            if (String.IsNullOrWhiteSpace(_tempImageLocation) ||
+                String.Equals(_tempImageLocation, DefaultLocation, StringComparison.CurrentCulture))
+            {
+                TempImageLocationSetting.Value = OmniTextRenderer.DefaultEmbeddedImageLocation;
+                return true;
+            }
+
+            if (IsPathValidRootedLocal(_tempImageLocation))
+            {
+                TempImageLocationSetting.Value = _tempImageLocation;
+                return true;
+            }
+
+            MessageBox.Show("Temp image location must be a valid file path.", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+            return false;
+        }
+
+        public bool IsPathValidRootedLocal(String pathString)
+        {
+            Uri pathUri;
+            Boolean isValidUri = Uri.TryCreate(pathString, UriKind.Absolute, out pathUri);
+            return isValidUri && pathUri != null && pathUri.IsLoopback;
         }
 
         #endregion
