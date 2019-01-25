@@ -31,10 +31,6 @@
                HorizontalAlignment="Left"
                Content="{Binding AppVersion}" />
 
-        <Label Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2"
-               HorizontalAlignment="Center"
-               Content="Copyright © 2016 Nik Gieske" />
-
         <Label Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2"
                HorizontalAlignment="Center"
                Content="All Rights Reserved" />
