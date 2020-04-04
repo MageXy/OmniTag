@@ -16,7 +16,6 @@ using OmniTagWPF.ViewModels.Base;
 using OmniTagWPF.ViewModels.Controls;
 using OmniTagWPF.Views;
 using MessageBox = System.Windows.MessageBox;
-using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace OmniTagWPF.ViewModels
 {
@@ -31,35 +30,35 @@ namespace OmniTagWPF.ViewModels
         public TagSearchViewModel TagSearchDataContext
         {
             get { return _tagSearchDataContext; }
-            set { PropNotify.SetProperty(ref _tagSearchDataContext, value); }
+            set { SetProperty(ref _tagSearchDataContext, value); }
         }
 
         private SearchViewModel<Omni> _omniSearchDataContext;
         public SearchViewModel<Omni> OmniSearchDataContext
         {
             get { return _omniSearchDataContext; }
-            set { PropNotify.SetProperty(ref _omniSearchDataContext, value); }
+            set { SetProperty(ref _omniSearchDataContext, value); }
         }
 
         private bool _showTagSearch;
         public bool ShowTagSearch
         {
             get { return _showTagSearch; }
-            set { PropNotify.SetProperty(ref _showTagSearch, value); }
+            set { SetProperty(ref _showTagSearch, value); }
         }
 
         private ObservableCollection<TagButtonViewModel> _tagButtons;
         public ObservableCollection<TagButtonViewModel> TagButtons
         {
             get { return _tagButtons; }
-            set { PropNotify.SetProperty(ref _tagButtons, value); }
+            set { SetProperty(ref _tagButtons, value); }
         }
 
         private Omni _selectedOmni;
         public Omni SelectedOmni
         {
             get { return _selectedOmni; }
-            set { PropNotify.SetProperty(ref _selectedOmni, value); }
+            set { SetProperty(ref _selectedOmni, value); }
         }
 
         [DependsOnProperty(nameof(SelectedOmni))]

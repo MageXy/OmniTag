@@ -29,49 +29,49 @@ namespace OmniTagWPF.ViewModels.Controls
         public ObservableCollection<T> AllValues
         {
             get { return _allValues; }
-            set { PropNotify.SetProperty(ref _allValues, value, x => ApplyFilter()); }
+            set { SetProperty(ref _allValues, value, onChangedAction:x => ApplyFilter()); }
         }
 
         private Func<T, bool> _filter;
         public Func<T, bool> Filter
         {
             get { return _filter; }
-            set { PropNotify.SetProperty(ref _filter, value); }
+            set { SetProperty(ref _filter, value); }
         }
 
         private string _hintText;
         public string HintText
         {
             get { return _hintText; }
-            set { PropNotify.SetProperty(ref _hintText, value); }
+            set { SetProperty(ref _hintText, value); }
         }
 
         private string _displayMember;
         public string DisplayMember
         {
             get { return _displayMember; }
-            set { PropNotify.SetProperty(ref _displayMember, value); }
+            set { SetProperty(ref _displayMember, value); }
         }
 
         private string _enterText;
         public string EnterText
         {
             get { return _enterText; }
-            set { PropNotify.SetProperty(ref _enterText, value); }
+            set { SetProperty(ref _enterText, value); }
         }
 
         private List<T> _searchedValues;
         public List<T> SearchedValues
         {
             get { return _searchedValues; }
-            set { PropNotify.SetProperty(ref _searchedValues, value); }
+            set { SetProperty(ref _searchedValues, value); }
         }
 
         private string _fullSearchText;
         public string FullSearchText
         {
             get { return _fullSearchText; }
-            set { PropNotify.SetProperty(ref _fullSearchText, value, true); }
+            set { SetProperty(ref _fullSearchText, value, forceUpdate:true); }
         }
 
         private string _searchText;
@@ -80,7 +80,7 @@ namespace OmniTagWPF.ViewModels.Controls
             get { return _searchText; }
             set
             {
-                PropNotify.SetProperty(ref _searchText, value, x =>
+                SetProperty(ref _searchText, value, onChangedAction: x =>
                 {
                     if (ApplyFilterOnSearchTextChanged)
                         ApplyFilter();
@@ -94,7 +94,7 @@ namespace OmniTagWPF.ViewModels.Controls
             get { return _selectedValue; }
             set
             {
-                PropNotify.SetProperty(ref _selectedValue, value, (x) =>
+                SetProperty(ref _selectedValue, value, onChangedAction: x =>
                 {
                     if (UpdateSearchTextWhenSelectionChanges)
                     {
@@ -120,28 +120,28 @@ namespace OmniTagWPF.ViewModels.Controls
         public bool ShowEnterButton
         {
             get { return _showEnterButton; }
-            set { PropNotify.SetProperty(ref _showEnterButton, value); }
+            set { SetProperty(ref _showEnterButton, value); }
         }
 
         private bool _showStatusFilter;
         public bool ShowStatusFilter
         {
             get { return _showStatusFilter; }
-            set { PropNotify.SetProperty(ref _showStatusFilter, value); }
+            set { SetProperty(ref _showStatusFilter, value); }
         }
 
         private bool _applyFilterOnSearchTextChanged;
         public bool ApplyFilterOnSearchTextChanged
         {
             get { return _applyFilterOnSearchTextChanged; }
-            set { PropNotify.SetProperty(ref _applyFilterOnSearchTextChanged, value); }
+            set { SetProperty(ref _applyFilterOnSearchTextChanged, value); }
         }
 
         private bool _updateSearchTextWhenSelectionChanges;
         public bool UpdateSearchTextWhenSelectionChanges
         {
             get { return _updateSearchTextWhenSelectionChanges; }
-            set { PropNotify.SetProperty(ref _updateSearchTextWhenSelectionChanges, value); }
+            set { SetProperty(ref _updateSearchTextWhenSelectionChanges, value); }
         }
 
         #endregion

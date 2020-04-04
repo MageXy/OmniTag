@@ -26,14 +26,14 @@ namespace OmniTagWPF.ViewModels.Controls
         public TagFilterMode TagFilterMode
         {
             get { return _tagFilterMode; }
-            set { PropNotify.SetProperty(ref _tagFilterMode, value, x => ApplyFilter()); }
+            set { SetProperty(ref _tagFilterMode, value, onChangedAction: x => ApplyFilter()); }
         }
 
         private Func<string, bool> _enableEnterFunc;
         public Func<string, bool> EnableEnterFunc
         {
             get { return _enableEnterFunc; }
-            set { PropNotify.SetProperty(ref _enableEnterFunc, value); }
+            set { SetProperty(ref _enableEnterFunc, value); }
         }
 
         [DependsOnProperty(nameof(FullSearchText))]
@@ -81,21 +81,21 @@ namespace OmniTagWPF.ViewModels.Controls
         public ICommand EnterCommand
         {
             get { return _enterCommand; }
-            set { PropNotify.SetProperty(ref _enterCommand, value); }
+            set { SetProperty(ref _enterCommand, value); }
         }
 
         private ICommand _searchCommand;
         public ICommand SearchCommand
         {
             get { return _searchCommand; }
-            set { PropNotify.SetProperty(ref _searchCommand, value); }
+            set { SetProperty(ref _searchCommand, value); }
         }
 
         private ICommand _clickSelectCommand;
         public ICommand ClickSelectCommand
         {
             get { return _clickSelectCommand; }
-            set { PropNotify.SetProperty(ref _clickSelectCommand, value); }
+            set { SetProperty(ref _clickSelectCommand, value); }
         }
 
         #endregion

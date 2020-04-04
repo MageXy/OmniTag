@@ -85,14 +85,14 @@
         <DockPanel Grid.Row="1"
                    LastChildFill="False">
             <Button DockPanel.Dock="Right"
-                    Margin="5" Padding="10,0,10,0"
-                    Content="Save and Close"
-                    Command="{Binding SaveCommand}"/>
-            
-            <Button DockPanel.Dock="Right"
-                    Margin="5" Padding="10,0,10,0"
+                    Margin="2,5,5,5" Padding="10,0,10,0"
                     Content="Cancel"
                     Command="{Binding CloseViewCommand}"/>
+            
+            <Button DockPanel.Dock="Right"
+                    Margin="5,5,2,5" Padding="10,0,10,0"
+                    Content="Save and Close"
+                    Command="{Binding SaveCommand}"/>
             
             <Button DockPanel.Dock="Left"
                     Margin="5" Padding="10,0,10,0"

@@ -15,28 +15,28 @@ namespace OmniTag.Models
         public string Summary
         {
             get { return _summary; }
-            set { PropNotify.SetProperty(ref _summary, value); }
+            set { SetProperty(ref _summary, value); }
         }
 
         private string _description;
         public string Description
         {
             get { return _description; }
-            set { PropNotify.SetProperty(ref _description, value); }
+            set { SetProperty(ref _description, value); }
         }
         
         private ICollection<Tag> _tags;
         public virtual ICollection<Tag> Tags
         {
             get { return _tags; }
-            set { PropNotify.SetProperty(ref _tags, value); }
+            set { SetProperty(ref _tags, value); }
         } 
 
         private ICollection<Image> _images;
         public virtual ICollection<Image> Images
         {
             get { return _images; }
-            set { PropNotify.SetProperty(ref _images, value); }
+            set { SetProperty(ref _images, value); }
         }
     }
 }

@@ -48,13 +48,13 @@
         <DockPanel Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2"
                    LastChildFill="False">
             <Button DockPanel.Dock="Right"
-                    Margin="2,5,5,5" Padding="20,0,20,0"
-                    Content="OK" 
-                    Command="{Binding ConfirmCommand}"/>
-            <Button DockPanel.Dock="Right"
-                    Margin="5,5,2,5" Padding="15,0,15,0"
+                    Margin="2,5,5,5" Padding="15,0,15,0"
                     Content="Cancel"
                     Command="{Binding CloseViewCommand}"/>
+            <Button DockPanel.Dock="Right"
+                    Margin="5,5,2,5" Padding="20,0,20,0"
+                    Content="OK" 
+                    Command="{Binding ConfirmCommand}"/>
         </DockPanel>
     </Grid>
 </v:CloseableView>

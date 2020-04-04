@@ -20,7 +20,7 @@ namespace OmniTagWPF.ViewModels
         public List<Omni> AvailableOmnis
         {
             get { return _availableOmnis; }
-            set { PropNotify.SetProperty(ref _availableOmnis, value); }
+            set { SetProperty(ref _availableOmnis, value); }
         }
 
         public string SelectedTagText

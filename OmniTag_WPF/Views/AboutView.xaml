@@ -28,8 +28,8 @@
                Content="Version" />
 
         <Label Grid.Column="1" Grid.Row="2"
-               HorizontalAlignment="Left"
-               Content="{Binding AppVersion}" />
+               Name="VersionLabel"
+               HorizontalAlignment="Left" />
 
         <Label Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2"
                HorizontalAlignment="Center"

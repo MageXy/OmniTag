@@ -14,14 +14,14 @@ namespace OmniTag.Models
         public string Name
         {
             get { return _name; }
-            set { PropNotify.SetProperty(ref _name, value); }
+            set { SetProperty(ref _name, value); }
         }
 
         private string _description;
         public string Description
         {
             get { return _description; }
-            set { PropNotify.SetProperty(ref _description, value); }
+            set { SetProperty(ref _description, value); }
         }
 
         /**
@@ -37,7 +37,7 @@ namespace OmniTag.Models
         public bool IsVerified
         {
             get { return _isVerified; }
-            set { PropNotify.SetProperty(ref _isVerified, value); }
+            set { SetProperty(ref _isVerified, value); }
         }
 
         /**
@@ -52,7 +52,7 @@ namespace OmniTag.Models
         public bool ManuallyVerified
         {
             get { return _manuallyVerified; }
-            set { PropNotify.SetProperty(ref _manuallyVerified, value); }
+            set { SetProperty(ref _manuallyVerified, value); }
         }
         
 
@@ -60,7 +60,7 @@ namespace OmniTag.Models
         public virtual ICollection<Omni> Omnis
         {
             get { return _omnis; }
-            set { PropNotify.SetProperty(ref _omnis, value); }
+            set { SetProperty(ref _omnis, value); }
         }
     }
 }

@@ -59,7 +59,7 @@ namespace OmniTagWPF.ViewModels
             get { return _omniSummary; }
             set
             {
-                PropNotify.SetProperty(ref _omniSummary, value,
+                SetProperty(ref _omniSummary, value,
                     s =>
                     {
                         if ((CurrentOmni != null) && (s != CurrentOmni.Description))
@@ -74,7 +74,7 @@ namespace OmniTagWPF.ViewModels
             get { return _omniDescription; }
             set
             {
-                PropNotify.SetProperty(ref _omniDescription, value,
+                SetProperty(ref _omniDescription, value,
                     s =>
                     {
                         if ((CurrentOmni != null) && (s != CurrentOmni.Description))
@@ -87,7 +87,7 @@ namespace OmniTagWPF.ViewModels
         public DateTime? CurrentOmniLastUpdatedTime
         {
             get { return _currentOmniLastUpdatedTime; }
-            set { PropNotify.SetProperty(ref _currentOmniLastUpdatedTime, value); }
+            set { SetProperty(ref _currentOmniLastUpdatedTime, value); }
         }
 
 
@@ -95,63 +95,63 @@ namespace OmniTagWPF.ViewModels
         public List<Tag> OmniTags
         {
             get { return _omniTags; }
-            set { PropNotify.SetProperty(ref _omniTags, value); }
+            set { SetProperty(ref _omniTags, value); }
         }
 
         private ObservableCollection<Image> _omniImages;
         public ObservableCollection<Image> OmniImages
         {
             get { return _omniImages; }
-            set { PropNotify.SetProperty(ref _omniImages, value); }
+            set { SetProperty(ref _omniImages, value); }
         }
 
         private string _searchText;
         public string SearchText
         {
             get { return _searchText; }
-            set { PropNotify.SetProperty(ref _searchText, value, OnSearchTextChanged); }
+            set { SetProperty(ref _searchText, value, onChangedAction:OnSearchTextChanged); }
         }
 
         private string _suggestedText;
         public string SuggestedText
         {
             get { return _suggestedText; }
-            set { PropNotify.SetProperty(ref _suggestedText, value); }
+            set { SetProperty(ref _suggestedText, value); }
         }
 
         private string _tagSearchText;
         public string TagSearchText
         {
             get { return _tagSearchText; }
-            set { PropNotify.SetProperty(ref _tagSearchText, value); }
+            set { SetProperty(ref _tagSearchText, value); }
         }
 
         private ObservableCollection<TagButtonViewModel> _imageButtons;
         public ObservableCollection<TagButtonViewModel> ImageButtons
         {
             get { return _imageButtons; }
-            set { PropNotify.SetProperty(ref _imageButtons, value); }
+            set { SetProperty(ref _imageButtons, value); }
         }
 
         private bool _changesMade;
         public bool ChangesMade
         {
             get { return _changesMade; }
-            set { PropNotify.SetProperty(ref _changesMade, value); }
+            set { SetProperty(ref _changesMade, value); }
         }
 
         private string _renderedMarkdownHtml;
         public string RenderedMarkdownHtml
         {
             get { return _renderedMarkdownHtml; }
-            set { PropNotify.SetProperty(ref _renderedMarkdownHtml, value); }
+            set { SetProperty(ref _renderedMarkdownHtml, value); }
         }
 
         private List<string> _tagNameList;
         public List<string> TagNameList
         {
             get { return _tagNameList; }
-            set { PropNotify.SetProperty(ref _tagNameList, value); }
+            set { SetProperty(ref _tagNameList, value); }
         }
 
         [DependsOnProperty(nameof(CurrentOmniLastUpdatedTime))]

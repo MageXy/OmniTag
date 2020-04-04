@@ -27,35 +27,35 @@ namespace OmniTagWPF.ViewModels
         public int NumberOfColumns
         {
             get { return _numberOfColumns; }
-            set { PropNotify.SetProperty(ref _numberOfColumns, value); }
+            set { SetProperty(ref _numberOfColumns, value); }
         }
 
         private int _numberOfRows;
         public int NumberOfRows
         {
             get { return _numberOfRows; }
-            set { PropNotify.SetProperty(ref _numberOfRows, value); }
+            set { SetProperty(ref _numberOfRows, value); }
         }
 
         private DataTable _data;
         public DataTable Data
         {
             get { return _data; }
-            set { PropNotify.SetProperty(ref _data, value); }
+            set { SetProperty(ref _data, value); }
         }
 
         private bool _useHeaderBorder;
         public bool UseHeaderBorder
         {
             get { return _useHeaderBorder; }
-            set { PropNotify.SetProperty(ref _useHeaderBorder, value); }
+            set { SetProperty(ref _useHeaderBorder, value); }
         }
 
         private bool _usePrettyPrint;
         public bool UsePrettyPrint
         {
             get { return _usePrettyPrint; }
-            set { PropNotify.SetProperty(ref _usePrettyPrint, value); }
+            set { SetProperty(ref _usePrettyPrint, value); }
         }
 
         #endregion

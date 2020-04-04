@@ -29,28 +29,28 @@ namespace OmniTagWPF.ViewModels
         public Omni CurrentOmni
         {
             get { return _currentOmni; }
-            set { PropNotify.SetProperty(ref _currentOmni, value); }
+            set { SetProperty(ref _currentOmni, value); }
         }
 
         private ObservableCollection<Image> _omniImages;
         public ObservableCollection<Image> OmniImages
         {
             get { return _omniImages; }
-            set { PropNotify.SetProperty(ref _omniImages, value); }
+            set { SetProperty(ref _omniImages, value); }
         }
 
         private List<Image> _removedImages;
         public List<Image> RemovedImages
         {
             get { return _removedImages; }
-            set { PropNotify.SetProperty(ref _removedImages, value); }
+            set { SetProperty(ref _removedImages, value); }
         }
 
         private bool _changesMade;
         public bool ChangesMade
         {
             get { return _changesMade; }
-            set { PropNotify.SetProperty(ref _changesMade, value); }
+            set { SetProperty(ref _changesMade, value); }
         }
 
         #endregion

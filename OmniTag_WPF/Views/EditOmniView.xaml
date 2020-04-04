@@ -292,15 +292,15 @@
         <DockPanel Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="2"
                    LastChildFill="True">
             <Button DockPanel.Dock="Right"
-                    Margin="5" Padding="30,0,30,0"
-                    IsEnabled="{Binding ChangesMade}"
-                    Content="Save"
-                    Command="{Binding SaveOmniCommand}"/>
-            <Button DockPanel.Dock="Right"
                     Margin="5" Padding="20,0,20,0"
                     Content="Close"
                     Command="{Binding Path=CloseViewCommand}" 
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+            <Button DockPanel.Dock="Right"
+                    Margin="5" Padding="30,0,30,0"
+                    IsEnabled="{Binding ChangesMade}"
+                    Content="Save"
+                    Command="{Binding SaveOmniCommand}"/>
             <Button DockPanel.Dock="Left"
                     Margin="5" Padding="20,0,20,0"
                     Content="Help"

@@ -23,14 +23,14 @@ namespace OmniTagWPF.ViewModels
         public IEnumerable<HelpTopic> HelpTopics
         {
             get { return _helpTopics; }
-            set { PropNotify.SetProperty(ref _helpTopics, value); }
+            set { SetProperty(ref _helpTopics, value); }
         }
 
         private HelpTopic _selectedHelpTopic;
         public HelpTopic SelectedHelpTopic
         {
             get { return _selectedHelpTopic; }
-            set { PropNotify.SetProperty(ref _selectedHelpTopic, value); }
+            set { SetProperty(ref _selectedHelpTopic, value); }
         }
 
         [DependsOnProperty(nameof(SelectedHelpTopic))]

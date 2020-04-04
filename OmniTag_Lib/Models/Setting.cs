@@ -12,14 +12,14 @@ namespace OmniTag.Models
         public string Name
         {
             get { return _name; }
-            set { PropNotify.SetProperty(ref _name, value); }
+            set { SetProperty(ref _name, value); }
         }
 
         private string _value;
         public string Value
         {
             get { return _value; }
-            set { PropNotify.SetProperty(ref _value, value); }
+            set { SetProperty(ref _value, value); }
         }
     }
 }

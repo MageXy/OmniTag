@@ -35,21 +35,21 @@ namespace OmniTagWPF.ViewModels
         public Tag SelectedTag
         {
             get { return _selectedTag; }
-            set { PropNotify.SetProperty(ref _selectedTag, value, OnSelectedTagChanging, OnSelectedTagChanged); }
+            set { SetProperty(ref _selectedTag, value, OnSelectedTagChanging, OnSelectedTagChanged); }
         }
 
         private TagSearchViewModel _tagSearchDataContext;
         public TagSearchViewModel TagSearchDataContext
         {
             get { return _tagSearchDataContext; }
-            set { PropNotify.SetProperty(ref _tagSearchDataContext, value); }
+            set { SetProperty(ref _tagSearchDataContext, value); }
         }
 
         private bool _changesMade;
         public bool ChangesMade
         {
             get { return _changesMade; }
-            set { PropNotify.SetProperty(ref _changesMade, value); }
+            set { SetProperty(ref _changesMade, value); }
         }
         #endregion
 
@@ -60,7 +60,7 @@ namespace OmniTagWPF.ViewModels
             get { return _selectedTagName; }
             set
             {
-                PropNotify.SetProperty(ref _selectedTagName, value,
+                SetProperty(ref _selectedTagName, value,
                     s =>
                     {
                         if ((SelectedTag != null) && (s != SelectedTag.Name))
@@ -75,7 +75,7 @@ namespace OmniTagWPF.ViewModels
             get { return _selectedTagDescription; }
             set
             {
-                PropNotify.SetProperty(ref _selectedTagDescription, value,
+                SetProperty(ref _selectedTagDescription, value,
                 s =>
                 {
                     if ((SelectedTag != null) && (s != SelectedTag.Description))
@@ -90,7 +90,7 @@ namespace OmniTagWPF.ViewModels
             get { return _isSelectedTagVerified; }
             set
             {
-                PropNotify.SetProperty(ref _isSelectedTagVerified, value,
+                SetProperty(ref _isSelectedTagVerified, value,
                 s =>
                 {
                     if ((SelectedTag != null) && (s != SelectedTag.IsVerified))
@@ -103,14 +103,14 @@ namespace OmniTagWPF.ViewModels
         public bool? IsSelectedTagManuallyVerified
         {
             get { return _isSelectedTagManuallyVerified; }
-            set { PropNotify.SetProperty(ref _isSelectedTagManuallyVerified, value); }
+            set { SetProperty(ref _isSelectedTagManuallyVerified, value); }
         }
 
         private DateTime? _selectedTagLastUpdatedTime;
         public DateTime? SelectedTagLastUpdatedTime
         {
             get { return _selectedTagLastUpdatedTime; }
-            set { PropNotify.SetProperty(ref _selectedTagLastUpdatedTime, value); }
+            set { SetProperty(ref _selectedTagLastUpdatedTime, value); }
         }
 
         [DependsOnProperty("SelectedTagLastUpdatedTime")]

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Reflection;
+using System.Windows;
 
 namespace OmniTagWPF.Views
 {
@@ -11,6 +12,7 @@ namespace OmniTagWPF.Views
 		{
 			InitializeComponent();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
+			VersionLabel.Content = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 		}
 	}
 }

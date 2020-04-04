@@ -16,7 +16,7 @@ namespace OmniTagWPF.ViewModels.Controls
         public Tag CurrentTag
         {
             get { return _currentTag; }
-            set { PropNotify.SetProperty(ref _currentTag, value); }
+            set { SetProperty(ref _currentTag, value); }
         }
 
         [DependsOnProperty("CurrentTag")]

@@ -31,7 +31,7 @@ namespace OmniTagWPF.ViewModels
             get { return _dataSource; }
             set
             {
-                PropNotify.SetProperty(ref _dataSource, value, (x) =>
+                SetProperty(ref _dataSource, value, onChangedAction: x =>
                 {
                     if (!IsLoading)
                         _dataSourceChanged = true;
@@ -43,14 +43,14 @@ namespace OmniTagWPF.ViewModels
         public string TagThreshold
         {
             get { return _tagThreshold; }
-            set { PropNotify.SetProperty(ref _tagThreshold, value); }
+            set { SetProperty(ref _tagThreshold, value); }
         }
 
         private bool _showTagFilter;
         public bool ShowTagFilter
         {
             get { return _showTagFilter; }
-            set { PropNotify.SetProperty(ref _showTagFilter, value); }
+            set { SetProperty(ref _showTagFilter, value); }
         }
 
         private string _tempImageLocation;
@@ -67,7 +67,7 @@ namespace OmniTagWPF.ViewModels
                     ? DefaultLocation
                     : _tempImageLocation;
             }
-            set { PropNotify.SetProperty(ref _tempImageLocation, value); }
+            set { SetProperty(ref _tempImageLocation, value); }
         }
         
         private Setting AutoTagVerifyThresholdSetting { get; set; }

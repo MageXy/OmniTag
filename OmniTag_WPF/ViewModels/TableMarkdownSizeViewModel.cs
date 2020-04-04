@@ -17,14 +17,14 @@ namespace OmniTagWPF.ViewModels
         public int NumCols
         {
             get { return _numCols; }
-            set { PropNotify.SetProperty(ref _numCols, value); }
+            set { SetProperty(ref _numCols, value); }
         }
 
         private int _numRows;
         public int NumRows
         {
             get { return _numRows; }
-            set { PropNotify.SetProperty(ref _numRows, value); }
+            set { SetProperty(ref _numRows, value); }
         }
 
         #endregion
